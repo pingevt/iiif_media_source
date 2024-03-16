@@ -1,0 +1,11 @@
+name: IIIF Media Source
+type: module
+description: 'Creating a Media Source for IIIF data'
+core_version_requirement: ^10
+
+package: Media
+
+dependencies:
+  - drupal:media
+
+configure: null
