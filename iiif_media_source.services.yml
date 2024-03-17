@@ -1,0 +1,4 @@
+services:
+  # iiif_media_source.focal_point_manager:
+  #   class: Drupal\iiif_media_source\IiifFocalPointManager
+  #   arguments: ['@entity_type.manager']

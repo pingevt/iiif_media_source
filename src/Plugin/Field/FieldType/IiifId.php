@@ -1,0 +1,115 @@
+<?php
+
+namespace Drupal\iiif_media_source\Plugin\Field\FieldType;
+
+use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\iiif_media_source\Iiif\IiifImage;
+
+/**
+ * Defines the 'string' entity field type.
+ *
+ * @FieldType(
+ *   id = "iiif_id",
+ *   label = @Translation("IIIF ID field"),
+ *   description = @Translation("A field containing a IIIF id"),
+ *   category = @Translation("IIIF"),
+ *   default_widget = "iiif_image_widget",
+ *   default_formatter = "iiif_image_formatter"
+ * )
+ */
+class IiifId extends StringItem {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultFieldSettings() {
+    $settings = parent::defaultFieldSettings();
+
+    $settings['server'] = "";
+    $settings['prefix'] = "";
+
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::fieldSettingsForm($form, $form_state);
+
+    $form['server'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Server'),
+      '#default_value' => $this->getSetting('server'),
+      '#description' => $this->t('IIIF Server, including scheme'),
+      '#required' => TRUE,
+    ];
+
+    $form['prefix'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Prefix'),
+      '#default_value' => $this->getSetting('prefix'),
+      '#description' => $this->t('IIIF Prefix'),
+      '#required' => TRUE,
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
+    $schema = parent::schema($field_definition);
+
+    $schema['columns']['info'] = [
+      'type' => 'text',
+      'size' => 'big',
+    ];
+
+    return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
+    $properties = parent::propertyDefinitions($field_definition);
+
+    $properties['info'] = DataDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('info'))
+      ->setRequired(FALSE);
+
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE) {
+ksm($values);
+
+    // todo: double check this logic. Is it correct?
+    if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
+      ksm('bob', $this);
+      $img = $this->getImg($values); // new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);
+      // $this->_image = $img;
+      // $this->width = $img->getWidth();
+      // $this->height = $img->getHeight();
+
+      $values['info'] = $img->getInfoEncoded();
+    }
+
+    parent::setValue($values, $notify);
+
+  }
+
+  public function getImg($values) {
+    return new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);
+  }
+
+}
