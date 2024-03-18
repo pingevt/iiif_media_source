@@ -7,10 +7,170 @@ namespace Drupal\iiif_media_source\Iiif;
  */
 class IiifImage extends IiifBase {
 
+
+  // public static $regionOptions = [
+  //   'full' => 'full',
+  //   'square' => 'square',
+  //   'x,y,w,h' => 'x,y,w,h',
+  //   'pct:x,y,w,h' => 'pct:x,y,w,h',
+  // ];
+
+  public static function getRegionOptions(string $version = "2"): array {
+    $options = [];
+
+    switch ($version) {
+      case "2":
+        $options = [
+          'full' => 'full',
+          'x,y,w,h' => 'x,y,w,h',
+          'pct:x,y,w,h' => 'pct:x,y,w,h',
+        ];
+        break;
+
+      case "3":
+        $options = [
+          'full' => 'full',
+          'square' => 'square',
+          'x,y,w,h' => 'x,y,w,h',
+          'pct:x,y,w,h' => 'pct:x,y,w,h',
+        ];
+        break;
+    }
+
+    return $options;
+  }
+
+  // public static $sizeOptions = [
+  //   'max' => 'max',
+  //   '!max' => '!max',
+  //   'w,' => 'w,',
+  //   '^w,' => '^w,',
+  //   ',h' => ',h',
+  //   '^,h' => '^,h',
+  //   'pct:n' => 'pct:n',
+  //   '^pct:n' => '^pct:n',
+  //   'w,h' => 'w,h',
+  //   '^w,h' => '^w,h',
+  //   '!w,h' => '!w,h',
+  //   '^!w,h' => '^!w,h',
+  // ];
+
+  public static function getSizeOptions(string $version = "2"): array {
+    $options = [];
+
+    switch ($version) {
+      case "2":
+        $options = [
+          'full' => 'full',
+          'w,' => 'w,',
+          ',h' => ',h',
+          'pct:n' => 'pct:n',
+          'w,h' => 'w,h',
+          '!w,h' => '!w,h',
+        ];
+        break;
+
+      case "3":
+        $options = [
+          'max' => 'max',
+          '!max' => '!max',
+          'w,' => 'w,',
+          '^w,' => '^w,',
+          ',h' => ',h',
+          '^,h' => '^,h',
+          'pct:n' => 'pct:n',
+          '^pct:n' => '^pct:n',
+          'w,h' => 'w,h',
+          '^w,h' => '^w,h',
+          '!w,h' => '!w,h',
+          '^!w,h' => '^!w,h',
+        ];
+        break;
+    }
+
+    return $options;
+  }
+
+  // public static $qualityOptions = [
+  //   'color' => 'color',
+  //   'gray' => 'gray',
+  //   'bitonal' => 'bitonal',
+  //   'default' => 'default',
+  // ];
+
+  public static function getQualityOptions(string $version = "2"): array {
+    $options = [];
+
+    switch ($version) {
+      case "2":
+        $options = [
+          'color' => 'color',
+          'gray' => 'gray',
+          'bitonal' => 'bitonal',
+          'default' => 'default',
+        ];
+        break;
+
+      case "3":
+        $options = [
+          'color' => 'color',
+          'gray' => 'gray',
+          'bitonal' => 'bitonal',
+          'default' => 'default',
+        ];
+        break;
+    }
+
+    return $options;
+  }
+
+  // public static $formatOptions = [
+  //   'jpg' => 'jpg',
+  //   'tif' => 'tif',
+  //   'png' => 'png',
+  //   'gif' => 'gif',
+  //   'jp2' => 'jp2',
+  //   'pdf' => 'pdf',
+  //   'webp' => 'webp',
+  // ];
+
+  public static function getFormatOptions(string $version = "2"): array {
+    $options = [];
+
+    switch ($version) {
+      case "2":
+        $options = [
+          'jpg' => 'jpg',
+          'tif' => 'tif',
+          'png' => 'png',
+          'gif' => 'gif',
+          'jp2' => 'jp2',
+          'pdf' => 'pdf',
+          'webp' => 'webp',
+        ];
+        break;
+
+      case "3":
+        $options = [
+          'jpg' => 'jpg',
+          'tif' => 'tif',
+          'png' => 'png',
+          'gif' => 'gif',
+          'jp2' => 'jp2',
+          'pdf' => 'pdf',
+          'webp' => 'webp',
+        ];
+        break;
+    }
+
+    return $options;
+  }
+
   protected $thumbWidth = 200;
+
   protected $thumbHeight = 200;
 
-  // Public function __construct(string $base_url, string $id) {
+  // public function __construct(string $base_url, string $id) {
   //   parent::__construct($base_url, $id);.
   // if (isset($this->info->width)) {
   //     $this->width = $this->info->width;

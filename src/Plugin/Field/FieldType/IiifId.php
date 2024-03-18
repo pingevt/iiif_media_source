@@ -31,6 +31,7 @@ class IiifId extends StringItem {
 
     $settings['server'] = "";
     $settings['prefix'] = "";
+    $settings['img_api_version'] = "2";
 
     return $settings;
   }
@@ -55,6 +56,18 @@ class IiifId extends StringItem {
       '#default_value' => $this->getSetting('prefix'),
       '#description' => $this->t('IIIF Prefix'),
       '#required' => TRUE,
+    ];
+
+    $form['img_api_version'] = [
+      '#type' => 'select',
+      '#title' => $this->t('IIIF Image API version'),
+      '#default_value' => $this->getSetting('img_api_version'),
+      '#description' => $this->t(''),
+      '#required' => TRUE,
+      '#options' => [
+        2 => "v2.0",
+        3 => "v3.0",
+      ],
     ];
 
     return $form;
@@ -91,11 +104,11 @@ class IiifId extends StringItem {
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-ksm($values);
+// ksm($values);
 
     // todo: double check this logic. Is it correct?
     if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
-      ksm('bob', $this);
+      // ksm('bob', $this);
       $img = $this->getImg($values); // new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);
       // $this->_image = $img;
       // $this->width = $img->getWidth();

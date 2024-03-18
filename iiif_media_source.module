@@ -19,10 +19,15 @@ function iiif_media_source_theme($existing, $type, $theme, $path) {
     'iiif_image' => [
       'variables' => [
         'image' => '',
-        'crop' => '',
-        'size_type' => 'resize_and_crop',
-        'dest_width' => 100,
-        'dest_height' => 100,
+        // 'crop' => '',
+        // 'size_type' => 'resize_and_crop',
+        // 'dest_width' => 100,
+        // 'dest_height' => 100,
+        'region' => '',
+        'size' => '',
+        'rotation' => '',
+        'quality' => '',
+        'format' => ''#,
       ],
     ],
   ];
@@ -32,171 +37,189 @@ function iiif_media_source_theme($existing, $type, $theme, $path) {
  *
  */
 function template_preprocess_iiif_image(&$variables) {
-
+  ksm($variables);
   $image = $variables['image'];
 
-  $fp_x = $variables['crop']? (int) $variables['crop']->x->value : 0;
-  $fp_y = $variables['crop']? (int) $variables['crop']->y->value : 0;
-
-  $dest_width = $variables['dest_width']? (int) $variables['dest_width'] : NULL;
-  $dest_height = $variables['dest_height']? (int) $variables['dest_height'] : NULL;
-
-  $dest_ratio = ($dest_height != 0) ? $dest_width / $dest_height : 1;
-
-  $orig_width = $image->getWidth();
-  $orig_height = $image->getHeight();
-
-  $orig_ratio = $orig_width / $orig_height;
-
-  // @todo this should all be exported to a cropper class or something.
-  if ($variables['size_type'] == "full") {
-    $region = "full";
-    $size = "max";
-    $rotation = 0;
-    $quality = 'default';
-
-    $variables['content'] = [
-      'image' => [
-        '#theme' => 'image',
-        '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
-        '#attributes' => [
-          'width' => $orig_width,
-          'height' => $orig_height,
-          'class' => ['iiif-image'],
-        ],
+  $variables['content'] = [
+    'image' => [
+      '#theme' => 'image',
+      '#uri' => $image->getBuiltImageUrl($variables['region'], $variables['size'], $variables['rotation'], $variables['quality']),
+      '#attributes' => [
+        // 'width' => $dest_width,
+        // 'height' => $dest_height,
+        // 'class' => ['iiif-image'],
       ],
-    ];
-  }
-  elseif ($variables['size_type'] == "scale") {
-    $region = "full";
-    $size = "$dest_width,$dest_height";
-    $rotation = 0;
-    $quality = 'default';
+    ],
+  ];
 
-    $variables['content'] = [
-      'image' => [
-        '#theme' => 'image',
-        '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
-        '#attributes' => [
-          'width' => $dest_width,
-          'height' => $dest_height,
-          'class' => ['iiif-image'],
-        ],
-      ],
-    ];
+  ksm($variables['content']);
 
-  }
-  elseif ($variables['size_type'] == "resize") {
-    $region = "full";
-    $size = "!$dest_width,$dest_height";
-    $rotation = 0;
-    $quality = 'default';
 
-    $variables['content'] = [
-      'image' => [
-        '#theme' => 'image',
-        '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
-        '#attributes' => [
-          'width' => $dest_width,
-          'height' => $dest_height,
-          'class' => ['iiif-image'],
-        ],
-      ],
-    ];
-  }
-  elseif ($variables['size_type'] == "scale_and_crop") {
-    // < 1 horizontal.
-    if ($orig_ratio > $dest_ratio) {
-      $region_width = $orig_height * $dest_width / $dest_height;
-      $rx1 = (int) ($fp_x - ($region_width / 2));
-      $rx2 = (int) ($fp_x + ($region_width / 2));
-      $ry1 = 0;
-      $ry2 = $orig_height;
 
-      if ($rx1 < 0) {
-        $rx2 += abs($rx1);
-        $rx1 = 0;
-      }
-      if ($rx2 > $orig_height) {
-        $rx1 -= $rx2 - $orig_height;
-        $rx2 = $orig_height;
-      }
-    }
-    else {
-      $region_height = $orig_width * $dest_height / $dest_width;
-      $rx1 = 0;
-      $rx2 = $orig_width;
-      $ry1 = (int) ($fp_y - ($region_height / 2));
-      $ry2 = (int) ($region_height + $ry1);
+  // $image = $variables['image'];
 
-      if ($ry1 < 0) {
-        $ry2 += abs($ry1);
-        $ry1 = 0;
-      }
-      if ($ry2 > $orig_height) {
-        $ry1 -= $ry2 - $orig_height;
-        $ry2 = $orig_height;
-      }
-    }
+  // $fp_x = $variables['crop']? (int) $variables['crop']->x->value : 0;
+  // $fp_y = $variables['crop']? (int) $variables['crop']->y->value : 0;
 
-    $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
-    $size = "!$dest_width,$dest_height";
-    $rotation = 0;
-    $quality = 'default';
+  // $dest_width = $variables['dest_width']? (int) $variables['dest_width'] : NULL;
+  // $dest_height = $variables['dest_height']? (int) $variables['dest_height'] : NULL;
 
-    $variables['content'] = [
-      'image' => [
-        '#theme' => 'image',
-        '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
-        '#attributes' => [
-          'width' => $dest_width,
-          'height' => $dest_height,
-          'class' => ['iiif-image'],
-        ],
-      ],
-    ];
-  }
-  elseif ($variables['size_type'] == "crop") {
-    $rx1 = (int) ($fp_x - ($dest_width / 2));
-    $rx2 = (int) ($fp_x + ($dest_width / 2));
-    $ry1 = (int) ($fp_y - ($dest_height / 2));
-    $ry2 = (int) ($fp_y + ($dest_height / 2));
+  // $dest_ratio = ($dest_height != 0) ? $dest_width / $dest_height : 1;
 
-    if ($rx1 < 0) {
-      $rx2 += abs($rx1);
-      $rx1 = 0;
-    }
-    if ($rx2 > $orig_height) {
-      $rx1 -= $rx2 - $orig_height;
-      $rx2 = $orig_height;
-    }
+  // $orig_width = $image->getWidth();
+  // $orig_height = $image->getHeight();
 
-    if ($ry1 < 0) {
-      $ry2 += abs($ry1);
-      $ry1 = 0;
-    }
-    if ($ry2 > $orig_height) {
-      $ry1 -= $ry2 - $orig_height;
-      $ry2 = $orig_height;
-    }
+  // $orig_ratio = $orig_width / $orig_height;
 
-    $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
-    $size = "!$dest_width,$dest_height";
-    $rotation = 0;
-    $quality = 'default';
+  // // @todo this should all be exported to a cropper class or something.
+  // if ($variables['size_type'] == "full") {
+  //   $region = "full";
+  //   $size = "max";
+  //   $rotation = 0;
+  //   $quality = 'default';
 
-    $variables['content'] = [
-      'image' => [
-        '#theme' => 'image',
-        '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
-        '#attributes' => [
-          'width' => $dest_width,
-          'height' => $dest_height,
-          'class' => ['iiif-image'],
-        ],
-      ],
-    ];
-  }
+  //   $variables['content'] = [
+  //     'image' => [
+  //       '#theme' => 'image',
+  //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
+  //       '#attributes' => [
+  //         'width' => $orig_width,
+  //         'height' => $orig_height,
+  //         'class' => ['iiif-image'],
+  //       ],
+  //     ],
+  //   ];
+  // }
+  // elseif ($variables['size_type'] == "scale") {
+  //   $region = "full";
+  //   $size = "$dest_width,$dest_height";
+  //   $rotation = 0;
+  //   $quality = 'default';
+
+  //   $variables['content'] = [
+  //     'image' => [
+  //       '#theme' => 'image',
+  //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
+  //       '#attributes' => [
+  //         'width' => $dest_width,
+  //         'height' => $dest_height,
+  //         'class' => ['iiif-image'],
+  //       ],
+  //     ],
+  //   ];
+
+  // }
+  // elseif ($variables['size_type'] == "resize") {
+  //   $region = "full";
+  //   $size = "!$dest_width,$dest_height";
+  //   $rotation = 0;
+  //   $quality = 'default';
+
+  //   $variables['content'] = [
+  //     'image' => [
+  //       '#theme' => 'image',
+  //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
+  //       '#attributes' => [
+  //         'width' => $dest_width,
+  //         'height' => $dest_height,
+  //         'class' => ['iiif-image'],
+  //       ],
+  //     ],
+  //   ];
+  // }
+  // elseif ($variables['size_type'] == "scale_and_crop") {
+  //   // < 1 horizontal.
+  //   if ($orig_ratio > $dest_ratio) {
+  //     $region_width = $orig_height * $dest_width / $dest_height;
+  //     $rx1 = (int) ($fp_x - ($region_width / 2));
+  //     $rx2 = (int) ($fp_x + ($region_width / 2));
+  //     $ry1 = 0;
+  //     $ry2 = $orig_height;
+
+  //     if ($rx1 < 0) {
+  //       $rx2 += abs($rx1);
+  //       $rx1 = 0;
+  //     }
+  //     if ($rx2 > $orig_height) {
+  //       $rx1 -= $rx2 - $orig_height;
+  //       $rx2 = $orig_height;
+  //     }
+  //   }
+  //   else {
+  //     $region_height = $orig_width * $dest_height / $dest_width;
+  //     $rx1 = 0;
+  //     $rx2 = $orig_width;
+  //     $ry1 = (int) ($fp_y - ($region_height / 2));
+  //     $ry2 = (int) ($region_height + $ry1);
+
+  //     if ($ry1 < 0) {
+  //       $ry2 += abs($ry1);
+  //       $ry1 = 0;
+  //     }
+  //     if ($ry2 > $orig_height) {
+  //       $ry1 -= $ry2 - $orig_height;
+  //       $ry2 = $orig_height;
+  //     }
+  //   }
+
+  //   $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
+  //   $size = "!$dest_width,$dest_height";
+  //   $rotation = 0;
+  //   $quality = 'default';
+
+  //   $variables['content'] = [
+  //     'image' => [
+  //       '#theme' => 'image',
+  //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
+  //       '#attributes' => [
+  //         'width' => $dest_width,
+  //         'height' => $dest_height,
+  //         'class' => ['iiif-image'],
+  //       ],
+  //     ],
+  //   ];
+  // }
+  // elseif ($variables['size_type'] == "crop") {
+  //   $rx1 = (int) ($fp_x - ($dest_width / 2));
+  //   $rx2 = (int) ($fp_x + ($dest_width / 2));
+  //   $ry1 = (int) ($fp_y - ($dest_height / 2));
+  //   $ry2 = (int) ($fp_y + ($dest_height / 2));
+
+  //   if ($rx1 < 0) {
+  //     $rx2 += abs($rx1);
+  //     $rx1 = 0;
+  //   }
+  //   if ($rx2 > $orig_height) {
+  //     $rx1 -= $rx2 - $orig_height;
+  //     $rx2 = $orig_height;
+  //   }
+
+  //   if ($ry1 < 0) {
+  //     $ry2 += abs($ry1);
+  //     $ry1 = 0;
+  //   }
+  //   if ($ry2 > $orig_height) {
+  //     $ry1 -= $ry2 - $orig_height;
+  //     $ry2 = $orig_height;
+  //   }
+
+  //   $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
+  //   $size = "!$dest_width,$dest_height";
+  //   $rotation = 0;
+  //   $quality = 'default';
+
+  //   $variables['content'] = [
+  //     'image' => [
+  //       '#theme' => 'image',
+  //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
+  //       '#attributes' => [
+  //         'width' => $dest_width,
+  //         'height' => $dest_height,
+  //         'class' => ['iiif-image'],
+  //       ],
+  //     ],
+  //   ];
+  // }
 
 }
 
