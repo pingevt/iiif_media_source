@@ -12,7 +12,7 @@ use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
 use Drupal\node\Entity\Node;
 
 /**
- *
+ * Implements hook_theme().
  */
 function iiif_media_source_theme($existing, $type, $theme, $path) {
   return [
@@ -37,7 +37,7 @@ function iiif_media_source_theme($existing, $type, $theme, $path) {
  *
  */
 function template_preprocess_iiif_image(&$variables) {
-  ksm($variables);
+  // ksm($variables);
   $image = $variables['image'];
 
   $variables['content'] = [
@@ -52,7 +52,7 @@ function template_preprocess_iiif_image(&$variables) {
     ],
   ];
 
-  ksm($variables['content']);
+  // ksm($variables['content']);
 
 
 
