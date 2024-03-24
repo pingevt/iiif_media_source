@@ -239,7 +239,7 @@ class IiifImage extends IiifBase {
   /**
    *
    */
-  public function getBuiltImageUrl($region, $size, $rotation, $quality):string {
+  public function getBuiltImageUrl($region, $size, $rotation, $quality, $format):string {
     // @todo validate these values.
     $url = implode("/", [
       $this->server,
@@ -248,7 +248,7 @@ class IiifImage extends IiifBase {
       $region,
       $size,
       $rotation,
-      $quality . "." . $this->getDefaultExtension(),
+      $quality . "." . $format,
     ]);
 
     return $url;

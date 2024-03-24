@@ -43,7 +43,7 @@ function template_preprocess_iiif_image(&$variables) {
   $variables['content'] = [
     'image' => [
       '#theme' => 'image',
-      '#uri' => $image->getBuiltImageUrl($variables['region'], $variables['size'], $variables['rotation'], $variables['quality']),
+      '#uri' => $image->getBuiltImageUrl($variables['region'], $variables['size'], $variables['rotation'], $variables['quality'], $variables['format']),
       '#attributes' => [
         // 'width' => $dest_width,
         // 'height' => $dest_height,
