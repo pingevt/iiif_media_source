@@ -1,2 +1,5 @@
 administer iiif_image_style:
   title: 'Administer iiif image style'
+
+administer iiif_responsive_image_style:
+  title: 'Administer iiif responsive image style'

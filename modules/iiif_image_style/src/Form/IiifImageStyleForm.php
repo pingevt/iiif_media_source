@@ -236,8 +236,8 @@ final class IiifImageStyleForm extends EntityForm {
 
     $values = $form_state->getValues();
 
-    ksm($values, $this->entity);
-
+    // ksm($values, $this->entity);
+    // todo: this should be moved to the entity set() method.
     foreach($values['style'] as $key => $value) {
       if (strpos($key, "region_") !== FALSE || strpos($key, "size_") !== FALSE || $key == "rotation") {
         $values['style'][$key] = empty($value) ? NULL : floatval($value);
@@ -245,7 +245,7 @@ final class IiifImageStyleForm extends EntityForm {
     }
 
     $this->entity->set('style', $values['style']);
-    ksm($this->entity);
+    // ksm($this->entity);
 
 
     $message_args = ['%label' => $this->entity->label()];

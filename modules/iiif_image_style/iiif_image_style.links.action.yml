@@ -3,3 +3,9 @@ entity.iiif_image_style.add_form:
   title: 'Add iiif image style'
   appears_on:
     - entity.iiif_image_style.collection
+
+entity.iiif_responsive_image_style.add_form:
+  route_name: 'entity.iiif_responsive_image_style.add_form'
+  title: 'Add iiif responsive image style'
+  appears_on:
+    - entity.iiif_responsive_image_style.collection

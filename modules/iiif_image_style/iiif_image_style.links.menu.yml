@@ -3,3 +3,9 @@ entity.iiif_image_style.overview:
   parent: system.admin_config_media
   description: 'List of iiif image styles to extend site functionality.'
   route_name: entity.iiif_image_style.collection
+
+entity.iiif_responsive_image_style.overview:
+  title: IIIF Responsive Image Styles
+  parent: system.admin_config_media
+  description: 'List of iiif responsive image styles to extend site functionality.'
+  route_name: entity.iiif_responsive_image_style.collection

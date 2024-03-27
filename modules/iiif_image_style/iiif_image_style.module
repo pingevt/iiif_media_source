@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\iiif_image_style\Entity\IiifImageStyle;
+
+/**
+ * Gets an array of image styles suitable for using as select list options.
+ *
+ * @param $include_empty
+ *   If TRUE a '- None -' option will be inserted in the options array.
+ *
+ * @return string[]
+ *   Array of image styles both key and value are set to style name.
+ */
+function iiif_image_style_options($include_empty = TRUE) {
+  $styles = IiifImageStyle::loadMultiple();
+  $options = [];
+  if ($include_empty && !empty($styles)) {
+    $options[''] = t('- None -');
+  }
+  foreach ($styles as $name => $style) {
+    $options[$name] = $style->label();
+  }
+
+  if (empty($options)) {
+    $options[''] = t('No defined styles');
+  }
+  return $options;
+}

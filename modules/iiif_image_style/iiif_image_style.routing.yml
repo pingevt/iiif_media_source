@@ -29,3 +29,35 @@ entity.iiif_image_style.delete_form:
     _title: 'Delete an iiif image style'
   requirements:
     _permission: 'administer iiif_image_style'
+
+entity.iiif_responsive_image_style.collection:
+  path: '/admin/config/media/iiif-responsive-image-style'
+  defaults:
+    _entity_list: 'iiif_responsive_image_style'
+    _title: 'IIIF Responsive Image Style configuration'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
+
+entity.iiif_responsive_image_style.add_form:
+  path: '/admin/config/media/iiif_responsive_image_style/add'
+  defaults:
+    _entity_form: 'iiif_responsive_image_style.add'
+    _title: 'Add an iiif responsive image style'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
+
+entity.iiif_responsive_image_style.edit_form:
+  path: '/admin/config/media/iiif-responsive-image-style/{iiif_responsive_image_style}'
+  defaults:
+    _entity_form: 'iiif_responsive_image_style.edit'
+    _title: 'Edit an iiif responsive image style'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
+
+entity.iiif_responsive_image_style.delete_form:
+  path: '/admin/config/media/iiif-responsive-image-style/{iiif_responsive_image_style}/delete'
+  defaults:
+    _entity_form: 'iiif_responsive_image_style.delete'
+    _title: 'Delete an iiif responsive image style'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
