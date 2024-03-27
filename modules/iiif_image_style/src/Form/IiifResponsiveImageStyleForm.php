@@ -56,6 +56,7 @@ final class IiifResponsiveImageStyleForm extends EntityForm {
 
     $form = parent::form($form, $form_state);
 
+    /** @var \Drupal\iiif_image_style\Entity\IiifResponsiveImageStyle $responsive_image_style */
     $responsive_image_style = $this->entity;
 
     $form['label'] = [
@@ -75,11 +76,12 @@ final class IiifResponsiveImageStyleForm extends EntityForm {
       '#disabled' => !$responsive_image_style->isNew(),
     ];
 
-    $form['status'] = [
-      '#type' => 'hidden',
-      '#title' => $this->t('Enabled'),
-      '#default_value' => TRUE,
-    ];
+    // todo: should this be editable? I don't think so.
+    // $form['status'] = [
+    //   '#type' => 'checkbox',
+    //   '#title' => $this->t('Enabled'),
+    //   '#default_value' => TRUE,
+    // ];
 
     $image_styles = iiif_image_style_options(TRUE);
 
@@ -221,6 +223,7 @@ final class IiifResponsiveImageStyleForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\iiif_image_style\IiifResponsiveImageStyleInterface $responsive_image_style */
     $responsive_image_style = $this->entity;
+
     // Remove all the existing mappings and replace with submitted values.
     $responsive_image_style->removeImageStyleMappings();
     if ($form_state->hasValue('keyed_styles')) {
