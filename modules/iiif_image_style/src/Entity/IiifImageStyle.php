@@ -28,7 +28,7 @@ use Drupal\iiif_image_style\IiifImageStyleInterface;
  *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
  *     },
  *   },
- *   config_prefix = "iiif_image_style",
+ *   config_prefix = "style",
  *   admin_permission = "administer iiif_image_style",
  *   links = {
  *     "collection" = "/admin/config/media/iiif-image-style",

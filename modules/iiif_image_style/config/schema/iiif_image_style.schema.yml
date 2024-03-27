@@ -1,4 +1,4 @@
-iiif_image_style.iiif_image_style.*:
+iiif_image_style.style.*:
   type: config_entity
   label: IIIF Image Style
   mapping:
@@ -12,26 +12,48 @@ iiif_image_style.iiif_image_style.*:
       type: string
     style:
       type: mapping
+      label: 'Style Definition'
       mapping:
         region:
           type: string
+          label: ''
         region_x:
-          type: number
+          type: float
+          nullable: true
+          label: ''
         region_y:
-          type: number
+          type: float
+          nullable: true
+          label: ''
         region_w:
-          type: number
+          type: float
+          nullable: true
+          label: ''
         region_h:
-          type: number
+          type: float
+          nullable: true
+          label: ''
         size:
           type: string
+          label: ''
         size_w:
-          type: number
+          type: float
+          nullable: true
+          label: ''
         size_h:
-          type: number
+          type: float
+          nullable: true
+          label: ''
+        size_n:
+          type: float
+          nullable: true
+          label: ''
         rotation:
-          type: integer
+          type: float
+          label: ''
         quality:
           type: string
+          label: ''
         format:
           type: string
+          label: ''

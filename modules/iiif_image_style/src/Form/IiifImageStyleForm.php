@@ -234,6 +234,20 @@ final class IiifImageStyleForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state): int {
     $result = parent::save($form, $form_state);
 
+    $values = $form_state->getValues();
+
+    ksm($values, $this->entity);
+
+    foreach($values['style'] as $key => $value) {
+      if (strpos($key, "region_") !== FALSE || strpos($key, "size_") !== FALSE || $key == "rotation") {
+        $values['style'][$key] = empty($value) ? NULL : floatval($value);
+      }
+    }
+
+    $this->entity->set('style', $values['style']);
+    ksm($this->entity);
+
+
     $message_args = ['%label' => $this->entity->label()];
     $this->messenger()->addStatus(
       match($result) {
