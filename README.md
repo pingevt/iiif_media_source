@@ -51,6 +51,7 @@ Field:
 - [x] Default Widget should just be plain text, i think.
 - [x] Default Formatter should just display ID.
   -  [ ] need to verify and have fallbacks for each section.
+  - [ ] Add in loading attribute (lazy eager) to basic formatter.
 - [x] Secondary (basic image) Widget includes image thumbnail.
 - [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
 - [ ] Do we need the base Iiif class?
@@ -59,7 +60,9 @@ Field:
 
 Image Styles / Responsive Images
 - [x] Image Style entity
-- [ ] Responsive IMage style entity
+- [x] Responsive Image style entity
+- [ ] IIIF Image style formatter
+- [ ] IIIF Responsive Image style formatter
 - [ ] Add in thirdparty setting for focal point
 - [ ] Add in thirdparty setting for custom crop
 

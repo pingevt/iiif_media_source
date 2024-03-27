@@ -3,30 +3,45 @@
 namespace Drupal\iiif_media_source\Iiif;
 
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  *
  */
 abstract class IiifBase {
 
+  /**
+   * An http client.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
   protected $server = "";
+
   protected $prefix = "";
+
   protected $iiifId = "";
-  protected $info = [];
+
+  protected $info;
 
   /**
    *
    */
-  public function __construct(string $server, string $prefix, string $id, string $info = "") {
+  public function __construct(string $server, string $prefix, string $id, \stdClass $info = new \stdClass()) {
+
+    $this->httpClient = \Drupal::httpClient();
+
     $this->server = $server;
     $this->prefix = $prefix;
     $this->iiifId = $id;
 
-    if (!empty($info)) {
-      $this->info = $info;
+    // If object is not empty.
+    if ($info == new \stdClass()) {
+      $this->retrieveManifest();
     }
     else {
-      $this->retrieveManifest();
+      $this->info = $info;
     }
 
   }
@@ -57,8 +72,9 @@ abstract class IiifBase {
    */
   protected function call(string $url, array $headers = []): ?Response {
     $response = NULL;
+
     try {
-      $response = \Drupal::httpClient()->get($url, $headers);
+      $response = $this->httpClient->get($url, $headers);
     }
     catch (\Exception $e) {
       // todo: log or something.

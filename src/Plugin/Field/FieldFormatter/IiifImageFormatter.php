@@ -67,7 +67,7 @@ class IiifImageFormatter extends StringFormatter {
       '#default_value' => $this->getSetting('region'),
       '#attributes' => [
         'data-states' => 'region',
-      ]
+      ],
     ];
     $form['region_x'] = [
       '#title' => $this->t('x'),
@@ -81,7 +81,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => 'pct:x,y,w,h'],
           ],
-        ]
+        ],
       ],
     ];
     $form['region_y'] = [
@@ -96,7 +96,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => 'pct:x,y,w,h'],
           ],
-        ]
+        ],
       ],
     ];
     $form['region_w'] = [
@@ -111,7 +111,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => 'pct:x,y,w,h'],
           ],
-        ]
+        ],
       ],
     ];
     $form['region_h'] = [
@@ -126,7 +126,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => 'pct:x,y,w,h'],
           ],
-        ]
+        ],
       ],
     ];
 
@@ -138,7 +138,7 @@ class IiifImageFormatter extends StringFormatter {
       '#default_value' => $this->getSetting('size'),
       '#attributes' => [
         'data-states' => 'size',
-      ]
+      ],
     ];
     $form['size_w'] = [
       '#title' => $this->t('w'),
@@ -160,7 +160,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
       ],
     ];
     $form['size_h'] = [
@@ -183,7 +183,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
       ],
     ];
     $form['size_n'] = [
@@ -201,7 +201,7 @@ class IiifImageFormatter extends StringFormatter {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
       ],
     ];
 
@@ -224,7 +224,7 @@ class IiifImageFormatter extends StringFormatter {
       '#default_value' => $this->getSetting('quality'),
       '#attributes' => [
         'data-states' => 'quality',
-      ]
+      ],
     ];
 
     // Format.
@@ -235,7 +235,7 @@ class IiifImageFormatter extends StringFormatter {
       '#default_value' => $this->getSetting('format'),
       '#attributes' => [
         'data-states' => 'format',
-      ]
+      ],
     ];
 
     return $form;
@@ -247,10 +247,11 @@ class IiifImageFormatter extends StringFormatter {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $this->processSettings();
+    list($region_actual, $size_actual) = IiifImage::processSettings($this->getSettings());
+    // IiifImage::processSettings($this->getSettings());
 
-    $summary[] = $this->t('Region: @region', ['@region' => $this->getSetting('region_actual')]);
-    $summary[] = $this->t('Size: @size', ['@size' => $this->getSetting('size_actual')]);
+    $summary[] = $this->t('Region: @region', ['@region' => $region_actual]);
+    $summary[] = $this->t('Size: @size', ['@size' => $size_actual]);
     $summary[] = $this->t('Rotation: @rotation', ['@rotation' => $this->getSetting('rotation')]);
     $summary[] = $this->t('Quality: @quality', ['@quality' => $this->getSetting('quality')]);
     $summary[] = $this->t('Format: @format', ['@format' => $this->getSetting('format')]);
@@ -265,37 +266,37 @@ class IiifImageFormatter extends StringFormatter {
 
     $build = [];
 
-    //   $field_def = $items->getFieldDefinition();
+    // $field_def = $items->getFieldDefinition();
     //   $field_name = $field_def->getName();
 
-    //   $parent_entity = $items->getParent()->getEntity();
+    // $parent_entity = $items->getParent()->getEntity();
     //   if (isset($parent_entity->overwritten_property_map)) {
     //     $overridden_data = json_decode($parent_entity->overwritten_property_map);
     //   }
 
-    //   $crop_type = \Drupal::config('focal_point.settings')->get('crop_type');
+    // $crop_type = \Drupal::config('focal_point.settings')->get('crop_type');
     //   $focal_point_manager = \Drupal::service('iiif_media_source.focal_point_manager');
 
-    //   // Get individual fields.
+    // // Get individual fields.
     //   foreach ($items as $delta => $item) {
     //     $view_value = $this->viewValue($item);
 
-    //     $crop = $focal_point_manager->getCropIiifEntity($item, $crop_type, $item->getEntity()->id());
+    // $crop = $focal_point_manager->getCropIiifEntity($item, $crop_type, $item->getEntity()->id());
 
-    //     // Check for contextual Override.
+    // // Check for contextual Override.
     //     $parent_entity = $item->getParent()->getParent()->getEntity();
 
-    //     if (isset($overridden_data) && isset($overridden_data->{$field_name}[$delta])) {
+    // if (isset($overridden_data) && isset($overridden_data->{$field_name}[$delta])) {
     //       if (isset($overridden_data->{$field_name}[$delta]->focal_point)) {
     //         [$x, $y] = explode(',', $overridden_data->{$field_name}[$delta]->focal_point);
     //         $full_dimens = $item->_image->getDimensions();
     //         $new_crop = $focal_point_manager->relativeToAbsolute($x, $y, $full_dimens['w'], $full_dimens['h']);
 
-    //         $crop->setPosition($new_crop['x'], $new_crop['y']);
+    // $crop->setPosition($new_crop['x'], $new_crop['y']);
     //       }
     //     }
 
-    //     // Set render array.
+    // // Set render array.
     //     $view_value = [
     //       '#theme' => 'iiif_image',
     //       '#image' => $item->_image,
@@ -305,19 +306,19 @@ class IiifImageFormatter extends StringFormatter {
     //       '#dest_height' => $this->getSetting('height'),
     //     ];
 
-    //     $build[$delta] = $view_value;
+    // $build[$delta] = $view_value;
     //   }
 
     // Process settings.
-    $this->processSettings();
+    list($region_actual, $size_actual) = IiifImage::processSettings($this->getSettings());
 
     foreach ($items as $delta => $item) {
 
       $view_value = [
         '#theme' => 'iiif_image',
         '#image' => $item->getImg($item->getValue()),
-        '#region' => $this->getSetting('region_actual'),
-        '#size' => $this->getSetting('size_actual'),
+        '#region' => $region_actual,
+        '#size' => $size_actual,
         '#rotation' => $this->getSetting('rotation'),
         '#quality' => $this->getSetting('quality'),
         '#format' => $this->getSetting('format'),
@@ -326,15 +327,6 @@ class IiifImageFormatter extends StringFormatter {
     }
 
     return $build;
-  }
-
-  protected function processSettings() {
-
-    $region_actual = str_replace(['w', 'h', 'n'], [$this->getSetting('region_w'), $this->getSetting('region_h'), $this->getSetting('region_n')], $this->getSetting('region'));
-    $size_actual = str_replace(['w', 'h'], [$this->getSetting('size_w'), $this->getSetting('size_h')], $this->getSetting('size'));
-
-    $this->setSetting('region_actual', $region_actual);
-    $this->setSetting('size_actual', $size_actual);
   }
 
 }

@@ -166,6 +166,16 @@ class IiifImage extends IiifBase {
     return $options;
   }
 
+  public static function processSettings($settings) {
+    $region_actual = str_replace(['w', 'h'], [$settings['region_w'], $settings['region_h']], $settings['region']);
+    $size_actual = str_replace(['w', 'h', 'n'], [$settings['size_w'], $settings['size_h'], $settings['size_n'] ?? ""], $settings['size']);
+
+    return [
+      $region_actual,
+      $size_actual,
+    ];
+  }
+
   protected $thumbWidth = 200;
 
   protected $thumbHeight = 200;

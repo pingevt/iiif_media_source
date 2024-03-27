@@ -119,7 +119,7 @@ class IiifImageMediaSource extends MediaSourceBase {
     // $json_arr = json_decode($remote_field->value);
     // ksm($attribute_name, $remote_field, $media);
     // If the source field is not required, it may be empty.
-    if (!$remote_field) {
+    if ($remote_field === FAlSE) {
       return parent::getMetadata($media, $attribute_name);
     }
 
