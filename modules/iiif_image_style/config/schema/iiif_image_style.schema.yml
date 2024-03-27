@@ -84,8 +84,7 @@ iiif_image_style.responsive_image.*:
             type: string
             label: 'Responsive image mapping type'
           image_mapping:
-            type: string
-            label: 'Image style'
+            type: iiif_responsive_image.image_mapping_type.[%parent.image_mapping_type]
           breakpoint_id:
             type: string
             label: 'Breakpoint ID'
@@ -98,3 +97,22 @@ iiif_image_style.responsive_image.*:
     fallback_image_style:
       type: string
       label: 'Fallback image style'
+
+iiif_responsive_image.image_mapping_type.image_style:
+  type: string
+  label: 'Image style'
+
+iiif_responsive_image.image_mapping_type.sizes:
+  type: mapping
+  mapping:
+    # The value for the sizes attribute as described in the spec:
+    # http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-sizes
+    sizes:
+      type: string
+      label: 'Sizes attribute'
+    sizes_image_styles:
+      type: sequence
+      label: 'Image styles to be used when using the ''sizes'' attribute'
+      sequence:
+        type: string
+        label: 'Image style'

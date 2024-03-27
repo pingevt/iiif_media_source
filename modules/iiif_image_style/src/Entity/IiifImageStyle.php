@@ -71,14 +71,21 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
    * {@inheritdoc}
    */
   public function id() {
-    return $this->name?? NULL;
+    return $this->name ?? NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getStyle(): ?array {
-    return $this->style?? [];
+    return $this->style ?? [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormat(): string {
+    return $this->style['format'] ?? "";
   }
 
 }

@@ -2,9 +2,14 @@
 
 /**
  * @file
+ * Code here is based heavily on core image and responsive_image modules.
  */
 
+use Drupal\breakpoint\BreakpointInterface;
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Template\Attribute;
 use Drupal\iiif_image_style\Entity\IiifImageStyle;
+use Drupal\iiif_image_style\Entity\IiifResponsiveImageStyle;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 
 /**
@@ -16,6 +21,13 @@ function iiif_image_style_theme($existing, $type, $theme, $path) {
       'variables' => [
         'image' => '',
         'iiif_image_style' => '',
+        'attributes' => [],
+      ],
+    ],
+    'iiif_responsive_image_style' => [
+      'variables' => [
+        'image' => '',
+        'iiif_responsive_image_style' => '',
         'attributes' => [],
       ],
     ],
@@ -60,6 +72,258 @@ function template_preprocess_iiif_image_style(&$variables) {
 }
 
 /**
+ * Prepares variables for iiif_responsive_image_style template.
+ *
+ * Default template: iiif_responsive_image_style.
+ */
+function template_preprocess_iiif_responsive_image_style(&$variables) {
+
+  $image = $variables['image'];
+
+  // Make sure that width and height are proper values
+  // If they exists we'll output them
+  // @see http://www.w3.org/community/respimg/2012/06/18/florians-compromise/
+  // if (isset($variables['width']) && empty($variables['width'])) {
+  //   unset($variables['width']);
+  //   unset($variables['height']);
+  // }
+  // elseif (isset($variables['height']) && empty($variables['height'])) {
+  //   unset($variables['width']);
+  //   unset($variables['height']);
+  // }
+
+  $responsive_image_style = IiifResponsiveImageStyle::load($variables['iiif_responsive_image_style']);
+  // If a responsive image style is not selected, log the error and stop
+  // execution.
+  if (!$responsive_image_style) {
+    $variables['img_element'] = [];
+    \Drupal::logger('iiif_image_style')->log(RfcLogLevel::ERROR, 'Failed to load iiif responsive image style: “@style“ while displaying responsive image.', ['@style' => $variables['iiif_responsive_image_style']]);
+    return;
+  }
+  // Retrieve all breakpoints and multipliers and reverse order of breakpoints.
+  // By default, breakpoints are ordered from smallest weight to largest:
+  // the smallest weight is expected to have the smallest breakpoint width,
+  // while the largest weight is expected to have the largest breakpoint
+  // width. For responsive images, we need largest breakpoint widths first, so
+  // we need to reverse the order of these breakpoints.
+  $breakpoints = array_reverse(\Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
+  foreach ($responsive_image_style->getKeyedImageStyleMappings() as $breakpoint_id => $multipliers) {
+    if (isset($breakpoints[$breakpoint_id])) {
+      $variables['sources'][] = _iiif_responsive_image_build_source_attributes($variables, $breakpoints[$breakpoint_id], $multipliers);
+    }
+  }
+
+  if (isset($variables['sources']) && count($variables['sources']) === 1 && !isset($variables['sources'][0]['media'])) {
+    // There is only one source tag with an empty media attribute. This means
+    // we can output an image tag with the srcset attribute instead of a
+    // picture tag.
+    $variables['output_image_tag'] = TRUE;
+    foreach ($variables['sources'][0] as $attribute => $value) {
+      if ($attribute != 'type') {
+        $variables['attributes'][$attribute] = $value;
+      }
+    }
+    $variables['img_element'] = [
+      '#theme' => 'image',
+      // '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
+      '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image),
+      '#attributes' => [],
+    ];
+  }
+  else {
+    $variables['output_image_tag'] = FALSE;
+    // Prepare the fallback image. We use the src attribute, which might cause
+    // double downloads in browsers that don't support the picture tag.
+    $variables['img_element'] = [
+      '#theme' => 'image',
+      // '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
+      '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image),
+      '#attributes' => [],
+    ];
+  }
+
+  // Get width and height from fallback responsive image style and transfer them
+  // to img tag so browser can do aspect ratio calculation and prevent
+  // recalculation of layout on image load.
+  $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
+    'width' => $variables['width'],
+    'height' => $variables['height'],
+  ],
+    $variables['uri']
+  );
+  $variables['img_element']['#width'] = $dimensions['width'];
+  $variables['img_element']['#height'] = $dimensions['height'];
+
+  if (isset($variables['attributes'])) {
+    if (isset($variables['attributes']['alt'])) {
+      $variables['img_element']['#alt'] = $variables['attributes']['alt'];
+      unset($variables['attributes']['alt']);
+    }
+    if (isset($variables['attributes']['title'])) {
+      $variables['img_element']['#title'] = $variables['attributes']['title'];
+      unset($variables['attributes']['title']);
+    }
+    $variables['img_element']['#attributes'] = $variables['attributes'];
+  }
+}
+
+function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $image) {
+
+  $iiif_image_style = IiifImageStyle::load($iiif_image_style_id);
+
+  $style_settings = $iiif_image_style->getStyle();
+  list($style_settings['region_actual'], $style_settings['size_actual']) = IiifImage::processSettings($style_settings);
+
+  $img_url = $image->getBuiltImageUrl(
+    $style_settings['region_actual'],
+    $style_settings['size_actual'],
+    $style_settings['rotation'],
+    $style_settings['quality'],
+    $style_settings['format']
+  );
+
+  return $img_url;
+}
+
+/**
+ *
+ * @param array $variables
+ *   An array with the following keys:
+ *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
+ *       ID.
+ *     - width: The width of the image (if known).
+ *     - height: The height of the image (if known).
+ *     - uri: The URI of the image file.
+ * @param \Drupal\breakpoint\BreakpointInterface $breakpoint
+ *   The breakpoint for this source tag.
+ * @param array $multipliers
+ *   An array with multipliers as keys and image style mappings as values.
+ *
+ * @return \Drupal\Core\Template\Attribute
+ *   An object of attributes for the source tag.
+ */
+function _iiif_responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers) {
+
+  $image = $variables['image'];
+
+  // $width = $image->getWidth();
+  // $height = $image->getHeight();
+
+  // $extension = $image->getDefaultExtension();
+  $sizes = [];
+  $srcset = [];
+  $derivative_mime_types = [];
+
+  // Traverse the multipliers in reverse so the largest image is processed last.
+  // The last image's dimensions are used for img.srcset height and width.
+  foreach (array_reverse($multipliers) as $multiplier => $image_style_mapping) {
+    switch ($image_style_mapping['image_mapping_type']) {
+      // Create a <source> tag with the 'sizes' attribute.
+      case 'sizes':
+        // Loop through the image styles for this breakpoint and multiplier.
+        foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
+          $iiif_image_style = IiifImageStyle::load($image_style_name);
+          $style_settings = $iiif_image_style->getStyle();
+          list($style_settings['region_actual'], $style_settings['size_actual']) = IiifImage::processSettings($style_settings);
+
+          // Get the dimensions.
+          $dimensions = $image->transformDimensions($style_settings);
+
+          // Get MIME type.
+          $ext = $iiif_image_style->getFormat();
+          $derivative_mime_type = iiif_image_style_mime_type_guesser($ext);
+          $derivative_mime_types[] = $derivative_mime_type;
+
+          // Add the image source with its width descriptor. When a width
+          // descriptor is used in a srcset, we can't add a multiplier to
+          // it. Because of this, the image styles for all multipliers of
+          // this breakpoint should be merged into one srcset and the sizes
+          // attribute should be merged as well.
+          if (is_null($dimensions['width'])) {
+            throw new \LogicException("Could not determine image width for '{$variables['uri']}' using image style with ID: $image_style_name. This image style can not be used for a responsive image style mapping using the 'sizes' attribute.");
+          }
+          // Use the image width as key so we can sort the array later on.
+          // Images within a srcset should be sorted from small to large, since
+          // the first matching source will be used.
+
+          $img_url = $image->getBuiltImageUrl(
+            $style_settings['region_actual'],
+            $style_settings['size_actual'],
+            $style_settings['rotation'],
+            $style_settings['quality'],
+            $style_settings['format']
+          );
+
+          $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = $img_url . ' ' . $multiplier;
+          $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
+        }
+        break;
+
+      case 'image_style':
+        $iiif_image_style = IiifImageStyle::load($image_style_mapping['image_mapping']);
+
+        // Get MIME type.
+        $ext = $iiif_image_style->getFormat();
+        $derivative_mime_type = iiif_image_style_mime_type_guesser($ext);
+        $derivative_mime_types[] = $derivative_mime_type;
+
+        // Add the image source with its multiplier. Use the multiplier as key
+        // so we can sort the array later on. Multipliers within a srcset should
+        // be sorted from small to large, since the first matching source will
+        // be used. We multiply it by 100 so multipliers with up to two decimals
+        // can be used.
+        $style_settings = $iiif_image_style->getStyle();
+        list($style_settings['region_actual'], $style_settings['size_actual']) = IiifImage::processSettings($style_settings);
+
+        $img_url = $image->getBuiltImageUrl(
+          $style_settings['region_actual'],
+          $style_settings['size_actual'],
+          $style_settings['rotation'],
+          $style_settings['quality'],
+          $style_settings['format']
+        );
+
+        $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = $img_url . ' ' . $multiplier;
+        $dimensions = $image->transformDimensions($style_settings);
+
+        break;
+    }
+  }
+
+  // Sort the srcset from small to large image width or multiplier.
+  ksort($srcset);
+  $source_attributes = new Attribute([
+    'srcset' => implode(', ', array_unique($srcset)),
+  ]);
+  $media_query = trim($breakpoint->getMediaQuery());
+  if (!empty($media_query)) {
+    $source_attributes->setAttribute('media', $media_query);
+  }
+  if (count(array_unique($derivative_mime_types)) == 1) {
+    $source_attributes->setAttribute('type', $derivative_mime_types[0]);
+  }
+  if (!empty($sizes)) {
+    $source_attributes->setAttribute('sizes', implode(',', array_unique($sizes)));
+  }
+  // The images used in a particular srcset attribute should all have the same
+  // aspect ratio. The sizes attribute paired with the srcset attribute provides
+  // information on how much space these images take up within the viewport at
+  // different breakpoints, but the aspect ratios should remain the same across
+  // those breakpoints. Multiple source elements can be used for art direction,
+  // where aspect ratios should change at particular breakpoints. Each source
+  // element can still have srcset and sizes attributes to handle variations for
+  // that particular aspect ratio. Because the same aspect ratio is assumed for
+  // all images in a srcset, dimensions are always added to the source
+  // attribute. Within srcset, images are sorted from largest to smallest in
+  // terms of the real dimension of the image.
+  if (!empty($dimensions['width']) && !empty($dimensions['height'])) {
+    $source_attributes->setAttribute('width', $dimensions['width']);
+    $source_attributes->setAttribute('height', $dimensions['height']);
+  }
+  return $source_attributes;
+}
+
+/**
  * Gets an array of image styles suitable for using as select list options.
  *
  * @param $include_empty
@@ -82,4 +346,38 @@ function iiif_image_style_options($include_empty = TRUE) {
     $options[''] = t('No defined styles');
   }
   return $options;
+}
+
+/**
+ * Gets an array of image styles suitable for using as select list options.
+ *
+ * @param $include_empty
+ *   If TRUE a ' - None - ' option will be inserted in the options array.
+ *
+ * @return string[]
+ *   Array of image styles both key and value are set to style name.
+ */
+function iiif_responsive_image_style_options($include_empty = TRUE) {
+  $styles = IiifResponsiveImageStyle::loadMultiple();
+  $options = [];
+  if ($include_empty && !empty($styles)) {
+    $options[''] = t(' - None - ');
+  }
+  foreach ($styles as $name => $style) {
+    $options[$name] = $style->label();
+  }
+
+  if (empty($options)) {
+    $options[''] = t('No defined styles');
+  }
+  return $options;
+}
+
+/**
+ * Guess the mimetype.
+ */
+function iiif_image_style_mime_type_guesser($ext) {
+
+  $fake_path = "example." . $ext;
+  return \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($fake_path);
 }

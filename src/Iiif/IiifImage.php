@@ -42,7 +42,7 @@ class IiifImage extends IiifBase {
 
   // public static $sizeOptions = [
   //   'max' => 'max',
-  //   '!max' => '!max',
+  //   '^max' => '^max',
   //   'w,' => 'w,',
   //   '^w,' => '^w,',
   //   ',h' => ',h',
@@ -73,7 +73,7 @@ class IiifImage extends IiifBase {
       case "3":
         $options = [
           'max' => 'max',
-          '!max' => '!max',
+          '^max' => '^max',
           'w,' => 'w,',
           '^w,' => '^w,',
           ',h' => ',h',
@@ -189,14 +189,14 @@ class IiifImage extends IiifBase {
   /**
    * }.
    */
-  public function getWidth():?int {
+  public function getWidth(): ?int {
     return $this->info->width ?? NULL;
   }
 
   /**
    *
    */
-  public function getHeight():?int {
+  public function getHeight(): ?int {
     return $this->info->height ?? NULL;
   }
 
@@ -285,9 +285,113 @@ class IiifImage extends IiifBase {
   /**
    *
    */
-  protected function getDefaultExtension():string {
+  public function getDefaultExtension(): string {
     // Asummption here that the first element is the default Extension.
     return current($this->info->profile[1]->formats) ?? "jpg";
+  }
+
+  /**
+   *
+   */
+  public function transformDimensions(array $settings): array {
+    $dimensions = [
+      'width' => $this->getWidth(),
+      'height' => $this->getHeight(),
+    ];
+
+    // Process the region dimension.
+    switch ($settings['region']) {
+      // case 'full':
+      //   break;
+
+      case 'square':
+        /**
+         * Defined in IIIF as:
+         * The region is defined as an area where the width
+         * and height are both equal to the length of the shorter dimension of
+         * the complete image. The region may be positioned anywhere in the
+         * longer dimension of the image content at the server’s discretion,
+         * and centered is often a reasonable default.
+         */
+        if ($dimensions['width'] > $dimensions['height']) {
+          $dimensions['width'] = $dimensions['height'];
+        }
+        else {
+          $dimensions['height'] = $dimensions['width'];
+        }
+        break;
+
+      case 'x,y,w,h':
+        $dimensions['width'] = $settings['region_w'];
+        $dimensions['height'] = $settings['region_h'];
+        break;
+
+      case 'pct:x,y,w,h':
+        // Percentages are 0-100, and can be floats.
+        $dimensions['width'] *= $settings['region_w'] / 100;
+        $dimensions['height'] *= $settings['region_h'] / 100;
+
+        break;
+    }
+
+    switch ($settings['size']) {
+      case 'max':
+        // nothing.
+        break;
+
+      case '^max':
+        // Upscale as permitted by maxWidth, maxHeight, maxArea.
+
+
+        break;
+
+      case 'w,':
+
+        break;
+
+      case '^w,':
+
+        break;
+
+      case ',h':
+
+        break;
+
+      case '^,h':
+
+        break;
+
+      case 'pct:n':
+
+        break;
+
+      case '^pct:n':
+
+        break;
+
+      case 'w,h':
+
+        break;
+
+      case '^w,h':
+
+        break;
+
+      case '!w,h':
+
+        break;
+
+      case '^!w,h':
+
+        break;
+
+    }
+
+    // Resize for rotation. sines an cosines!
+
+    // Validate maxWidth/maxHeight/MaxArea.
+
+    return $dimensions;
   }
 
 }

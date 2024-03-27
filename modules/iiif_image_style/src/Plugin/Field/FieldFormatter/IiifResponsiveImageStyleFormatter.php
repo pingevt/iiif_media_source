@@ -10,21 +10,21 @@ use Drupal\Core\Form\FormStateInterface;
  * IIIF Image formatter.
  *
  * @FieldFormatter(
- *   id = "iiif_image_style_formatter",
- *   label = @Translation("IIIF Image Style Formatter"),
+ *   id = "iiif_responsive_image_style_formatter",
+ *   label = @Translation("IIIF Responsive Image Style Formatter"),
  *   field_types = {
  *     "iiif_id"
  *   }
  * )
  */
-class IiifImageStyleFormatter extends StringFormatter {
+class IiifResponsiveImageStyleFormatter extends StringFormatter {
 
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
-      'image_style' => '',
+      'responsive_image_style' => '',
       'image_loading' => [
         'attribute' => 'lazy',
       ],
@@ -39,17 +39,17 @@ class IiifImageStyleFormatter extends StringFormatter {
 
     // $field_img_api_version = $this->fieldDefinition->getSettings()['img_api_version'];
 
-    $image_styles = iiif_image_style_options(FALSE);
+    $responsive_image_styles = iiif_responsive_image_style_options(FALSE);
     // $description_link = Link::fromTextAndUrl(
     //   $this->t('Configure Image Styles'),
-    //   Url::fromRoute('entity.image_style.collection')
+    //   Url::fromRoute('entity.responsive_image_style.collection')
     // );
-    $element['image_style'] = [
+    $element['responsive_image_style'] = [
       '#title' => $this->t('Image style'),
       '#type' => 'select',
-      '#default_value' => $this->getSetting('image_style'),
+      '#default_value' => $this->getSetting('responsive_image_style'),
       '#empty_option' => $this->t('None (original image)'),
-      '#options' => $image_styles,
+      '#options' => $responsive_image_styles,
       // '#description' => $description_link->toRenderable() + [
       //   '#access' => $this->currentUser->hasPermission('administer image styles'),
       // ],
@@ -88,13 +88,13 @@ class IiifImageStyleFormatter extends StringFormatter {
   public function settingsSummary() {
     // $summary = parent::settingsSummary();
 
-    $image_styles = iiif_image_style_options(FALSE);
+    $responsive_image_styles = iiif_responsive_image_style_options(FALSE);
     // Unset possible 'No defined styles' option.
-    unset($image_styles['']);
+    unset($responsive_image_styles['']);
 
-    $image_style_setting = $this->getSetting('image_style');
-    if (isset($image_styles[$image_style_setting])) {
-      $summary[] = $this->t('Image style: @style', ['@style' => $image_styles[$image_style_setting]]);
+    $responsive_image_style_setting = $this->getSetting('responsive_image_style');
+    if (isset($responsive_image_styles[$responsive_image_style_setting])) {
+      $summary[] = $this->t('Image style: @style', ['@style' => $responsive_image_styles[$responsive_image_style_setting]]);
     }
     else {
       $summary[] = $this->t('Original image');
@@ -130,9 +130,9 @@ class IiifImageStyleFormatter extends StringFormatter {
     foreach ($items as $delta => $item) {
 
       $view_value = [
-        '#theme' => 'iiif_image_style',
+        '#theme' => 'iiif_responsive_image_style',
         '#image' => $item->getImg($item->getValue()),
-        '#iiif_image_style' => $this->getSetting('image_style'),
+        '#iiif_responsive_image_style' => $this->getSetting('responsive_image_style'),
         '#attributes' => [
           'loading' => $image_loading['attribute'],
         ],
