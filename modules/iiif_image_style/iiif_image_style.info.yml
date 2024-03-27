@@ -1,0 +1,8 @@
+name: 'Iiif image style'
+type: module
+description: '@todo Add description.'
+package: '@todo Add package'
+core_version_requirement: ^10
+
+dependencies:
+  - iiif_media_source:iiif_media_source

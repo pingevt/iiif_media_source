@@ -1,0 +1,37 @@
+iiif_image_style.iiif_image_style.*:
+  type: config_entity
+  label: IIIF Image Style
+  mapping:
+    name:
+      type: string
+      label: Name
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+    style:
+      type: mapping
+      mapping:
+        region:
+          type: string
+        region_x:
+          type: number
+        region_y:
+          type: number
+        region_w:
+          type: number
+        region_h:
+          type: number
+        size:
+          type: string
+        size_w:
+          type: number
+        size_h:
+          type: number
+        rotation:
+          type: integer
+        quality:
+          type: string
+        format:
+          type: string

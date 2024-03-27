@@ -1,0 +1,31 @@
+entity.iiif_image_style.collection:
+  path: '/admin/config/media/iiif-image-style'
+  defaults:
+    _entity_list: 'iiif_image_style'
+    _title: 'IIIF Image Style configuration'
+  requirements:
+    _permission: 'administer iiif_image_style'
+
+entity.iiif_image_style.add_form:
+  path: '/admin/config/media/iiif_image_style/add'
+  defaults:
+    _entity_form: 'iiif_image_style.add'
+    _title: 'Add an iiif image style'
+  requirements:
+    _permission: 'administer iiif_image_style'
+
+entity.iiif_image_style.edit_form:
+  path: '/admin/config/media/iiif-image-style/{iiif_image_style}'
+  defaults:
+    _entity_form: 'iiif_image_style.edit'
+    _title: 'Edit an iiif image style'
+  requirements:
+    _permission: 'administer iiif_image_style'
+
+entity.iiif_image_style.delete_form:
+  path: '/admin/config/media/iiif-image-style/{iiif_image_style}/delete'
+  defaults:
+    _entity_form: 'iiif_image_style.delete'
+    _title: 'Delete an iiif image style'
+  requirements:
+    _permission: 'administer iiif_image_style'
