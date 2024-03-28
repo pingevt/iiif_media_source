@@ -105,6 +105,59 @@ class IiifImageTests extends UnitTestCase {
 
     $this->assertEquals($d3['width'], 2437);
     $this->assertEquals($d3['height'], 2400);
+
+    // Full 100,.
+    $d3 = $testImg1->transformDimensions([
+      'region' => "full",
+      'size' => "w,",
+      'size_w' => 100,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ]);
+
+    $this->assertEquals($d3['width'], 100);
+    $this->assertEquals($d3['height'], 160);
+
+    // Full ,200.
+    $d3 = $testImg1->transformDimensions([
+      'region' => "full",
+      'size' => ",h",
+      'size_h' => 200,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ]);
+
+    $this->assertEquals($d3['width'], 126);
+    $this->assertEquals($d3['height'], 200);
+
+    // Full pct:2.5.
+    $d3 = $testImg1->transformDimensions([
+      'region' => "full",
+      'size' => "pct:n",
+      'size_n' => 2.5,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ]);
+
+    $this->assertEquals($d3['width'], 80);
+    $this->assertEquals($d3['height'], 128);
+
+    // Full 100,400.
+    $d3 = $testImg1->transformDimensions([
+      'region' => "full",
+      'size' => "w,h",
+      'size_w' => 100,
+      'size_h' => 400,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ]);
+
+    $this->assertEquals($d3['width'], 100);
+    $this->assertEquals($d3['height'], 400);
   }
 
   /**

@@ -341,47 +341,63 @@ class IiifImage extends IiifBase {
 
       case '^max':
         // Upscale as permitted by maxWidth, maxHeight, maxArea.
-
-
+        // todo
         break;
 
       case 'w,':
+        $dimensions['width'] = $settings['size_w'];
+        $dimensions['height'] = (int) ceil($settings['size_w'] * $this->getHeight() / $this->getWidth());
 
         break;
 
       case '^w,':
+        // todo
 
         break;
 
       case ',h':
 
+        $dimensions['width'] = (int) ceil($settings['size_h'] * $this->getWidth() / $this->getHeight());
+        $dimensions['height'] = $settings['size_h'];
+
         break;
 
       case '^,h':
+        // todo
 
         break;
 
       case 'pct:n':
 
+        $dimensions['width'] = (int) round($dimensions['width'] * $settings['size_n'] / 100);
+        $dimensions['height'] = (int) round($dimensions['height'] * $settings['size_n'] / 100);
+
         break;
 
       case '^pct:n':
+        // todo
 
         break;
 
       case 'w,h':
 
+        $dimensions['width'] = (int) round($settings['size_w']);
+        $dimensions['height'] = (int) round($settings['size_h']);
+
         break;
 
       case '^w,h':
+        // todo
 
         break;
 
       case '!w,h':
+        // todo
 
         break;
 
       case '^!w,h':
+        // todo
 
         break;
 
