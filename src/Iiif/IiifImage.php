@@ -388,6 +388,37 @@ class IiifImage extends IiifBase {
     }
 
     // Resize for rotation. sines an cosines!
+    if ($settings['rotation'] === 90 || $settings['rotation'] === 270) {
+      $w = $dimensions['width'];
+      $h = $dimensions['height'];
+      $dimensions['width'] = $h;
+      $dimensions['height'] = $w;
+    }
+    elseif ($settings['rotation'] !== 0) {
+
+      $settings['rotation'] = ($settings['rotation'] % 360);
+
+      if (($settings['rotation'] > 0 && $settings['rotation'] < 90) || ($settings['rotation'] > 180 && $settings['rotation'] < 270)) {
+        $w1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
+        $w2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
+
+        $h1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
+        $h2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
+
+        $dimensions['width'] = (int) ceil($w1 + $w2);
+        $dimensions['height'] = (int) ceil($h1 + $h2);
+      }
+      else {
+        $h1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
+        $h2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
+
+        $w1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
+        $w2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
+
+        $dimensions['width'] = (int) ceil($w1 + $w2);
+        $dimensions['height'] = (int) ceil($h1 + $h2);
+      }
+    }
 
     // Validate maxWidth/maxHeight/MaxArea.
 
