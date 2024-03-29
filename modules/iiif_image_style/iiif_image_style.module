@@ -145,12 +145,17 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
   // Get width and height from fallback responsive image style and transfer them
   // to img tag so browser can do aspect ratio calculation and prevent
   // recalculation of layout on image load.
-  $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
-    'width' => $variables['width'],
-    'height' => $variables['height'],
-  ],
-    $variables['uri']
-  );
+  // $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(),
+  // [
+  //   'width' => $variables['width'],
+  //   'height' => $variables['height'],
+  // ],
+  //   $variables['uri']
+  // );
+  $iiif_image_style = IiifImageStyle::load($responsive_image_style->getFallbackImageStyle());
+  $style_settings = $iiif_image_style->getStyle();
+  $dimensions = $image->transformDimensions($style_settings);
+
   $variables['img_element']['#width'] = $dimensions['width'];
   $variables['img_element']['#height'] = $dimensions['height'];
 

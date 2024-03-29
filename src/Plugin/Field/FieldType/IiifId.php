@@ -125,4 +125,37 @@ class IiifId extends StringItem {
     return new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);
   }
 
+
+
+  public function __get($name) {
+    // // echo "Getting '$name'\n";
+
+    // if (array_key_exists($name, $this->data)) {
+    //     return $this->data[$name];
+    // }
+
+    // $trace = debug_backtrace();
+    // trigger_error(
+    //   'Undefined property via __get(): ' . $name .
+    //   ' in ' . $trace[0]['file'] .
+    //   ' on line ' . $trace[0]['line'],
+    //   E_USER_NOTICE);
+    // return null;
+
+    if ($name == "width") {
+
+      $img = $this->getImg($this->getValue());
+      // ksm("Width", $img->getWidth());
+      return $img->getWidth();
+    }
+    if ($name == "height") {
+      $img = $this->getImg($this->getValue());
+      // ksm("height", $img->getHeight());
+
+      return $img->getHeight();
+    }
+
+    return parent::__get($name);
+  }
+
 }

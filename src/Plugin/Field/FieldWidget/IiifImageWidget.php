@@ -71,32 +71,19 @@ class IiifImageWidget extends WidgetBase implements ContainerFactoryPluginInterf
     ];
 
     if ($items[$delta]->value) {
-      $element['container'] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'style' => 'display: flex;',
-        ],
-        '#tree' => FALSE,
-      ];
-
-ksm($items);
-      // $url = $items[$delta]->_image->getFullUrl();
       $img = $items[$delta]->getImg($items[$delta]->getValue());
       $url = $img->getThumbnailUrl();
-      ksm($url);
-      $element['container']['thumbnail'] = [
+
+      $element['thumbnail'] = [
         '#theme' => 'image',
         '#uri' => $url,
         '#weight' => -1,
         '#attributes' => [
           'style' => "margin: 0 1rem 3rem 0",
         ],
+        '#wieght' => $element['value']['#weight'] - 0.1,
       ];
 
-      $element['container']['value'] = $element['value'];
-      $element['container']['info'] = $element['info'];
-      unset($element['value']);
-      unset($element['info']);
     }
 
     return $element;
