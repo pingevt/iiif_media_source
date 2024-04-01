@@ -1,0 +1,8 @@
+services:
+  iiif_image_focalpoint.focal_point_manager:
+    class: Drupal\iiif_image_focalpoint\IiifFocalPointManager
+    arguments: ['@entity_type.manager']
+  iiif_image_focalpoint.iiif_image_style_settings_alter:
+    class: '\Drupal\iiif_image_focalpoint\EventSubscriber\IiifImageStyleSubscriber'
+    tags:
+      - { name: 'event_subscriber' }

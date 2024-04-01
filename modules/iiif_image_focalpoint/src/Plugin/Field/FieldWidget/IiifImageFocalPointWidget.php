@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\iiif_media_source_focalpoint\Plugin\Field\FieldWidget;
+namespace Drupal\iiif_image_focalpoint\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;

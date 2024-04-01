@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\iiif_media_source_focalpoint;
+namespace Drupal\iiif_image_focalpoint;
 
 use Drupal\crop\Entity\Crop;
 use Drupal\focal_point\FocalPointManager;

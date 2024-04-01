@@ -1,11 +1,12 @@
-name: IIIF Media Source - Focal Point
+name: IIIF Image - Focal Point
 type: module
-description: 'Creating a Media Source for IIIF data'
+description: 'Creating a Image for IIIF data'
 core_version_requirement: ^10
 
 package: Media
 
 dependencies:
   - focal_point:focal_point
+  - iiif_media_source:iiif_image_style
 
 configure: null
