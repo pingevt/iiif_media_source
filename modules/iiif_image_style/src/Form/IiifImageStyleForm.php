@@ -44,22 +44,22 @@ final class IiifImageStyleForm extends EntityForm {
     ];
 
     // Grab Style definition.
-    $style = $this->entity->getStyle();
+    $params = $this->entity->getParams();
 
     // Region.
-    $form['style']['region'] = [
+    $form['params']['region'] = [
       '#type' => 'select',
       '#title' => $this->t('Region'),
       '#options' => IiifImage::getRegionOptions($field_img_api_version),
-      '#default_value' => $style['region'] ?? "full",
+      '#default_value' => $params['region'] ?? "full",
       '#attributes' => [
         'data-states' => 'region',
       ]
     ];
-    $form['style']['region_x'] = [
+    $form['params']['region_x'] = [
       '#title' => $this->t('x'),
       '#type' => 'number',
-      '#default_value' => $style['region_x'] ?? NULL,
+      '#default_value' => $params['region_x'] ?? NULL,
       '#description' => $this->t(''),
       '#states' => [
         'visible' => [
@@ -71,10 +71,10 @@ final class IiifImageStyleForm extends EntityForm {
         ]
       ],
     ];
-    $form['style']['region_y'] = [
+    $form['params']['region_y'] = [
       '#title' => $this->t('y'),
       '#type' => 'number',
-      '#default_value' => $style['region_y'] ?? NULL,
+      '#default_value' => $params['region_y'] ?? NULL,
       '#description' => $this->t(''),
       '#states' => [
         'visible' => [
@@ -86,10 +86,10 @@ final class IiifImageStyleForm extends EntityForm {
         ]
       ],
     ];
-    $form['style']['region_w'] = [
+    $form['params']['region_w'] = [
       '#title' => $this->t('w'),
       '#type' => 'number',
-      '#default_value' => $style['region_w'] ?? NULL,
+      '#default_value' => $params['region_w'] ?? NULL,
       '#description' => $this->t(''),
       '#states' => [
         'visible' => [
@@ -101,10 +101,10 @@ final class IiifImageStyleForm extends EntityForm {
         ]
       ],
     ];
-    $form['style']['region_h'] = [
+    $form['params']['region_h'] = [
       '#title' => $this->t('h'),
       '#type' => 'number',
-      '#default_value' => $style['region_h'] ?? NULL,
+      '#default_value' => $params['region_h'] ?? NULL,
       '#description' => $this->t(''),
       '#states' => [
         'visible' => [
@@ -118,19 +118,19 @@ final class IiifImageStyleForm extends EntityForm {
     ];
 
     // Size.
-    $form['style']['size'] = [
+    $form['params']['size'] = [
       '#type' => 'select',
       '#title' => $this->t('Size'),
       '#options' => IiifImage::getSizeOptions($field_img_api_version),
-      '#default_value' => $style['size'] ?? "full",
+      '#default_value' => $params['size'] ?? "full",
       '#attributes' => [
         'data-states' => 'size',
       ]
     ];
-    $form['style']['size_w'] = [
+    $form['params']['size_w'] = [
       '#title' => $this->t('w'),
       '#type' => 'number',
-      '#default_value' => $style['size_w'] ?? NULL,
+      '#default_value' => $params['size_w'] ?? NULL,
       '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
@@ -150,10 +150,10 @@ final class IiifImageStyleForm extends EntityForm {
         ]
       ],
     ];
-    $form['style']['size_h'] = [
+    $form['params']['size_h'] = [
       '#title' => $this->t('h'),
       '#type' => 'number',
-      '#default_value' => $style['size_h'] ?? NULL,
+      '#default_value' => $params['size_h'] ?? NULL,
       '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
@@ -173,10 +173,10 @@ final class IiifImageStyleForm extends EntityForm {
         ]
       ],
     ];
-    $form['style']['size_n'] = [
+    $form['params']['size_n'] = [
       '#title' => $this->t('n'),
       '#type' => 'number',
-      '#default_value' => $style['size_n'] ?? NULL,
+      '#default_value' => $params['size_n'] ?? NULL,
       '#description' => $this->t(''),
       '#min' => 0,
       '#max' => 100,
@@ -193,10 +193,10 @@ final class IiifImageStyleForm extends EntityForm {
     ];
 
     // Rotation.
-    $form['style']['rotation'] = [
+    $form['params']['rotation'] = [
       '#title' => $this->t('Rotation'),
       '#type' => 'number',
-      '#default_value' => $style['rotation'] ?? 0,
+      '#default_value' => $params['rotation'] ?? 0,
       '#description' => $this->t(''),
       '#min' => 0,
       '#max' => 360,
@@ -204,22 +204,22 @@ final class IiifImageStyleForm extends EntityForm {
     ];
 
     // Quality.
-    $form['style']['quality'] = [
+    $form['params']['quality'] = [
       '#type' => 'select',
       '#title' => $this->t('Quality'),
       '#options' => IiifImage::getQualityOptions($field_img_api_version),
-      '#default_value' => $style['quality'] ?? "default",
+      '#default_value' => $params['quality'] ?? "default",
       '#attributes' => [
         'data-states' => 'quality',
       ]
     ];
 
     // Format.
-    $form['style']['format'] = [
+    $form['params']['format'] = [
       '#type' => 'select',
       '#title' => $this->t('Format'),
       '#options' => IiifImage::getFormatOptions($field_img_api_version),
-      '#default_value' => $style['format'] ?? "jpg",
+      '#default_value' => $params['format'] ?? "jpg",
       '#attributes' => [
         'data-states' => 'format',
       ]
@@ -238,14 +238,15 @@ final class IiifImageStyleForm extends EntityForm {
 
     // ksm($values, $this->entity);
     // todo: this should be moved to the entity set() method.
-    foreach($values['style'] as $key => $value) {
+    foreach ($values['params'] as $key => $value) {
       if (strpos($key, "region_") !== FALSE || strpos($key, "size_") !== FALSE || $key == "rotation") {
-        $values['style'][$key] = empty($value) ? NULL : floatval($value);
+        $values['params'][$key] = empty($value) ? NULL : floatval($value);
       }
     }
+    ksm($values['params']);
 
-    $this->entity->set('style', $values['style']);
-    // ksm($this->entity);
+    $this->entity->set('params', $values['params']);
+    ksm($this->entity);
 
     $message_args = ['%label' => $this->entity->label()];
     $this->messenger()->addStatus(

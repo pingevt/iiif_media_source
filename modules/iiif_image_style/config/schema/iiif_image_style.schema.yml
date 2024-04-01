@@ -10,9 +10,9 @@ iiif_image_style.style.*:
       label: Label
     uuid:
       type: string
-    style:
+    params:
       type: mapping
-      label: 'Style Definition'
+      label: 'Params Definition'
       mapping:
         region:
           type: string

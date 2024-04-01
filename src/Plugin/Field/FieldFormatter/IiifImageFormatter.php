@@ -2,10 +2,15 @@
 
 namespace Drupal\iiif_media_source\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\iiif_image_style\Event\IiiifImageFormatterEvent;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * IIIF Image formatter.
@@ -27,6 +32,58 @@ class IiifImageFormatter extends StringFormatter {
   //   'scale' => "Scale",
   //   'crop' => "Crop",
   // ];
+
+  /**
+   * The event Dispatcher.
+   *
+   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
+   */
+  protected $eventDispatcher;
+
+  /**
+   * Constructs a StringFormatter instance.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher
+   *   The event Dispatcher.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, ContainerAwareEventDispatcher $event_dispatcher) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $entity_type_manager);
+
+    $this->eventDispatcher = $event_dispatcher;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('entity_type.manager'),
+      $container->get('event_dispatcher')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -247,14 +304,14 @@ class IiifImageFormatter extends StringFormatter {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    list($region_actual, $size_actual) = IiifImage::processSettings($this->getSettings());
-    // IiifImage::processSettings($this->getSettings());
+    $settings = $this->getSettings();
+    IiifImage::expandSettings($settings);
 
-    $summary[] = $this->t('Region: @region', ['@region' => $region_actual]);
-    $summary[] = $this->t('Size: @size', ['@size' => $size_actual]);
-    $summary[] = $this->t('Rotation: @rotation', ['@rotation' => $this->getSetting('rotation')]);
-    $summary[] = $this->t('Quality: @quality', ['@quality' => $this->getSetting('quality')]);
-    $summary[] = $this->t('Format: @format', ['@format' => $this->getSetting('format')]);
+    $summary[] = $this->t('Region: @region', ['@region' => $settings['region_actual']]);
+    $summary[] = $this->t('Size: @size', ['@size' => $settings['size_actual']]);
+    $summary[] = $this->t('Rotation: @rotation', ['@rotation' => $settings['rotation']]);
+    $summary[] = $this->t('Quality: @quality', ['@quality' => $settings['quality']]);
+    $summary[] = $this->t('Format: @format', ['@format' => $settings['format']]);
 
     return $summary;
   }
@@ -309,19 +366,28 @@ class IiifImageFormatter extends StringFormatter {
     // $build[$delta] = $view_value;
     //   }
 
-    // Process settings.
-    list($region_actual, $size_actual) = IiifImage::processSettings($this->getSettings());
-
     foreach ($items as $delta => $item) {
+
+      // Process settings.
+      $style_settings = $this->getSettings();
+      ksm($style_settings);
+
+      IiifImage::expandSettings($style_settings);
+      ksm($style_settings);
+
+      // ksm($style_settings);
+      // Call event for other modules to alter the settings.
+      // $event = new IiiifImageFormatterEvent();
+      // $this->eventDispatcher->dispatch($event, IiiifImageFormatterEvent::EVENT_NAME);
 
       $view_value = [
         '#theme' => 'iiif_image',
         '#image' => $item->getImg($item->getValue()),
-        '#region' => $region_actual,
-        '#size' => $size_actual,
-        '#rotation' => $this->getSetting('rotation'),
-        '#quality' => $this->getSetting('quality'),
-        '#format' => $this->getSetting('format'),
+        '#region' => $style_settings['region_actual'],
+        '#size' => $style_settings['size_actual'],
+        '#rotation' => $style_settings['rotation'],
+        '#quality' => $style_settings['quality'],
+        '#format' => $style_settings['format'],
       ];
       $build[$delta] = $view_value;
     }

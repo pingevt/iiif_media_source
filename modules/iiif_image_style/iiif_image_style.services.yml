@@ -1,0 +1,5 @@
+services:
+  # iiif_image_style:
+  #   class: '\Drupal\iiif_image_style\EventSubscriber\IiifImageStyleSubscriber'
+  #   tags:
+  #     - { name: 'event_subscriber' }

@@ -239,7 +239,7 @@ class IiifIdFormatter extends StringFormatter {
   // public function settingsSummary() {
   //   $summary = parent::settingsSummary();
 
-  //   $this->processSettings();
+  //   $this->expandSettings();
 
   //   $summary[] = $this->t('Region: @region', ['@region' => $this->getSetting('region_actual')]);
   //   $summary[] = $this->t('Size: @size', ['@size' => $this->getSetting('size_actual')]);
@@ -301,7 +301,7 @@ class IiifIdFormatter extends StringFormatter {
   //   //   }
 
   //   // Process settings.
-  //   $this->processSettings();
+  //   $this->expandSettings();
 
   //   foreach ($items as $delta => $item) {
 
@@ -320,7 +320,7 @@ class IiifIdFormatter extends StringFormatter {
   //   return $build;
   // }
 
-  // protected function processSettings() {
+  // protected function expandSettings() {
 
   //   $region_actual = str_replace(['w', 'h', 'n'], [$this->getSetting('region_w'), $this->getSetting('region_h'), $this->getSetting('region_n')], $this->getSetting('region'));
   //   $size_actual = str_replace(['w', 'h'], [$this->getSetting('size_w'), $this->getSetting('size_h')], $this->getSetting('size'));

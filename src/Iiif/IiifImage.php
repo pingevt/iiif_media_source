@@ -166,25 +166,15 @@ class IiifImage extends IiifBase {
     return $options;
   }
 
-  public static function processSettings($settings) {
-    $region_actual = str_replace(['w', 'h'], [$settings['region_w'], $settings['region_h']], $settings['region']);
-    $size_actual = str_replace(['w', 'h', 'n'], [$settings['size_w'], $settings['size_h'], $settings['size_n'] ?? ""], $settings['size']);
-
-    return [
-      $region_actual,
-      $size_actual,
-    ];
+  public static function expandSettings(&$settings): void {
+    ksm($settings);
+    $settings['region_actual'] = str_replace(['w', 'h'], [$settings['region_w'], $settings['region_h']], $settings['region']);
+    $settings['size_actual'] = str_replace(['w', 'h', 'n'], [$settings['size_w'], $settings['size_h'], $settings['size_n'] ?? ""], $settings['size']);
   }
 
   protected $thumbWidth = 200;
 
   protected $thumbHeight = 200;
-
-  // public function __construct(string $base_url, string $id) {
-  //   parent::__construct($base_url, $id);.
-  // if (isset($this->info->width)) {
-  //     $this->width = $this->info->width;
-  //   }.
 
   /**
    * }.

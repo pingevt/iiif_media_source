@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Drupal\iiif_image_style\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\iiif_image_style\EventsTrait;
+use Drupal\iiif_image_style\Event\IiifImageStyleSettingsEvent;
 use Drupal\iiif_image_style\IiifImageStyleInterface;
+use Drupal\iiif_media_source\Iiif\IiifImage;
 
 /**
  * Defines the iiif image style entity type.
@@ -44,11 +47,13 @@ use Drupal\iiif_image_style\IiifImageStyleInterface;
  *   config_export = {
  *     "name",
  *     "label",
- *     "style",
+ *     "params",
  *   },
  * )
  */
 final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInterface {
+
+  use EventsTrait;
 
   /**
    * The example name.
@@ -61,11 +66,11 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   protected string $label;
 
   /**
-   * The array of style data for the IIIF url.
+   * The array of params data for the IIIF url.
    *
    * @var array
    */
-  protected $style = [];
+  protected $params = [];
 
   /**
    * {@inheritdoc}
@@ -77,15 +82,17 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   /**
    * {@inheritdoc}
    */
-  public function getStyle(): ?array {
-    return $this->style ?? [];
+  public function getParams(IiifImage $image = NULL): ?array {
+
+
+    return $this->params ?? [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormat(): string {
-    return $this->style['format'] ?? "";
+    return $this->params['format'] ?? "";
   }
 
 }
