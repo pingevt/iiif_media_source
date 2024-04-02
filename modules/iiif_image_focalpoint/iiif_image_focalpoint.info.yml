@@ -1,6 +1,6 @@
 name: IIIF Image - Focal Point
 type: module
-description: 'Creating a Image for IIIF data'
+description: 'Creating a Image Focal point for IIIF data'
 core_version_requirement: ^10
 
 package: Media
