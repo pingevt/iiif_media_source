@@ -1,0 +1,98 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Field\WidgetInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * @see focal_point_entity_update
+ */
+function iiif_image_crop_entity_insert(EntityInterface $entity) {
+  iiif_image_crop_entity_update($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * Saves the focal point value for the image file entity about to be saved.
+ */
+function iiif_image_crop_entity_update(EntityInterface $entity) {
+  // ksm($entity);
+  // ksm("hi");
+  // Only worry about entities that are fieldable.
+  if ($entity instanceof FieldableEntityInterface) {
+    ksm("checking fields...");
+    // Loop all the fields and save focal point values for images.
+    foreach ($entity->getFieldDefinitions() as $key => $field) {
+      // ksm($key, $field->getType());
+      if ($field->getType() == 'iiif_id' && $entity->hasField($field->getName())) {
+        // ksm("Correct field, i think");
+      // if ($key == "field_media_iiif_image") {
+        // ksm($entity->{$field->getName()});
+        // @todo do i need to create settings for this module for croptype? Probably.
+        $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
+        // ksm( $crop_type );
+        // Loop through all values for this field. Its cardinality might be > 1.
+        foreach ($entity->{$field->getName()} as $item) {
+
+          if (!$item instanceof IiifId) {
+            ksm("NOT A IiifId FIELD: ", $item);
+            continue;
+          }
+          // if (!isset($item->crop)) {
+          //   ksm("NOT a field with a crop: ", $item);
+          //   continue;
+          // }
+
+          $crop_manager = \Drupal::service('iiif_image_crop.crop_manager');
+          // $crop = $crop_manager->getCropEntity($item->entity, $crop_type);
+          $crop = $crop_manager->getCropIiifEntity($item, $crop_type, $entity->id());
+          ksm($crop);
+
+          if ($crop) {
+            $img_crop = NULL;
+            // Use the default focal point on new crop entities.
+            if ($crop->isNew()) {
+              $img_crop = \Drupal::config('crop.settings')->get('default_value');
+            }
+
+            // Use the focal point set over the UI.
+            if (!empty($item->crop)) {
+              $img_crop = $item->crop;
+              $image = $item->getImg($item->getValue());
+              $width = $image->getWidth();
+              $height = $image->getHeight();
+              ksm($crop);
+              // Keep the original crop value to be able to use it during hooks.
+              if (!$crop->get('x')->isEmpty() && !$crop->get('y')->isEmpty() && !$crop->get('width')->isEmpty() && !$crop->get('height')->isEmpty()) {
+                $x = $crop->get('x')->value;
+                $y = $crop->get('y')->value;
+                $w = $crop->get('width')->value;
+                $h = $crop->get('height')->value;
+                $crop_original = $crop_manager->absoluteToRelative($x, $y, $w, $h, $width, $height);
+                $entity->{$field->getName()}->crop_original = implode(',', $crop_original);
+              }
+            }
+
+            ksm($img_crop, $item);
+
+            if ($img_crop && $item->width && $item->height) {
+              [$x, $y, $w, $h] = explode(',', $img_crop);
+              $crop_manager->saveCropEntity($x, $y, $w, $h, $width, $height, $crop);
+            }
+            else {
+              ksm("didn't save crop");
+            }
+          }
+        }
+      }
+    }
+  }
+}

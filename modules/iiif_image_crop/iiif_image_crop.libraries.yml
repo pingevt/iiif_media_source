@@ -1,0 +1,17 @@
+iiif_image_crop.cropperjs:
+  version: 1.x
+  css:
+    theme:
+      assets/dist/vendor/cropperjs/cropper.css: {}
+  js:
+    assets/dist/vendor/cropperjs/cropper.js: {}
+
+iiif_image_crop.crop:
+  version: 1.x
+  css:
+    theme:
+      assets/src/css/crop.css: {}
+  js:
+    assets/src/js/crop.js: {}
+  dependencies:
+    - iiif_image_crop/iiif_image_crop.cropperjs

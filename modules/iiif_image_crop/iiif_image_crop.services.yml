@@ -1,0 +1,8 @@
+services:
+  iiif_image_crop.crop_manager:
+    class: Drupal\iiif_image_crop\IiifCropManager
+    arguments: ['@entity_type.manager']
+  # iiif_image_crop.iiif_image_style_settings_alter:
+  #   class: '\Drupal\iiif_image_crop\EventSubscriber\IiifImageStyleSubscriber'
+  #   tags:
+  #     - { name: 'event_subscriber' }

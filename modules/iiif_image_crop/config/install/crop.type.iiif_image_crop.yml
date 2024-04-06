@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+label: 'IIIF Image Crop'
+id: iiif_image_crop
+description: 'Crop type used by IIIF Image Crop module.'
+aspect_ratio: ''
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: null
+hard_limit_height: null

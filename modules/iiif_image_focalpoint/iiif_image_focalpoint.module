@@ -74,7 +74,7 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
               }
             }
 
-            ksm($focal_point, $item);
+            // ksm($focal_point, $item);
 
             if ($focal_point && $item->width && $item->height) {
               [$x, $y] = explode(',', $focal_point);

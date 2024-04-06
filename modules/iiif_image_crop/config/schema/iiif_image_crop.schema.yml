@@ -1,0 +1,27 @@
+iiif_image_crop.settings:
+  type: config_object
+  label: 'IIIF Inage Crop settings'
+  mapping:
+    crop_type:
+      type: string
+      label: 'Crop type to be used with IIIF Inage Crop'
+    default_value:
+      type: string
+      label: 'The default value to use for IIIF Inage Crop when none is specified'
+
+# field.widget.settings.image_focal_point:
+#   type: mapping
+#   label: 'Focal Point widget settings'
+#   mapping:
+#     progress_indicator:
+#       type: string
+#       label: 'Progress indicator'
+#     preview_image_style:
+#       type: string
+#       label: 'Preview image style'
+#     preview_link:
+#       type: boolean
+#       label: 'Preview link'
+#     offsets:
+#       type: string
+#       label: 'Focal point offsets'

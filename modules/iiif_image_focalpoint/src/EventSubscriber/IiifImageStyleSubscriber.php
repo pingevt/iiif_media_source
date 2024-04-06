@@ -30,7 +30,7 @@ class IiifImageStyleSubscriber implements EventSubscriberInterface {
    *
    */
   public function imgStyleSettingsAlter(IiifImageStyleSettingsEvent $event) {
-    ksm('altering', $event);
+    // ksm('altering', $event);
   }
 
 }

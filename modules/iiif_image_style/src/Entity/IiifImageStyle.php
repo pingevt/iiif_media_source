@@ -84,6 +84,9 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
    */
   public function getParams(IiifImage $image = NULL): ?array {
 
+    $params = $this->params;
+    $e = new IiifImageStyleSettingsEvent($this, $image, $params);
+    $this->eventDispatcher()->dispatch($e, IiifImageStyleSettingsEvent::EVENT_NAME);
 
     return $this->params ?? [];
   }

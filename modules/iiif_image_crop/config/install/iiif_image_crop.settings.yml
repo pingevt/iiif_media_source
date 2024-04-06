@@ -1,0 +1,2 @@
+crop_type: 'iiif_image_crop'
+default_value: '0,0,100,100'

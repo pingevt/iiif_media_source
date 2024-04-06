@@ -1,0 +1,11 @@
+name: IIIF Image - Crop
+type: module
+description: 'Creating a Image Crop for IIIF data'
+core_version_requirement: ^10
+
+package: Media
+
+dependencies:
+  - iiif_media_source:iiif_image_style
+
+configure: null
