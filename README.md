@@ -3,6 +3,9 @@
 todo: write descritpion
 implementing the Image API 3.0
 
+Crop (Not Crop API entity): Primarily used for redifining the source image.
+Focal Point: Used primarily for "Art Direction" when automaitlly sizing images so we don't loose focus
+
 ## Table of contents
 
 - Requirements
@@ -50,21 +53,21 @@ Field:
   - [ ] Could add in some validation? but not sure what that would be... https://iiif.io/api/image/3.0/#2-uri-syntax
 - [x] Default Widget should just be plain text, i think.
 - [x] Default Formatter should just display ID.
-  -  [ ] need to verify and have fallbacks for each section.
+  - [ ] need to verify and have fallbacks for each section.
   - [ ] Add in loading attribute (lazy eager) to basic formatter.
 - [x] Secondary (basic image) Widget includes image thumbnail.
 - [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
 - [ ] Do we need the base Iiif class?
   - [ ] If so, needs to be a service.
-  - [ ] Inject it intot he field class.
+  - [ ] Inject it into the field class.
 
 Image Styles / Responsive Images
 - [x] Image Style entity
 - [x] Responsive Image style entity
-- [ ] IIIF Image style formatter
-- [ ] IIIF Responsive Image style formatter
-- [ ] Add in thirdparty setting for focal point
-- [ ] Add in thirdparty setting for custom crop
+- [x] IIIF Image style formatter
+- [x] IIIF Responsive Image style formatter
+- [ ] Add in external setting for focal point
+- [ ] Add in external setting for custom crop
 
 
 Media Source
