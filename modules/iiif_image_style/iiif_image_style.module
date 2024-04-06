@@ -45,7 +45,7 @@ function template_preprocess_iiif_image_style(&$variables) {
   if ($variables['iiif_image_style']) {
     $image_style = IiifImageStyle::load($variables['iiif_image_style']);
     $style_settings = $image_style->getParams();
-    ksm($style_settings);
+    // ksm($style_settings);
     IiifImage::expandSettings($style_settings);
 
     $img_url = $image->getBuiltImageUrl(
@@ -178,7 +178,7 @@ function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $im
   $iiif_image_style = IiifImageStyle::load($iiif_image_style_id);
 
   $style_settings = $iiif_image_style->getParams();
-  ksm($iiif_image_style, $style_settings);
+  // ksm($iiif_image_style, $style_settings);
   IiifImage::expandSettings($style_settings);
 
   $img_url = $image->getBuiltImageUrl(

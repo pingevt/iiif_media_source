@@ -167,8 +167,8 @@ class IiifImage extends IiifBase {
   }
 
   public static function expandSettings(&$settings): void {
-    ksm($settings);
-    $settings['region_actual'] = str_replace(['w', 'h'], [$settings['region_w'], $settings['region_h']], $settings['region']);
+    // ksm($settings);
+    $settings['region_actual'] = str_replace(['x', 'y', 'w', 'h'], [$settings['region_x'], $settings['region_y'], $settings['region_w'], $settings['region_h']], $settings['region']);
     $settings['size_actual'] = str_replace(['w', 'h', 'n'], [$settings['size_w'], $settings['size_h'], $settings['size_n'] ?? ""], $settings['size']);
   }
 
@@ -203,7 +203,7 @@ class IiifImage extends IiifBase {
   /**
    *
    */
-  public function getThumbnailUrl():string {
+  public function getThumbnailUrl(): string {
 
     $url = implode("/", [
       $this->server,
@@ -221,7 +221,7 @@ class IiifImage extends IiifBase {
   /**
    *
    */
-  public function getFullUrl():string {
+  public function getFullUrl(): string {
 
     $url = implode("/", [
       $this->server,
@@ -257,7 +257,7 @@ class IiifImage extends IiifBase {
   /**
    *
    */
-  public function getScaledUrl($width, $height):string {
+  public function getScaledUrl($width, $height): string {
 
     $url = implode("/", [
       $this->server,
