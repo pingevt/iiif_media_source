@@ -36,7 +36,6 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
         // ksm("Correct field, i think");
       // if ($key == "field_media_iiif_image") {
         // ksm($entity->{$field->getName()});
-        // @todo do i need to create settings for this module for croptype? Probably.
         $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
         // ksm( $crop_type );
         // Loop through all values for this field. Its cardinality might be > 1.

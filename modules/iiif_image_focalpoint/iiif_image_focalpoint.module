@@ -94,58 +94,58 @@ function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state
   // ksm(func_get_args());
 
   // Add option to Image style.
-  if ($form_id == "iiif_image_style_add_form" || $form_id == "iiif_image_style_edit_form") {
-    $entity = $form_state->getFormObject()->getEntity();
-    // ksm($entity);
+  // if ($form_id == "iiif_image_style_add_form" || $form_id == "iiif_image_style_edit_form") {
+  //   $entity = $form_state->getFormObject()->getEntity();
+  //   // ksm($entity);
 
-    $settings = $entity->getThirdPartySettings('iiif_image_focalpoint');
+  //   $settings = $entity->getThirdPartySettings('iiif_image_focalpoint');
 
-    // ksm($settings);
+  //   // ksm($settings);
 
-    $form['crops_and_focal'] = [
-      '#type' => 'fieldset',
-      '#title' => t('Crops and Focal Points'),
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-    ];
+  //   $form['crops_and_focal'] = [
+  //     '#type' => 'fieldset',
+  //     '#title' => t('Crops and Focal Points'),
+  //     '#collapsible' => FALSE,
+  //     '#collapsed' => FALSE,
+  //   ];
 
-    $form['use_iiif_focalpoint'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Use IIIF focal point'),
-      '#default_value' => $settings['use_iiif_focalpoint'] ?? FALSE,
-      '#group' => 'crops_and_focal',
-    ];
-  }
+  //   $form['use_iiif_focalpoint'] = [
+  //     '#type' => 'checkbox',
+  //     '#title' => t('Use IIIF focal point'),
+  //     '#default_value' => $settings['use_iiif_focalpoint'] ?? FALSE,
+  //     '#group' => 'crops_and_focal',
+  //   ];
+  // }
 }
 
 /**
  * Implements hook_field_widget_third_party_settings_form().
  */
 function iiif_image_focalpoint_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, array $form, FormStateInterface $form_state) {
-  if ($plugin->getPluginId() == "iiif_image_widget") {
-    // ksm($plugin->getPluginId());
+  // if ($plugin->getPluginId() == "iiif_image_widget") {
+  //   // ksm($plugin->getPluginId());
 
-    $element['add_iiif_focalpoint'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Add IIIF focal point'),
-      '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint'),
-    ];
+  //   $element['add_iiif_focalpoint'] = [
+  //     '#type' => 'checkbox',
+  //     '#title' => t('Add IIIF focal point'),
+  //     '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint'),
+  //   ];
 
-    return $element;
-  }
+  //   return $element;
+  // }
 }
 
 /**
  * Implements hook_field_widget_settings_summary_alter().
  */
 function iiif_image_focalpoint_field_widget_settings_summary_alter(array &$summary, array $context) {
-  $add = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint');
+  // $add = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint');
 
-  // ksm($add);
+  // // ksm($add);
 
-  if ($add) {
-    $summary[] = t('Adding IIIF Focal Point');
-  }
+  // if ($add) {
+  //   $summary[] = t('Adding IIIF Focal Point');
+  // }
 }
 
 /**
@@ -153,20 +153,20 @@ function iiif_image_focalpoint_field_widget_settings_summary_alter(array &$summa
  */
 function iiif_image_focalpoint_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
 
-  if ($context['widget']->getPluginId() == "iiif_image_widget") {
-    // ksm(func_get_args());
-    // ksm($context['widget']->getPluginId());
-    // ksm($context['widget']->getThirdPartySettings());
-    // ksm($element);
+  // if ($context['widget']->getPluginId() == "iiif_image_widget") {
+  //   // ksm(func_get_args());
+  //   // ksm($context['widget']->getPluginId());
+  //   // ksm($context['widget']->getThirdPartySettings());
+  //   // ksm($element);
 
-    $settings = $context['widget']->getThirdPartySettings('iiif_image_focalpoint');
-    // ksm($settings, isset($settings['add_iiif_focalpoint']), $settings['add_iiif_focalpoint']);
+  //   $settings = $context['widget']->getThirdPartySettings('iiif_image_focalpoint');
+  //   // ksm($settings, isset($settings['add_iiif_focalpoint']), $settings['add_iiif_focalpoint']);
 
-    if ($settings && isset($settings['add_iiif_focalpoint']) && $settings['add_iiif_focalpoint']) {
-      // todo: bring in the focal point field element.
-      // ksm($element);
-    }
+  //   if ($settings && isset($settings['add_iiif_focalpoint']) && $settings['add_iiif_focalpoint']) {
+  //     // todo: bring in the focal point field element.
+  //     // ksm($element);
+  //   }
 
-  }
+  // }
 
 }
