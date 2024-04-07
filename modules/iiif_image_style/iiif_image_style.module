@@ -11,6 +11,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\iiif_image_style\Entity\IiifImageStyle;
 use Drupal\iiif_image_style\Entity\IiifResponsiveImageStyle;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
  * Implements hook_theme().
@@ -46,15 +47,11 @@ function template_preprocess_iiif_image_style(&$variables) {
     $image_style = IiifImageStyle::load($variables['iiif_image_style']);
     $style_settings = $image_style->getParams();
     // ksm($style_settings);
-    IiifImage::expandSettings($style_settings);
+    // IiifImage::expandSettings($style_settings);
 
-    $img_url = $image->getBuiltImageUrl(
-      $style_settings['region_actual'],
-      $style_settings['size_actual'],
-      $style_settings['rotation'],
-      $style_settings['quality'],
-      $style_settings['format']
-    );
+    $params = IiifImageUrlParams::fromSettingsArray($style_settings);
+
+    $img_url = $image->getBuiltImageUrl($params);
   }
   // Original image.
   else {
@@ -80,18 +77,6 @@ function template_preprocess_iiif_image_style(&$variables) {
 function template_preprocess_iiif_responsive_image_style(&$variables) {
 
   $image = $variables['image'];
-
-  // Make sure that width and height are proper values
-  // If they exists we'll output them
-  // @see http://www.w3.org/community/respimg/2012/06/18/florians-compromise/
-  // if (isset($variables['width']) && empty($variables['width'])) {
-  //   unset($variables['width']);
-  //   unset($variables['height']);
-  // }
-  // elseif (isset($variables['height']) && empty($variables['height'])) {
-  //   unset($variables['width']);
-  //   unset($variables['height']);
-  // }
 
   $responsive_image_style = IiifResponsiveImageStyle::load($variables['iiif_responsive_image_style']);
   // If a responsive image style is not selected, log the error and stop
@@ -155,7 +140,10 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
   // );
   $iiif_image_style = IiifImageStyle::load($responsive_image_style->getFallbackImageStyle());
   $style_settings = $iiif_image_style->getParams();
-  $dimensions = $image->transformDimensions($style_settings);
+
+  $params = IiifImageUrlParams::fromSettingsArray($style_settings);
+
+  $dimensions = $params->transformDimensions($image);
 
   $variables['img_element']['#width'] = $dimensions['width'];
   $variables['img_element']['#height'] = $dimensions['height'];
@@ -179,15 +167,11 @@ function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $im
 
   $style_settings = $iiif_image_style->getParams();
   // ksm($iiif_image_style, $style_settings);
-  IiifImage::expandSettings($style_settings);
+  // IiifImage::expandSettings($style_settings);
 
-  $img_url = $image->getBuiltImageUrl(
-    $style_settings['region_actual'],
-    $style_settings['size_actual'],
-    $style_settings['rotation'],
-    $style_settings['quality'],
-    $style_settings['format']
-  );
+  $params = IiifImageUrlParams::fromSettingsArray($style_settings);
+
+  $img_url = $image->getBuiltImageUrl($params);
 
   return $img_url;
 }
@@ -231,10 +215,11 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
           $iiif_image_style = IiifImageStyle::load($image_style_name);
           $style_settings = $iiif_image_style->getParams();
-          IiifImage::expandSettings($style_settings);
+
+          $params = IiifImageUrlParams::fromSettingsArray($style_settings);
 
           // Get the dimensions.
-          $dimensions = $image->transformDimensions($style_settings);
+          $dimensions = $params->transformDimensions($image);
 
           // Get MIME type.
           $ext = $iiif_image_style->getFormat();
@@ -253,13 +238,7 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
           // Images within a srcset should be sorted from small to large, since
           // the first matching source will be used.
 
-          $img_url = $image->getBuiltImageUrl(
-            $style_settings['region_actual'],
-            $style_settings['size_actual'],
-            $style_settings['rotation'],
-            $style_settings['quality'],
-            $style_settings['format']
-          );
+          $img_url = $image->getBuiltImageUrl($params);
 
           $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = $img_url . ' ' . $multiplier;
           $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
@@ -280,18 +259,12 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         // be used. We multiply it by 100 so multipliers with up to two decimals
         // can be used.
         $style_settings = $iiif_image_style->getParams();
-        IiifImage::expandSettings($style_settings);
+        $params = IiifImageUrlParams::fromSettingsArray($style_settings);
 
-        $img_url = $image->getBuiltImageUrl(
-          $style_settings['region_actual'],
-          $style_settings['size_actual'],
-          $style_settings['rotation'],
-          $style_settings['quality'],
-          $style_settings['format']
-        );
+        $img_url = $image->getBuiltImageUrl($params);
 
         $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = $img_url . ' ' . $multiplier;
-        $dimensions = $image->transformDimensions($style_settings);
+        $dimensions = $params->transformDimensions($image);
 
         break;
     }

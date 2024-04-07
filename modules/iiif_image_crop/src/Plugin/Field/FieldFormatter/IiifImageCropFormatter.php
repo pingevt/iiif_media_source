@@ -12,6 +12,7 @@ use Drupal\crop\Entity\Crop;
 use Drupal\iiif_image_crop\IiifCropManager;
 use Drupal\iiif_image_style\Event\IiiifImageFormatterEvent;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Drupal\iiif_media_source\Plugin\Field\FieldFormatter\IiifImageFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -86,21 +87,20 @@ class IiifImageCropFormatter extends IiifImageFormatter {
       $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
       $crop = Crop::findCrop($img->getFullUrl(), $crop_type);
 
-
       // Process settings.
       $style_settings = $this->getSettings();
 
-      $this->cropManager->applyCrop($img, $style_settings, $crop);
+      // ksm($style_settings);
+
+      $params = IiifImageUrlParams::fromSettingsArray($style_settings);
+      $this->cropManager->applyCrop($img, $params, $crop);
 
       $view_value = [
         '#theme' => 'iiif_image',
         '#image' => $img,
-        '#region' => $style_settings['region_actual'],
-        '#size' => $style_settings['size_actual'],
-        '#rotation' => $style_settings['rotation'],
-        '#quality' => $style_settings['quality'],
-        '#format' => $style_settings['format'],
+        '#url_params' => $params,
       ];
+
       $build[$delta] = $view_value;
     }
 

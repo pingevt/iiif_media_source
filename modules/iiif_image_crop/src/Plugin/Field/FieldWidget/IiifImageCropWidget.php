@@ -130,7 +130,6 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
         '#prefix' => "<div class='cropper-image'>",
         '#suffix' => "</div>",
       ];
-
     }
 
     $element['#crop'] = [

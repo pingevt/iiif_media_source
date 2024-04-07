@@ -23,11 +23,13 @@ function iiif_media_source_theme($existing, $type, $theme, $path) {
         // 'size_type' => 'resize_and_crop',
         // 'dest_width' => 100,
         // 'dest_height' => 100,
-        'region' => '',
-        'size' => '',
-        'rotation' => '',
-        'quality' => '',
-        'format' => ''#,
+        // 'region' => '',
+        // 'size' => '',
+        // 'rotation' => '',
+        // 'quality' => '',
+        // 'format' => '',
+        'url_params' => NULL,
+        'attributes' => [],
       ],
     ],
   ];
@@ -43,18 +45,17 @@ function template_preprocess_iiif_image(&$variables) {
   $variables['content'] = [
     'image' => [
       '#theme' => 'image',
-      '#uri' => $image->getBuiltImageUrl($variables['region'], $variables['size'], $variables['rotation'], $variables['quality'], $variables['format']),
-      '#attributes' => [
-        // 'width' => $dest_width,
-        // 'height' => $dest_height,
-        // 'class' => ['iiif-image'],
-      ],
+      '#uri' => $image->getBuiltImageUrl($variables['url_params']),
+      '#attributes' => $variables['attributes'],
     ],
   ];
 
+
+
+
+
+
   // ksm($variables['content']);
-
-
 
   // $image = $variables['image'];
 

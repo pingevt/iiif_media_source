@@ -8,6 +8,7 @@ use Drupal\crop\CropInterface;
 use Drupal\crop\CropStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
  * Provides business logic related to focal point.
@@ -97,7 +98,7 @@ class IiifCropManager {
    */
   public function saveCropEntity(float $x, float $y, float $w, float $h, int $width, int $height, CropInterface $crop): CropInterface {
     $absolute = $this->relativeToAbsolute($x, $y, $w, $h, $width, $height);
-ksm($x, $y, $w, $h, $width, $height);
+// ksm($x, $y, $w, $h, $width, $height);
     $crop->setPosition($absolute['x'], $absolute['y']);
     $crop->setSize($absolute['w'], $absolute['h']);
     $crop->save();
@@ -108,7 +109,12 @@ ksm($x, $y, $w, $h, $width, $height);
   /**
    *
    */
-  public function applyCrop($image, &$style_settings, $crop) {
+  public function applyCrop($image, IiifImageUrlParams $params, $crop) {
+
+    // If there is no crop, then just return. Nothing needs to be done.
+    if ($crop == NULL) {
+      return;
+    }
 
     // We will need to change the region setting in order to apply the crop.
     // 'full' => transform to "x,y,w,h", which is the cropped image settings.
@@ -116,17 +122,14 @@ ksm($x, $y, $w, $h, $width, $height);
     // 'x,y,w,h' => transform so that values are inside the crop (or should we really do nothing?)
     // 'pct:x,y,w,h' => transform to "x,y,w,h", but percentages are based on the cropped image.
 
-    // Apply this 'expandSettings' first, so we have all defaults.
-    IiifImage::expandSettings($style_settings);
-
     [$x, $y] = array_values($crop->position());
     [$w, $h] = array_values($crop->size());
 
-    switch($style_settings['region']) {
+    switch ($params->getSetting('region')) {
       case 'full':
         $region = [$x, $y, $w, $h];
-        $style_settings['region'] = implode(",", $region);
-        $style_settings['region_actual'] = implode(",", $region);
+        $params->region = implode(",", $region);
+        $params->region_actual = implode(",", $region);
 
         break;
 
@@ -145,8 +148,8 @@ ksm($x, $y, $w, $h, $width, $height);
         }
 
         $region = [$x, $y, $w, $h];
-        $style_settings['region'] = implode(",", $region);
-        $style_settings['region_actual'] = implode(",", $region);
+        $params->region = implode(",", $region);
+        $params->region_actual = implode(",", $region);
 
         break;
 
@@ -157,15 +160,15 @@ ksm($x, $y, $w, $h, $width, $height);
 
       case 'pct:x,y,w,h':
 
-        $nx = $x + (int) ($w * ($style_settings['region_x'] / 100));
-        $ny = $y + (int) ($h * ($style_settings['region_y'] / 100));
-        $nw = (int) ($w * ($style_settings['region_w'] / 100));
-        $nh = (int) ($h * ($style_settings['region_h'] / 100));
+        $nx = $x + (int) ($w * ($params->getSetting('region_x') / 100));
+        $ny = $y + (int) ($h * ($params->getSetting('region_y') / 100));
+        $nw = (int) ($w * ($params->getSetting('region_w') / 100));
+        $nh = (int) ($h * ($params->getSetting('region_h') / 100));
 
         $region = [$nx, $ny, $nw, $nh];
 
-        $style_settings['region'] = implode(",", $region);
-        $style_settings['region_actual'] = implode(",", $region);
+        $params->region = implode(",", $region);
+        $params->region_actual = implode(",", $region);
 
         break;
     }

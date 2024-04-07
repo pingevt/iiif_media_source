@@ -10,6 +10,7 @@ use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\iiif_image_style\Event\IiiifImageFormatterEvent;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -91,19 +92,7 @@ class IiifImageFormatter extends StringFormatter {
   public static function defaultSettings() {
     $options = parent::defaultSettings();
 
-    $options += [
-      'region' => 'full',
-      'region_x' => '',
-      'region_y' => '',
-      'region_w' => '',
-      'region_h' => '',
-      'size' => 'max',
-      'size_w' => '',
-      'size_h' => '',
-      'rotation' => 0,
-      'quality' => 'default',
-      'format' => 'png',
-    ];
+    $options += IiifImageUrlParams::getDefaultSettings();
 
     return $options;
   }
@@ -120,7 +109,7 @@ class IiifImageFormatter extends StringFormatter {
     $form['region'] = [
       '#type' => 'select',
       '#title' => $this->t('Region'),
-      '#options' => IiifImage::getRegionOptions($field_img_api_version),
+      '#options' => IiifImageUrlParams::getRegionOptions($field_img_api_version),
       '#default_value' => $this->getSetting('region'),
       '#attributes' => [
         'data-states' => 'region',
@@ -191,7 +180,7 @@ class IiifImageFormatter extends StringFormatter {
     $form['size'] = [
       '#type' => 'select',
       '#title' => $this->t('Size'),
-      '#options' => IiifImage::getSizeOptions($field_img_api_version),
+      '#options' => IiifImageUrlParams::getSizeOptions($field_img_api_version),
       '#default_value' => $this->getSetting('size'),
       '#attributes' => [
         'data-states' => 'size',
@@ -277,7 +266,7 @@ class IiifImageFormatter extends StringFormatter {
     $form['quality'] = [
       '#type' => 'select',
       '#title' => $this->t('Quality'),
-      '#options' => IiifImage::getQualityOptions($field_img_api_version),
+      '#options' => IiifImageUrlParams::getQualityOptions($field_img_api_version),
       '#default_value' => $this->getSetting('quality'),
       '#attributes' => [
         'data-states' => 'quality',
@@ -288,7 +277,7 @@ class IiifImageFormatter extends StringFormatter {
     $form['format'] = [
       '#type' => 'select',
       '#title' => $this->t('Format'),
-      '#options' => IiifImage::getFormatOptions($field_img_api_version),
+      '#options' => IiifImageUrlParams::getFormatOptions($field_img_api_version),
       '#default_value' => $this->getSetting('format'),
       '#attributes' => [
         'data-states' => 'format',
@@ -304,14 +293,13 @@ class IiifImageFormatter extends StringFormatter {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $settings = $this->getSettings();
-    IiifImage::expandSettings($settings);
+    $params = IiifImageUrlParams::fromSettingsArray($this->getSettings());
 
-    $summary[] = $this->t('Region: @region', ['@region' => $settings['region_actual']]);
-    $summary[] = $this->t('Size: @size', ['@size' => $settings['size_actual']]);
-    $summary[] = $this->t('Rotation: @rotation', ['@rotation' => $settings['rotation']]);
-    $summary[] = $this->t('Quality: @quality', ['@quality' => $settings['quality']]);
-    $summary[] = $this->t('Format: @format', ['@format' => $settings['format']]);
+    $summary[] = $this->t('Region: @region', ['@region' => $params->getRegion()]);
+    $summary[] = $this->t('Size: @size', ['@size' => $params->getSize()]);
+    $summary[] = $this->t('Rotation: @rotation', ['@rotation' => $params->getRotation()]);
+    $summary[] = $this->t('Quality: @quality', ['@quality' => $params->getQuality()]);
+    $summary[] = $this->t('Format: @format', ['@format' => $params->getFormat()]);
 
     return $summary;
   }
@@ -323,71 +311,15 @@ class IiifImageFormatter extends StringFormatter {
 
     $build = [];
 
-    // $field_def = $items->getFieldDefinition();
-    //   $field_name = $field_def->getName();
-
-    // $parent_entity = $items->getParent()->getEntity();
-    //   if (isset($parent_entity->overwritten_property_map)) {
-    //     $overridden_data = json_decode($parent_entity->overwritten_property_map);
-    //   }
-
-    // $crop_type = \Drupal::config('focal_point.settings')->get('crop_type');
-    //   $focal_point_manager = \Drupal::service('iiif_media_source.focal_point_manager');
-
-    // // Get individual fields.
-    //   foreach ($items as $delta => $item) {
-    //     $view_value = $this->viewValue($item);
-
-    // $crop = $focal_point_manager->getCropIiifEntity($item, $crop_type, $item->getEntity()->id());
-
-    // // Check for contextual Override.
-    //     $parent_entity = $item->getParent()->getParent()->getEntity();
-
-    // if (isset($overridden_data) && isset($overridden_data->{$field_name}[$delta])) {
-    //       if (isset($overridden_data->{$field_name}[$delta]->focal_point)) {
-    //         [$x, $y] = explode(',', $overridden_data->{$field_name}[$delta]->focal_point);
-    //         $full_dimens = $item->_image->getDimensions();
-    //         $new_crop = $focal_point_manager->relativeToAbsolute($x, $y, $full_dimens['w'], $full_dimens['h']);
-
-    // $crop->setPosition($new_crop['x'], $new_crop['y']);
-    //       }
-    //     }
-
-    // // Set render array.
-    //     $view_value = [
-    //       '#theme' => 'iiif_image',
-    //       '#image' => $item->_image,
-    //       '#crop' => $crop,
-    //       '#size_type' => $this->getSetting('size_type'),
-    //       '#dest_width' => $this->getSetting('width'),
-    //       '#dest_height' => $this->getSetting('height'),
-    //     ];
-
-    // $build[$delta] = $view_value;
-    //   }
-
     foreach ($items as $delta => $item) {
 
       // Process settings.
-      $style_settings = $this->getSettings();
-      ksm($style_settings);
-
-      IiifImage::expandSettings($style_settings);
-      ksm($style_settings);
-
-      // ksm($style_settings);
-      // Call event for other modules to alter the settings.
-      // $event = new IiiifImageFormatterEvent();
-      // $this->eventDispatcher->dispatch($event, IiiifImageFormatterEvent::EVENT_NAME);
+      $params = IiifImageUrlParams::fromSettingsArray($this->getSettings());
 
       $view_value = [
         '#theme' => 'iiif_image',
         '#image' => $item->getImg($item->getValue()),
-        '#region' => $style_settings['region_actual'],
-        '#size' => $style_settings['size_actual'],
-        '#rotation' => $style_settings['rotation'],
-        '#quality' => $style_settings['quality'],
-        '#format' => $style_settings['format'],
+        '#url_params' => $params,
       ];
       $build[$delta] = $view_value;
     }

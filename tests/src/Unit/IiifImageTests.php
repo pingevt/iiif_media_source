@@ -4,6 +4,7 @@ namespace Drupal\Tests\iiif_media_source\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
@@ -158,6 +159,33 @@ class IiifImageTests extends UnitTestCase {
 
     $this->assertEquals($d3['width'], 100);
     $this->assertEquals($d3['height'], 400);
+  }
+
+  /**
+   * Testing IIIF Image URL Params.
+   */
+  public function testIiifImageUrlParams() {
+
+    // Test Version Inputs.
+    $params = new IiifImageUrlParams(2.0);
+    $version = $params->getVersion();
+    $this->assertEquals(2.0, $version);
+
+    $params = new IiifImageUrlParams(2);
+    $version = $params->getVersion();
+    $this->assertEquals(2.0, $version);
+
+    $params = new IiifImageUrlParams("2");
+    $version = $params->getVersion();
+    $this->assertEquals(2.0, $version);
+
+    $params = new IiifImageUrlParams("2.0");
+    $version = $params->getVersion();
+    $this->assertEquals(2.0, $version);
+
+    $params = new IiifImageUrlParams(52);
+    $version = $params->getVersion();
+    $this->assertEquals(2.1, $version);
   }
 
   /**
