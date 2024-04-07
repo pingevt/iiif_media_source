@@ -61,3 +61,42 @@ entity.iiif_responsive_image_style.delete_form:
     _title: 'Delete an iiif responsive image style'
   requirements:
     _permission: 'administer iiif_responsive_image_style'
+
+
+
+
+iiif_image_style.effect_delete:
+  path: '/admin/config/media/iiif-responsive-image-style/manage/{iiif_image_style}/effects/{image_effect}/delete'
+  defaults:
+    _form: '\Drupal\iiif_image_style\Form\IiifImageEffectDeleteForm'
+    _title: 'Delete image effect'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
+  options:
+    parameters:
+      iiif_image_style:
+        type: entity:iiif_image_style
+
+iiif_image_style.effect_add_form:
+  path: '/admin/config/media/iiif-responsive-image-style/manage/{iiif_image_style}/add/{image_effect}'
+  defaults:
+    _form: '\Drupal\iiif_image_style\Form\IiifImageEffectAddForm'
+    _title: 'Add image effect'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
+  options:
+    parameters:
+      iiif_image_style:
+        type: entity:iiif_image_style
+
+iiif_image_style.effect_edit_form:
+  path: '/admin/config/media/iiif-responsive-image-style/manage/{iiif_image_style}/effects/{image_effect}'
+  defaults:
+    _form: '\Drupal\iiif_image_style\Form\IiifImageEffectEditForm'
+    _title: 'Edit image effect'
+  requirements:
+    _permission: 'administer iiif_responsive_image_style'
+  options:
+    parameters:
+      iiif_image_style:
+        type: entity:iiif_image_style

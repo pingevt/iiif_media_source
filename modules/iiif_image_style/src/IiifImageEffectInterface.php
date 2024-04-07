@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\iiif_image_style;
 
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
-interface IiifImageEffectInterface {
+interface IiifImageEffectInterface extends PluginInspectionInterface, ConfigurableInterface, DependentPluginInterface {
 
   /**
    * Applies an image effect to the image object.

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\iiif_image_style\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\iiif_image_style\EventsTrait;
 use Drupal\iiif_image_style\Event\IiifImageStyleSettingsEvent;
 use Drupal\iiif_image_style\IiifImageStyleInterface;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_image_style\IiifImageEffectPluginCollection;
 
 /**
  * Defines the iiif image style entity type.
@@ -26,9 +28,9 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
  *   handlers = {
  *     "list_builder" = "Drupal\iiif_image_style\IiifImageStyleListBuilder",
  *     "form" = {
- *       "add" = "Drupal\iiif_image_style\Form\IiifImageStyleForm",
- *       "edit" = "Drupal\iiif_image_style\Form\IiifImageStyleForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
+ *       "add" = "Drupal\iiif_image_style\Form\IiifImageStyleAddForm",
+ *       "edit" = "Drupal\iiif_image_style\Form\IiifImageStyleEditForm",
+ *       "delete" = "Drupal\iiif_image_style\Form\IiifImageStyleDeleteForm",
  *     },
  *   },
  *   config_prefix = "style",
@@ -47,11 +49,11 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
  *   config_export = {
  *     "name",
  *     "label",
- *     "params",
+ *     "effects",
  *   },
  * )
  */
-final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInterface {
+final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInterface, EntityWithPluginCollectionInterface {
 
   use EventsTrait;
 
@@ -66,11 +68,11 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   protected string $label;
 
   /**
-   * The array of params data for the IIIF url.
+   * The array of effects for the image.
    *
    * @var array
    */
-  protected $params = [];
+  protected $effects = [];
 
   /**
    * {@inheritdoc}
@@ -80,22 +82,73 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   }
 
   /**
+   * Holds the collection of image effects that are used by this image style.
+   *
+   * @var \Drupal\iiif_image_style\IiifImageEffectPluginCollection
+   */
+  protected $effectsCollection;
+
+  /**
    * {@inheritdoc}
    */
-  public function getParams(IiifImage $image = NULL): ?array {
-
-    $params = $this->params;
-    $e = new IiifImageStyleSettingsEvent($this, $image, $params);
-    $this->eventDispatcher()->dispatch($e, IiifImageStyleSettingsEvent::EVENT_NAME);
-
-    return $this->params ?? [];
+  public function addImageEffect(array $configuration) {
+    $configuration['uuid'] = $this->uuidGenerator()->generate();
+    $this->getEffects()->addInstanceId($configuration['uuid'], $configuration);
+    return $configuration['uuid'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormat(): string {
-    return $this->params['format'] ?? "";
+  public function getEffect($effect) {
+    return $this->getEffects()->get($effect);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEffects() {
+    if (!$this->effectsCollection) {
+      $this->effectsCollection = new IiifImageEffectPluginCollection($this->getImageEffectPluginManager(), $this->effects);
+      $this->effectsCollection->sort();
+    }
+    return $this->effectsCollection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginCollections() {
+    return ['effects' => $this->getEffects()];
+  }
+
+  /**
+   * Returns the image effect plugin manager.
+   *
+   * @return \Drupal\Component\Plugin\PluginManagerInterface
+   *   The image effect plugin manager.
+   */
+  protected function getImageEffectPluginManager() {
+    return \Drupal::service('plugin.manager.iiif_image_effect');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  // public function getParams(IiifImage $image = NULL): ?array {
+
+  //   $params = $this->params;
+  //   $e = new IiifImageStyleSettingsEvent($this, $image, $params);
+  //   $this->eventDispatcher()->dispatch($e, IiifImageStyleSettingsEvent::EVENT_NAME);
+
+  //   return $this->params ?? [];
+  // }
+
+  /**
+   * {@inheritdoc}
+   */
+  // public function getFormat(): string {
+  //   return $this->params['format'] ?? "";
+  // }
 
 }

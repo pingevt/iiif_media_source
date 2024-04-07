@@ -58,18 +58,22 @@ Field:
 - [x] Secondary (basic image) Widget includes image thumbnail.
 - [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
 - [ ] Do we need the base Iiif class?
-  - [ ] If so, needs to be a service.
-  - [ ] Inject it into the field class.
+  - [ ] If so, needs to be a service?
+  - [ ] Inject it into the field class?
 
 Image Styles / Responsive Images
 - [x] Image Style entity
 - [x] Responsive Image style entity
 - [x] IIIF Image style formatter
 - [x] IIIF Responsive Image style formatter
-- [ ] Add in Thirdparty form setting for focal point
-- [ ] Add in Thirdparty form setting for custom crop
-- [ ] We're going to need plugins... Imagestyle with plugins for the transformaers.
-
+- [ ] ~Add in Thirdparty form setting for focal point~
+- [ ] ~Add in Thirdparty form setting for custom crop~
+- [x] We're going to need plugins... Imagestyle with plugins for the transformers.
+- [ ] Add in some default IIIF Image Styles
+- [ ] Admin librabry w/ CSS.
+- [ ] Add in preview on Image Styles.
+- [ ] Document plugin so others can create plugins.
+- [ ] Documentation and helper text for forms.
 
 Media Source
 - [ ] Source just provides data for fields, if wanted on the media item.

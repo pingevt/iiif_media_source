@@ -10,53 +10,93 @@ iiif_image_style.style.*:
       label: Label
     uuid:
       type: string
-    params:
-      type: mapping
-      label: 'Params Definition'
-      mapping:
-        region:
-          type: string
-          label: ''
-        region_x:
-          type: float
-          nullable: true
-          label: ''
-        region_y:
-          type: float
-          nullable: true
-          label: ''
-        region_w:
-          type: float
-          nullable: true
-          label: ''
-        region_h:
-          type: float
-          nullable: true
-          label: ''
-        size:
-          type: string
-          label: ''
-        size_w:
-          type: float
-          nullable: true
-          label: ''
-        size_h:
-          type: float
-          nullable: true
-          label: ''
-        size_n:
-          type: float
-          nullable: true
-          label: ''
-        rotation:
-          type: float
-          label: ''
-        quality:
-          type: string
-          label: ''
-        format:
-          type: string
-          label: ''
+    effects:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          uuid:
+            type: uuid
+          id:
+            type: string
+          weight:
+            type: integer
+          data:
+            type: iiif_image_style.effect.[%parent.id]
+
+iiif_image_style.effect.*:
+  type: mapping
+  label: 'Effect settings'
+
+iiif_image_style.effect.iiif_image_resize:
+  type: mapping
+  label: 'IIIF Image Settings'
+  mapping:
+    size_w:
+      type: float
+      nullable: true
+      label: ''
+    size_h:
+      type: float
+      nullable: true
+      label: ''
+    size_n:
+      type: float
+      nullable: true
+      label: ''
+
+iiif_image_style.effect.iiif_image_settings:
+  type: mapping
+  label: 'IIIF Image Settings'
+  mapping:
+    region:
+      type: string
+      label: ''
+    region_x:
+      type: float
+      nullable: true
+      label: ''
+    region_y:
+      type: float
+      nullable: true
+      label: ''
+    region_w:
+      type: float
+      nullable: true
+      label: ''
+    region_h:
+      type: float
+      nullable: true
+      label: ''
+    size:
+      type: string
+      label: ''
+    size_w:
+      type: float
+      nullable: true
+      label: ''
+    size_h:
+      type: float
+      nullable: true
+      label: ''
+    size_n:
+      type: float
+      nullable: true
+      label: ''
+    rotation:
+      type: float
+      label: ''
+    quality:
+      type: string
+      label: ''
+    format:
+      type: string
+      label: ''
+
+
+
+
+
 
 iiif_image_style.responsive_image.*:
   type: config_entity
