@@ -91,20 +91,22 @@ class IiifImage extends IiifBase {
   /**
    *
    */
-  // public function getScaledUrl($width, $height): string {
+  public function getScaledUrl($width, $height): string {
 
-  //   $url = implode(DIRECTORY_SEPARATOR, [
-  //     $this->server,
-  //     $this->prefix,
-  //     $this->iiifId,
-  //     "full",
-  //     "!" . $width . "," . $height,
-  //     0,
-  //     "default." . $this->getDefaultExtension(),
-  //   ]);
+    // TODO: create settings obj, so proper validation happens.
 
-  //   return $url;
-  // }
+    $url = implode(DIRECTORY_SEPARATOR, [
+      $this->server,
+      $this->prefix,
+      $this->iiifId,
+      "full",
+      "!" . $width . "," . $height,
+      0,
+      "default." . $this->getDefaultExtension(),
+    ]);
+
+    return $url;
+  }
 
   /**
    *
