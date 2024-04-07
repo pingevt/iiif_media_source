@@ -3,3 +3,14 @@ services:
   #   class: '\Drupal\iiif_image_style\EventSubscriber\IiifImageStyleSubscriber'
   #   tags:
   #     - { name: 'event_subscriber' }
+  plugin.manager.iiif_image_effect:
+    class: Drupal\iiif_image_style\IiifImageEffectManager
+    parent: default_plugin_manager
+
+  plugin.manager.bob:
+    class: Drupal\iiif_image_style\BobPluginManager
+    parent: default_plugin_manager
+
+  plugin.manager.fred:
+    class: Drupal\iiif_image_style\FredPluginManager
+    parent: default_plugin_manager
