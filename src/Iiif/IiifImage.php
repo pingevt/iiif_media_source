@@ -116,4 +116,18 @@ class IiifImage extends IiifBase {
     return current($this->info->profile[1]->formats) ?? "jpg";
   }
 
+  /**
+   *
+   */
+  public function getApiVersion() {
+    if ($this->info->{'@context'} == "http://iiif.io/api/image/2/context.json") {
+      return 2.1;
+    }
+    if ($this->info->{'@context'} == "http://iiif.io/api/image/3/context.json") {
+      return 3;
+    }
+
+    return 2.0;
+  }
+
 }

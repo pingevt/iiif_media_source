@@ -11,6 +11,7 @@ use Drupal\iiif_image_style\Event\IiifImageStyleSettingsEvent;
 use Drupal\iiif_image_style\IiifImageStyleInterface;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_image_style\IiifImageEffectPluginCollection;
+use Drupal\iiif_image_style\IiifImageEffectInterface;
 
 /**
  * Defines the iiif image style entity type.
@@ -95,6 +96,15 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
     $configuration['uuid'] = $this->uuidGenerator()->generate();
     $this->getEffects()->addInstanceId($configuration['uuid'], $configuration);
     return $configuration['uuid'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteImageEffect( IiifImageEffectInterface $effect) {
+    $this->getEffects()->removeInstanceId($effect->getUuid());
+    $this->save();
+    return $this;
   }
 
   /**

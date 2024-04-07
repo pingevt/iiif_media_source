@@ -61,6 +61,31 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   /**
    * {@inheritdoc}
    */
+  public static function fullImageParams($version = 2.0): static {
+    $obj = new static($version);
+    $obj->buildFromArray([
+      'region' => 'full',
+      'region_actual' => 'full',
+      'region_x' => '',
+      'region_y' => '',
+      'region_w' => '',
+      'region_h' => '',
+      'size' => 'full',
+      'size_actual' => 'full',
+      'size_w' => '',
+      'size_h' => '',
+      'size_n' => '',
+      'rotation' => 0,
+      'quality' => 'default',
+      'format' => 'jpg',
+    ]);
+
+    return $obj;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function fromSettingsArray(array $settings, $version = 2.0): static {
     $obj = new static($version);
     $obj->buildFromArray($settings);

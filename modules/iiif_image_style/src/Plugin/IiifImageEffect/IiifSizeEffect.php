@@ -13,19 +13,20 @@ use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
  *
  */
 #[IiifImageEffect(
-  id: "iiif_image_resize",
-  label: new TranslatableMarkup("Resize"),
-  description: new TranslatableMarkup("Simple resizer")
+  id: "iiif_image_size",
+  label: new TranslatableMarkup("Size Param"),
+  description: new TranslatableMarkup("Just a settings form for the basic IIIF Size Param Settings")
 )]
-class IiifResizeEffect extends IiifConfigurableImageEffectBase {
+class IiifSizeEffect extends IiifConfigurableImageEffectBase {
 
   /**
    * {@inheritdoc}
    */
   public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
-    $params->size = "w,h";
-    $params->size_w = $this->configuration["size_w"];
-    $params->size_h = $this->configuration["size_h"];
+    $params->size = $this->configuration['size'];
+    $params->size_w = $this->configuration['size_w'];
+    $params->size_h = $this->configuration['size_h'];
+    $params->size_n = $this->configuration['size_n'];
   }
 
   /**
@@ -33,7 +34,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
    */
   public function getSummary() {
     $summary = [
-      '#theme' => 'iiif_image_resize_summary',
+      '#theme' => 'iiif_image_size_summary',
       '#data' => $this->configuration,
     ];
     $summary += parent::getSummary();
@@ -46,8 +47,10 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
    */
   public function defaultConfiguration() {
     return [
-      'size_w' => NULL,
-      'size_h' => NULL,
+      'size' => 'full',
+      'size_w' => '',
+      'size_h' => '',
+      'size_n' => '',
     ];
   }
 
@@ -55,12 +58,21 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $params = $this->configuration;
 
+    // Size.
+    $form['size'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Size'),
+      '#options' => IiifImageUrlParams::getSizeOptions(),
+      '#default_value' => $this->configuration['size'],
+      '#attributes' => [
+        'data-states' => 'size',
+      ],
+    ];
     $form['size_w'] = [
       '#title' => $this->t('w'),
       '#type' => 'number',
-      '#default_value' => $params['size_w'] ?? NULL,
+      '#default_value' => $this->configuration['size_w'],
       '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
@@ -77,13 +89,13 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
       ],
     ];
     $form['size_h'] = [
       '#title' => $this->t('h'),
       '#type' => 'number',
-      '#default_value' => $params['size_h'] ?? NULL,
+      '#default_value' => $this->configuration['size_h'],
       '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
@@ -100,7 +112,25 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
+      ],
+    ];
+    $form['size_n'] = [
+      '#title' => $this->t('n'),
+      '#type' => 'number',
+      '#default_value' => $this->configuration['size_n'],
+      '#description' => $this->t(''),
+      '#min' => 0,
+      '#max' => 100,
+      '#step' => 0.1,
+      '#states' => [
+        'visible' => [
+          ':input[data-states="size"]' => [
+            ['value' => 'pct:n'],
+            'or',
+            ['value' => '^pct:n'],
+          ],
+        ],
       ],
     ];
 
@@ -113,9 +143,10 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
 
+    $this->configuration['size'] = $form_state->getValue('size');
     $this->configuration['size_w'] = $form_state->getValue('size_w');
     $this->configuration['size_h'] = $form_state->getValue('size_h');
-    // $this->configuration['size_n'] = $form_state->getValue('size_n');
+    $this->configuration['size_n'] = $form_state->getValue('size_n');
   }
 
 }

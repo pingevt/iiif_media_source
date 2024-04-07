@@ -32,6 +32,28 @@ function iiif_image_style_theme($existing, $type, $theme, $path) {
         'attributes' => [],
       ],
     ],
+
+    'iiif_image_resize_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
+    'iiif_image_scale_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
+    'iiif_image_region_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
+    'iiif_image_size_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
+    'iiif_image_rotation_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
+    'iiif_image_quality_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
+    'iiif_image_format_summary' => [
+      'variables' => ['data' => NULL, 'effect' => []],
+    ],
   ];
 }
 
@@ -42,14 +64,12 @@ function iiif_image_style_theme($existing, $type, $theme, $path) {
  */
 function template_preprocess_iiif_image_style(&$variables) {
   $image = $variables['image'];
-
   if ($variables['iiif_image_style']) {
     $image_style = IiifImageStyle::load($variables['iiif_image_style']);
-    $style_settings = $image_style->getParams();
-    // ksm($style_settings);
-    // IiifImage::expandSettings($style_settings);
-
-    $params = IiifImageUrlParams::fromSettingsArray($style_settings);
+    $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
+    foreach ($image_style->getEffects() as $effectId => $effect) {
+      $effect->applyEffect($image, $params);
+    }
 
     $img_url = $image->getBuiltImageUrl($params);
   }
@@ -59,7 +79,6 @@ function template_preprocess_iiif_image_style(&$variables) {
   }
 
   // Grab final url components from the image style, and pass directly to an image formatter.
-  // $image->getBuiltImageUrl();
   $variables['content'] = [
     'image' => [
       '#theme' => 'image',

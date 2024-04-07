@@ -60,7 +60,7 @@ class IiifImageEffectDeleteForm extends ConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL) {
     $this->imageStyle = $iiif_image_style;
-    $this->imageEffect = $this->imageStyle->getEffect($iiif_image_style);
+    $this->imageEffect = $this->imageStyle->getEffect($image_effect);
 
     return parent::buildForm($form, $form_state);
   }
