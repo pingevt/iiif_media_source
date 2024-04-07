@@ -66,13 +66,15 @@ Image Styles / Responsive Images
 - [x] Responsive Image style entity
 - [x] IIIF Image style formatter
 - [x] IIIF Responsive Image style formatter
-- [ ] Add in external setting for focal point
-- [ ] Add in external setting for custom crop
+- [ ] Add in Thirdparty form setting for focal point
+- [ ] Add in Thirdparty form setting for custom crop
+- [ ] We're going to need plugins... Imagestyle with plugins for the transformaers.
 
 
 Media Source
 - [ ] Source just provides data for fields, if wanted on the media item.
 - [ ] Provides:
+  - [ ] version
   - [ ] width
   - [ ] height
   - [ ] sizes
@@ -85,10 +87,12 @@ Media Source
   - [ ] supports
 
 Submodule: Focalpoint
-- [ ] Add in widget to define a focal point of the image.
+- [x] Add in widget to define a focal point of the image.
+- [ ] Thirdparty settings or something so we can combine everything into 1 form element.
 
 Submodule: Crop
-- [ ] Add in widget to define a crop for the image.
+- [x] Add in widget to define a crop for the image.
+- [ ] Thirdparty settings or something so we can combine everything into 1 form element.
 
 Tests:
 -
