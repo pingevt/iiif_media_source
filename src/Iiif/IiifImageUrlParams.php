@@ -494,7 +494,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
       case 'w,':
         $dimensions['width'] = $settings['size_w'];
-        $dimensions['height'] = (int) ceil($settings['size_w'] * $this->getHeight() / $this->getWidth());
+        $dimensions['height'] = (int) ceil($settings['size_w'] * $image->getHeight() / $image->getWidth());
 
         break;
 
@@ -505,7 +505,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
       case ',h':
 
-        $dimensions['width'] = (int) ceil($settings['size_h'] * $this->getWidth() / $this->getHeight());
+        $dimensions['width'] = (int) ceil($settings['size_h'] * $image->getWidth() / $image->getHeight());
         $dimensions['height'] = $settings['size_h'];
 
         break;

@@ -193,7 +193,7 @@ function iiif_image_focalpoint_field_widget_single_element_form_alter(&$element,
       // todo: fix this so we remove it responsibly.
       unset($element['thumbnail']);
 
-      $element['#process'] = ['iiif_image_focalpoint_process_widget'];
+      $element['#process'][] = 'iiif_image_focalpoint_process_widget';
 
       $element['#item'] = $items[$delta]->getValue();
 
@@ -262,7 +262,8 @@ function iiif_image_focalpoint_process_widget($element, FormStateInterface $form
 
     $element['preview'] = $preview;
   }
-ksm($element);
+
+  // ksm($element);
   // Add the focal point field.
   $element['focal_point'] = createFocalPointField($element['#field_name'], $element_selectors, $default_focal_point_value);
 

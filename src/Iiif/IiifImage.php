@@ -14,7 +14,7 @@ class IiifImage extends IiifBase {
   protected $thumbHeight = 200;
 
   /**
-   * }.
+   *
    */
   public function getWidth(): ?int {
     return $this->info->width ?? NULL;

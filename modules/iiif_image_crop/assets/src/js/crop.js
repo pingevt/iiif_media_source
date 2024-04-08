@@ -3,7 +3,7 @@
 console.log('hello World');
 
 
-let imgs = document.querySelectorAll('.field--widget-iiif-image-crop-widget .cropper-image img');
+let imgs = document.querySelectorAll('.field--widget-iiif-image-crop-widget .cropper-image img, .field--widget-iiif-image-widget .cropper-image img');
 console.log(imgs);
 
 imgs.forEach(element => {
