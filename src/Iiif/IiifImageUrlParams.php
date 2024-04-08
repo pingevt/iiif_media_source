@@ -288,11 +288,76 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   /**
    * {@inheritdoc}
    */
+  public function getRegionSettings(): array {
+    $data = [];
+
+    $keys = [
+      'region',
+      'region_actual',
+      'region_x',
+      'region_y',
+      'region_w',
+      'region_h',
+    ];
+
+    foreach ($keys as $k) {
+      $data[$k] = $this->params[$k];
+    }
+
+    return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getRegion(): string {
 
     $this->expandSettings();
 
     return $this->params['region_actual'];
+  }
+
+  /**
+   *
+   */
+  public function applyRegionSettings(array $settings): void {
+    $keys = [
+      'region',
+      'region_actual',
+      'region_x',
+      'region_y',
+      'region_w',
+      'region_h',
+    ];
+
+    foreach ($keys as $key) {
+      if ($settings[$key]) {
+        $this->params[$key] = $settings[$key];
+      }
+    }
+
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSizeSettings(): array {
+    $data = [];
+
+    $keys = [
+      'size',
+      'size_actual',
+      'size_x',
+      'size_y',
+      'size_n',
+    ];
+
+    foreach ($keys as $k) {
+      $data[$k] = $this->params[$k];
+    }
+
+    return $data;
   }
 
   /**
@@ -303,6 +368,26 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     $this->expandSettings();
 
     return $this->params['size_actual'];
+  }
+
+  /**
+   *
+   */
+  public function applySizeSettings(array $settings): void {
+    $keys = [
+      'size',
+      'size_actual',
+      'size_x',
+      'size_y',
+      'size_n',
+    ];
+
+    foreach ($keys as $key) {
+      if ($settings[$key]) {
+        $this->params[$key] = $settings[$key];
+      }
+    }
+
   }
 
   /**
@@ -502,6 +587,60 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     // Validate maxWidth/maxHeight/MaxArea.
 
     return $dimensions;
+  }
+
+  /**
+   *
+   */
+  public function transformPosition(IiifImage $image): array {
+    $settings = $this->params;
+
+    $dimensions = [
+      'width' => $image->getWidth(),
+      'height' => $image->getHeight(),
+    ];
+
+    $position = [
+      'x' => 0,
+      'y' => 0,
+    ];
+
+    // Process the region dimension.
+    switch ($settings['region']) {
+      // case 'full':
+      //   break;
+
+      case 'square':
+        /**
+         * Defined in IIIF as:
+         * The region is defined as an area where the width
+         * and height are both equal to the length of the shorter dimension of
+         * the complete image. The region may be positioned anywhere in the
+         * longer dimension of the image content at the server’s discretion,
+         * and centered is often a reasonable default.
+         */
+        if ($dimensions['width'] > $dimensions['height']) {
+          $position['x'] = (int) ($dimensions['width'] - $dimensions['height']) / 2;
+        }
+        else {
+          $position['x'] = (int) ($dimensions['height'] - $dimensions['width']) / 2;
+        }
+        break;
+
+      case 'x,y,w,h':
+        $position['x'] = $settings['region_x'];
+        $position['y'] = $settings['region_y'];
+        break;
+
+      case 'pct:x,y,w,h':
+
+        $position['x'] = (int) $settings['region_x'] / 100 * $dimensions['width'];
+        $position['y'] = (int) $settings['region_y'] / 100 * $dimensions['height'];
+
+        break;
+    }
+
+    return $position;
   }
 
   /**

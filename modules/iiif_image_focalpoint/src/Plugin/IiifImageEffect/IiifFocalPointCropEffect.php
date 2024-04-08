@@ -28,9 +28,26 @@ class IiifFocalPointCropEffect extends IiifConfigurableImageEffectBase {
     $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
     $crop = Crop::findCrop($image->getFullUrl(), $crop_type);
 
+    $offset = ['x' => 0, 'y' => 0];
     $center = ['x' => 0, 'y' => 0];
-    $orig_width = $image->getWidth();
-    $orig_height = $image->getHeight();
+
+    if ($params->getSetting('region') == "full") {
+      $orig_width = $image->getWidth();
+      $orig_height = $image->getHeight();
+    }
+    else {
+
+      // Create temp Params with region only and get dimensions.
+      $tempParams = IiifImageUrlParams::fullImageParams();
+      $tempParams->applyRegionSettings($params->getRegionSettings());
+
+      $dim = $tempParams->transformDimensions($image);
+      $offset = $tempParams->transformPosition($image);
+
+      $orig_width = $dim['width'];
+      $orig_height = $dim['height'];
+
+    }
 
     // Grab Crop center point, or default settings.
     if ($crop) {
@@ -43,6 +60,10 @@ class IiifFocalPointCropEffect extends IiifConfigurableImageEffectBase {
       $center['x'] = $orig_width * $x_ra / 100;
       $center['y'] = $orig_height * $y_ra / 100;
     }
+
+    // Adjust if there is any offset.
+    $center['x'] -= $offset['x'];
+    $center['y'] -= $offset['y'];
 
     $fp_x = $center['x'] ? (int) $center['x'] : 0;
     $fp_y = $center['y'] ? (int) $center['y'] : 0;
@@ -74,8 +95,8 @@ class IiifFocalPointCropEffect extends IiifConfigurableImageEffectBase {
     }
 
     $params->region = "x,y,w,h";
-    $params->region_x = $rx1;
-    $params->region_y = $ry1;
+    $params->region_x = $rx1 + $offset['x'];
+    $params->region_y = $ry1 + $offset['y'];
     $params->region_w = ($rx2 - $rx1);
     $params->region_h = ($ry2 - $ry1);
 

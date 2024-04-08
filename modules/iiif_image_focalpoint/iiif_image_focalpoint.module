@@ -95,7 +95,7 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
               $focal_point_manager->saveCropEntity($x, $y, $item->width, $item->height, $crop);
             }
             else {
-              ksm("didn't save crop");
+              // ksm("didn't save crop");
             }
           }
         }

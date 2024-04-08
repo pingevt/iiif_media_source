@@ -55,12 +55,32 @@ interface IiifImageUrlParamsInterface {
   /**
    *
    */
+  public function getRegionSettings(): array;
+
+  /**
+   *
+   */
   public function getRegion(): string;
 
   /**
    *
    */
+  public function applyRegionSettings(array $settings): void;
+
+  /**
+   *
+   */
+  public function getSizeSettings(): array;
+
+  /**
+   *
+   */
   public function getSize(): string;
+
+  /**
+   *
+   */
+  public function applySizeSettings(array $settings): void;
 
   /**
    *

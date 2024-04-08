@@ -28,7 +28,7 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
   // ksm("hi");
   // Only worry about entities that are fieldable.
   if ($entity instanceof FieldableEntityInterface) {
-    ksm("checking fields...");
+    // ksm("checking fields...");
     // Loop all the fields and save focal point values for images.
     foreach ($entity->getFieldDefinitions() as $key => $field) {
       // ksm($key, $field->getType());
@@ -53,7 +53,7 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
           $crop_manager = \Drupal::service('iiif_image_crop.crop_manager');
           // $crop = $crop_manager->getCropEntity($item->entity, $crop_type);
           $crop = $crop_manager->getCropIiifEntity($item, $crop_type, $entity->id());
-          ksm($crop);
+          // ksm($crop);
 
           if ($crop) {
             $img_crop = NULL;
@@ -68,7 +68,7 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
               $image = $item->getImg($item->getValue());
               $width = $image->getWidth();
               $height = $image->getHeight();
-              ksm($crop);
+              // ksm($crop);
               // Keep the original crop value to be able to use it during hooks.
               if (!$crop->get('x')->isEmpty() && !$crop->get('y')->isEmpty() && !$crop->get('width')->isEmpty() && !$crop->get('height')->isEmpty()) {
                 $x = $crop->get('x')->value;
@@ -80,14 +80,14 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
               }
             }
 
-            ksm($img_crop, $item);
+            // ksm($img_crop, $item);
 
             if ($img_crop && $item->width && $item->height) {
               [$x, $y, $w, $h] = explode(',', $img_crop);
               $crop_manager->saveCropEntity($x, $y, $w, $h, $width, $height, $crop);
             }
             else {
-              ksm("didn't save crop");
+              // ksm("didn't save crop");
             }
           }
         }
