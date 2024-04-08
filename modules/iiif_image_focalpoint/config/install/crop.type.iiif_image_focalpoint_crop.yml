@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+label: 'IIIF Image Focal Point Crop'
+id: iiif_image_focalpoint_crop
+description: 'Crop type used by IIIF Image Focalpoint Crop module.'
+aspect_ratio: ''
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: null
+hard_limit_height: null

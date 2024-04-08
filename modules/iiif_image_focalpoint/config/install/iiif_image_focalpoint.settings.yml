@@ -1,0 +1,2 @@
+crop_type: 'iiif_image_focalpoint_crop'
+default_value: '50,50'

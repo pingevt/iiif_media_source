@@ -153,21 +153,16 @@ class IiifImageFocalPointWidget extends StringTextfieldWidget implements Contain
    */
   public static function process($element, FormStateInterface $form_state, $form) {
     $item = $element['#item'];
-    // ksm($element);
 
     $element_selectors = [
       'focal_point' => 'focal-point-' . implode('-', $element['#parents']),
     ];
 
     if (!isset($item['focal_point']) && isset($item['full_url'])) {
-      // $url = $item['_image']->getFullUrl();
-      // todo; should we make our own crop type?
-      $crop_type = \Drupal::config('focal_point.settings')->get('crop_type');
-// ksm($url, $crop_type);
+      $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
       $crop = Crop::findCrop($item['full_url'], $crop_type);
-
       if ($crop) {
-        $anchor = \Drupal::service('focal_point.manager')->absoluteToRelative($crop->x->value, $crop->y->value, $item['width'], $item['height']);
+        $anchor = \Drupal::service('iiif_image_focalpoint.focal_point_manager')->absoluteToRelative($crop->x->value, $crop->y->value, $item['width'], $item['height']);
         $item['focal_point'] = "{$anchor['x']},{$anchor['y']}";
       }
     }
@@ -201,7 +196,7 @@ class IiifImageFocalPointWidget extends StringTextfieldWidget implements Contain
    * Validation Callback; Focal Point process field.
    */
   public static function validateFocalPoint($element, FormStateInterface $form_state) {
-    if (empty($element['#value']) || (FALSE === \Drupal::service('focal_point.manager')->validateFocalPoint($element['#value']))) {
+    if (empty($element['#value']) || (FALSE === \Drupal::service('iiif_image_focalpoint.focal_point_manager')->validateFocalPoint($element['#value']))) {
       $replacements = ['@title' => strtolower($element['#title'])];
       $form_state->setError($element, new TranslatableMarkup('The @title field should be in the form "leftoffset,topoffset" where offsets are in percentages. Ex: 25,75.', $replacements));
     }
