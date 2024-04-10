@@ -66,14 +66,15 @@ Image Styles / Responsive Images
 - [x] Responsive Image style entity
 - [x] IIIF Image style formatter
 - [x] IIIF Responsive Image style formatter
-- [ ] ~Add in Thirdparty form setting for focal point~
-- [ ] ~Add in Thirdparty form setting for custom crop~
+- [ ] ~~Add in Thirdparty form setting for focal point~~
+- [ ] ~~Add in Thirdparty form setting for custom crop~~
 - [x] We're going to need plugins... Imagestyle with plugins for the transformers.
 - [ ] Add in some default IIIF Image Styles
 - [ ] Admin librabry w/ CSS.
 - [ ] Add in preview on Image Styles.
 - [ ] Document plugin so others can create plugins.
 - [ ] Documentation and helper text for forms.
+- [ ] Fix errors when using "original image" for responsive images
 
 Media Source
 - [ ] Source just provides data for fields, if wanted on the media item.
@@ -92,11 +93,14 @@ Media Source
 
 Submodule: Focalpoint
 - [x] Add in widget to define a focal point of the image.
-- [ ] Thirdparty settings or something so we can combine everything into 1 form element.
+- [x] Thirdparty settings or something so we can combine everything into 1 form element.
 
 Submodule: Crop
 - [x] Add in widget to define a crop for the image.
-- [ ] Thirdparty settings or something so we can combine everything into 1 form element.
+- [x] Thirdparty settings or something so we can combine everything into 1 form element.
 
 Tests:
--
+- Unit Tests
+  - [ ] Need to test and finish Dimension in `IiifImageUrlParams`
+- Functional Tests
+- Browser Tests
