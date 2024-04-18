@@ -91,6 +91,12 @@ Media Source
   - [ ] maxWidth
   - [ ] supports
 
+Submodule: Image Handling
+- [ ] Class to handle form elements for adding to widgets.
+- [ ] Class to handle form elements for own widgets.
+- [ ] Need a common (CSS) library.
+- [ ] Need logic for 1 or other handlers.
+
 Submodule: Focalpoint
 - [x] Add in widget to define a focal point of the image.
 - [x] Thirdparty settings or something so we can combine everything into 1 form element.
@@ -98,6 +104,8 @@ Submodule: Focalpoint
 Submodule: Crop
 - [x] Add in widget to define a crop for the image.
 - [x] Thirdparty settings or something so we can combine everything into 1 form element.
+- [ ] "Drupalize" js file.
+- [ ] Need JS solution to hide field (copy from FP)
 
 Tests:
 - Unit Tests

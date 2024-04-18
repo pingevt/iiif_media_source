@@ -1,6 +1,5 @@
-// import Cropper from 'cropperjs';
 
-console.log('hello World');
+console.log('hello World 42');
 
 
 let imgs = document.querySelectorAll('.field--widget-iiif-image-crop-widget .cropper-image img, .field--widget-iiif-image-widget .cropper-image img');
@@ -8,7 +7,7 @@ console.log(imgs);
 
 imgs.forEach(element => {
   // console.log(element, element.parentElement.parentElement);
-  let cropWrapperInput = element.parentElement.parentElement.querySelector('.crop-wrapper input');
+  let cropWrapperInput = element.closest(".field--type-iiif-id").querySelector('.crop-wrapper input');
   console.log(cropWrapperInput);
   console.log(cropWrapperInput.value);
 
@@ -17,14 +16,17 @@ imgs.forEach(element => {
 
 
   const cropper = new Cropper(element, {
-    viewMode: 1,
+    viewMode: 2,
     scalable: false,
-    rotatable: false,
-    // zoomable: false,
+    rotatable: true,
+    dragMode: 'move',
+    zoomable: false,
     // aspectRatio: 16 / 9,
+    // data: {},
     ready() {
       console.log("ready");
       let initData = cropWrapperInput.value.split(",");
+      // todo add this to data attrs or something to pull this and init cropper, rather than instead of waiting for cropper to be ready.
       let initImgData = this.cropper.getImageData();
 
       console.log(initData, initImgData);
@@ -43,7 +45,7 @@ imgs.forEach(element => {
       initialized = true;
     },
     crop(event) {
-      console.log("crop");
+      // console.log("crop");
 
       // console.log(event);
       // console.log(event.detail.x);
@@ -80,17 +82,4 @@ imgs.forEach(element => {
     // }
   });
 
-
-  // let initData = cropWrapperInput.value.split(",");
-  // let initImgData = cropper.getImageData();
-  // console.log(initData, initImgData);
-
-  // let intCrop = {
-  //   x: initData[0] * initImgData.naturalWidth,
-  //   y: initData[1] * initImgData.naturalHeight,
-  //   width: initData[2] * initImgData.naturalWidth,
-  //   height: initData[3] * initImgData.naturalHeight,
-  // };
-
-  // cropper.setData(intCrop);
 });

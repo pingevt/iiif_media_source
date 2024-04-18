@@ -113,7 +113,7 @@ class IiifImage extends IiifBase {
    */
   public function getDefaultExtension(): string {
     // Asummption here that the first element is the default Extension.
-    return current($this->info->profile[1]->formats) ?? "jpg";
+    return isset($this->info->profile[1]->formats) ? current($this->info->profile[1]->formats) : "jpg";
   }
 
   /**

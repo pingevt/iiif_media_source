@@ -29,7 +29,6 @@ abstract class IiifBase {
    *
    */
   public function __construct(string $server, string $prefix, string $id, \stdClass $info = new \stdClass()) {
-
     $this->httpClient = \Drupal::httpClient();
 
     $this->server = $server;
@@ -53,7 +52,7 @@ abstract class IiifBase {
     // @todo cache this call on usage and for long term.
     $url = implode("/", [$this->server, $this->prefix, $this->iiifId, "info.json"]);
     $data = $this->call($url);
-
+ksm($url, $data);
     if ($data) {
       $this->info = json_decode($data->getBody()->__toString());
     }
@@ -72,12 +71,16 @@ abstract class IiifBase {
    */
   protected function call(string $url, array $headers = []): ?Response {
     $response = NULL;
-
+    // $headers = [
+    //   'User-Agent' => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+    // ];
+    // ksm($headers);
     try {
-      $response = $this->httpClient->get($url, $headers);
+      $response = $this->httpClient->get("http://media.nga.gov/iiif/0f89f4fa-f116-4087-acac-e1bca883d150/info.json", $headers);
     }
     catch (\Exception $e) {
       // todo: log or something.
+      ksm($e);
     }
     return $response;
   }

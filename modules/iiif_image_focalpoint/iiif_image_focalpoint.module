@@ -11,6 +11,8 @@ use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
+use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
+
 /**
  * Implements hook_theme().
  */
@@ -173,144 +175,11 @@ function iiif_image_focalpoint_field_widget_settings_summary_alter(array &$summa
 function iiif_image_focalpoint_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
 
   if ($context['widget']->getPluginId() == "iiif_image_widget") {
-    // ksm(func_get_args());
-    // ksm($context['widget']->getPluginId());
-    // ksm($context['widget']->getSettings());
-    // ksm($context['widget']->getThirdPartySettings());
-    // ksm($context['widget']->getPluginDefinition());
-    // ksm($element);
 
     $settings = $context['widget']->getThirdPartySettings('iiif_image_focalpoint');
-    // ksm($settings, isset($settings['add_iiif_focalpoint']), $settings['add_iiif_focalpoint']);
 
     if ($settings && isset($settings['add_iiif_focalpoint']) && $settings['add_iiif_focalpoint']) {
-      // todo: bring in the focal point field element.
-      // ksm($element, $context);
-
-      $items = $context['items'];
-      $delta = $context['delta'];
-
-      // todo: fix this so we remove it responsibly.
-      unset($element['thumbnail']);
-
-      $element['#process'][] = 'iiif_image_focalpoint_process_widget';
-
-      $element['#item'] = $items[$delta]->getValue();
-
-      if (!$items[$delta]->isEmpty()) {
-        // ksm($items[$delta]);
-
-        $img = $items[$delta]->getImg($items[$delta]->getValue());
-        $element['#item']['full_url'] = $img->getFullUrl();
-        $element['#item']['width'] = $img->getwidth();
-        $element['#item']['height'] = $img->getHeight();
-
-        // todo fix with 3rd party setting.
-        $scaled_url = $img->getScaledUrl(500, 500);
-
-        $element['preview'] = [
-          '#theme' => 'image',
-          '#uri' => $scaled_url,
-          '#weight' => 1,
-          '#attributes' => [
-            'style' => "margin: 0 1rem 3rem 0",
-          ],
-        ];
-
-      }
-
-      // todo fix with 3rd party setting.
-      $element['#focal_point'] = [
-        'offsets' => "50,50",
-      ];
-
+      $element = IiifImageHandlingProcessor::buildElementFocalPoint($element, $form_state, $context);
     }
-  }
-}
-
-function iiif_image_focalpoint_process_widget($element, FormStateInterface $form_state, $form) {
-  $item = $element['#item'];
-
-  $element_selectors = [
-    'focal_point' => 'focal-point-' . implode('-', $element['#parents']),
-  ];
-
-  if (!isset($item['focal_point']) && isset($item['full_url'])) {
-    $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
-    $crop = Crop::findCrop($item['full_url'], $crop_type);
-    // ksm($crop, $item);
-    if ($crop) {
-      $anchor = \Drupal::service('iiif_image_focalpoint.focal_point_manager')->absoluteToRelative($crop->x->value, $crop->y->value, $item['width'], $item['height']);
-      // ksm($anchor);
-      $item['focal_point'] = "{$anchor['x']},{$anchor['y']}";
-    }
-  }
-
-  $default_focal_point_value = $item['focal_point'] ?? $element['#focal_point']['offsets'];
-
-  // Add the focal point indicator to preview.
-  if (isset($element['preview'])) {
-    $preview = [
-      'indicator' => createFocalPointIndicator($element['#delta'], $element_selectors),
-      'thumbnail' => $element['preview'],
-    ];
-
-    // Use the existing preview weight value so that the focal point indicator
-    // and thumbnail appear in the correct order.
-    $preview['#weight'] = $element['preview']['#weight'] ?? 0;
-    unset($preview['thumbnail']['#weight']);
-
-    $element['preview'] = $preview;
-  }
-
-  // ksm($element);
-  // Add the focal point field.
-  $element['focal_point'] = createFocalPointField($element['#field_name'], $element_selectors, $default_focal_point_value);
-
-  return $element;
-}
-
-function createFocalPointField($field_name, array $element_selectors, $default_focal_point_value) {
-
-  $field = [
-    '#type' => 'textfield',
-    '#title' => new TranslatableMarkup('Focal point'),
-    '#description' => new TranslatableMarkup('Specify the focus of this image in the form "leftoffset,topoffset" where offsets are in percents. Ex: 25,75'),
-    '#default_value' => $default_focal_point_value,
-    '#element_validate' => ['validateFocalPoint'],
-    '#attributes' => [
-      'class' => ['focal-point', $element_selectors['focal_point']],
-      'data-selector' => $element_selectors['focal_point'],
-      'data-field-name' => $field_name,
-    ],
-    '#wrapper_attributes' => [
-      'class' => ['focal-point-wrapper'],
-    ],
-    '#attached' => [
-      'library' => ['focal_point/drupal.focal_point'],
-    ],
-  ];
-
-  return $field;
-}
-
-function createFocalPointIndicator($delta, array $element_selectors) {
-  $indicator = [
-    '#type' => 'html_tag',
-    '#tag' => 'div',
-    '#attributes' => [
-      'class' => ['focal-point-indicator'],
-      'data-selector' => $element_selectors['focal_point'],
-      'data-delta' => $delta,
-    ],
-  ];
-
-  return $indicator;
-}
-
-function validateFocalPoint($element, FormStateInterface $form_state) {
-  if (empty($element['#value']) || (FALSE === \Drupal::service('iiif_image_focalpoint.focal_point_manager')->validateFocalPoint($element['#value']))) {
-    $replacements = ['@title' => strtolower($element['#title'])];
-    $form_state->setError($element, new TranslatableMarkup('The @title field should be in the form "leftoffset,topoffset" where offsets are in percentages. Ex: 25,75.', $replacements));
   }
 }

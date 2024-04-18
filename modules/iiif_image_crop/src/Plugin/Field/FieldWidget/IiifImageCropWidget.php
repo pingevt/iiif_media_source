@@ -164,7 +164,7 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
       // $url = $item['_image']->getFullUrl();
       // todo; should we make our own crop type?
       $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
-// ksm($url, $crop_type);
+      // ksm($url, $crop_type);
 
       // ksm($item['full_url'], $crop_type);
       $crop = Crop::findCrop($item['full_url'], $crop_type);

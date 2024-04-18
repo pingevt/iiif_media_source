@@ -122,7 +122,11 @@ class IiifId extends StringItem {
   }
 
   public function getImg($values) {
-    return new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);
+    $info = NULL;
+    if (!empty($values['info'])) {
+      $info = json_decode($values['info']);
+    }
+    return new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value'], $info);
   }
 
 

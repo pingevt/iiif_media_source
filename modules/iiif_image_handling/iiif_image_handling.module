@@ -1,0 +1,32 @@
+<?php
+
+
+
+/**
+ * Implements hook_theme().
+ */
+function iiif_image_handling_theme($existing, $type, $theme, $path) {
+  return [
+    'iiif_image_handler2' => [
+      'variables' => [
+        // 'image' => '',
+        // 'crop' => '',
+        // 'size_type' => 'resize_and_crop',
+        // 'dest_width' => 100,
+        // 'dest_height' => 100,
+        // 'region' => '',
+        // 'size' => '',
+        // 'rotation' => '',
+        // 'quality' => '',
+        // 'format' => '',
+        // 'url_params' => NULL,
+        'attributes' => [],
+      ],
+    ],
+  ];
+}
+
+
+function template_preprocess_iiif_image_handler2(&$variables) {
+  ksm($variables);
+}

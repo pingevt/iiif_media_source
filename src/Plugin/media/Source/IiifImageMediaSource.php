@@ -34,7 +34,7 @@ use Symfony\Component\Mime\MimeTypes;
  *   id = "iiif_image",
  *   label = @Translation("IIIF External Image"),
  *   description = @Translation("Use remote IIIF Image Data."),
- *   allowed_field_types = {"string"},
+ *   allowed_field_types = {"iiif_id"},
  *   default_thumbnail_filename = "no-thumbnail.png"
  * )
  */
@@ -96,6 +96,41 @@ class IiifImageMediaSource extends MediaSourceBase {
   /**
    * {@inheritdoc}
    */
+  protected function getSourceFieldName() {
+    // If the Field UI module is installed, and has a specific prefix
+    // configured, use that. Otherwise, just default to using 'field_' as
+    // a prefix, which is the default that Field UI ships with.
+    // $prefix = $this->configFactory->get('field_ui.settings')
+    //   ->get('field_prefix') ?? 'field_';
+    // // Some media sources are using a deriver, so their plugin IDs may contain
+    // // a separator (usually ':') which is not allowed in field names.
+    // $base_id = $prefix . 'media_' . str_replace(static::DERIVATIVE_SEPARATOR, '_', $this->getPluginId());
+    // $tries = 0;
+    // $storage = $this->entityTypeManager->getStorage('field_storage_config');
+
+    $prefix = $this->configFactory->get('field_ui.settings')
+      ->get('field_prefix') ?? 'field_';
+    $base_id = $prefix . 'media_iiif_id';
+    $tries = 0;
+    $storage = $this->entityTypeManager->getStorage('field_storage_config');
+
+    // Iterate at least once, until no field with the generated ID is found.
+    do {
+      $id = $base_id;
+      // If we've tried before, increment and append the suffix.
+      if ($tries) {
+        $id .= '_' . $tries;
+      }
+      $field = $storage->load('media.' . $id);
+      $tries++;
+    } while ($field);
+
+    return $id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getMetadataAttributes() {
     return [
       // 'title' => $this->t('Title'),
@@ -106,6 +141,9 @@ class IiifImageMediaSource extends MediaSourceBase {
       // 'uri' => $this->t('URL'),
       'width' => $this->t('Width'),
       'height' => $this->t('Height'),
+      'formats' => $this->t('Formats'),
+      'qualities' => $this->t('Qualities'),
+      'supports' => $this->t('Supports'),
     ];
   }
 

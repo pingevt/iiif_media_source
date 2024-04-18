@@ -331,7 +331,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     ];
 
     foreach ($keys as $key) {
-      if ($settings[$key]) {
+      if (!empty($settings[$key])) {
         $this->params[$key] = $settings[$key];
       }
     }
@@ -348,8 +348,8 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     $keys = [
       'size',
       'size_actual',
-      'size_x',
-      'size_y',
+      'size_w',
+      'size_h',
       'size_n',
     ];
 
@@ -377,13 +377,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     $keys = [
       'size',
       'size_actual',
-      'size_x',
-      'size_y',
+      'size_w',
+      'size_h',
       'size_n',
     ];
 
     foreach ($keys as $key) {
-      if ($settings[$key]) {
+      if (!empty($settings[$key])) {
         $this->params[$key] = $settings[$key];
       }
     }
@@ -446,6 +446,8 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       'width' => $image->getWidth(),
       'height' => $image->getHeight(),
     ];
+
+    ksm($settings, $image->getWidth());
 
     // Process the region dimension.
     switch ($settings['region']) {
@@ -540,7 +542,18 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '!w,h':
-        // todo
+        // Figure out percentages.
+        $width_ratio = (float) $settings['size_w'] / (float) $dimensions['width'];
+        $height_ratio = (float) $settings['size_h'] / (float) $dimensions['height'];
+
+        if ($dimensions['width'] < $dimensions['height']) {
+          $dimensions['width'] = (int) round($height_ratio * $dimensions['width']);
+          $dimensions['height'] = (int) round($height_ratio * $dimensions['height']);
+        }
+        else {
+          $dimensions['width'] = (int) round($width_ratio * $dimensions['width']);
+          $dimensions['height'] = (int) round($width_ratio * $dimensions['height']);
+        }
 
         break;
 

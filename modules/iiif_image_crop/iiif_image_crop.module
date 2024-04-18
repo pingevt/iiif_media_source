@@ -6,10 +6,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\crop\Entity\Crop;
 use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
 
 /**
  * Implements hook_entity_insert().
@@ -145,6 +147,11 @@ function iiif_image_crop_field_widget_single_element_form_alter(&$element, FormS
     $settings = $context['widget']->getThirdPartySettings('iiif_image_crop');
 
     if ($settings && isset($settings['add_iiif_crop']) && $settings['add_iiif_crop']) {
+
+
+      $element = IiifImageHandlingProcessor::buildElementCrop($element, $form_state, $context);
+      return;
+
       // todo - can i simplify this with a subform or something?
 
       $items = $context['items'];
@@ -162,6 +169,14 @@ function iiif_image_crop_field_widget_single_element_form_alter(&$element, FormS
         // ksm($items[$delta]);
 
         $img = $items[$delta]->getImg($items[$delta]->getValue());
+        $full_params = IiifImageUrlParams::fullImageParams();
+        $full_params->applySizeSettings([
+          'size' => "!w,h",
+          'size_w' => 500,
+          'size_h' => 500,
+        ]);
+        $thumb_dimensions = $full_params->transformDimensions($img);
+        ksm($thumb_dimensions);
         $element['#item']['full_url'] = $img->getFullUrl();
         $element['#item']['width'] = $img->getwidth();
         $element['#item']['height'] = $img->getHeight();
@@ -173,9 +188,11 @@ function iiif_image_crop_field_widget_single_element_form_alter(&$element, FormS
           '#uri' => $scaled_url,
           '#weight' => 1,
           '#attributes' => [
-            'style' => "margin: 0 1rem 3rem 0",
+          //   'style' => "margin: 0 1rem 3rem 0",
+            // 'width' => $thumb_dimensions['width'] . "px",
+            // 'height' => $thumb_dimensions['height'] . "px",
           ],
-          '#prefix' => "<div class='cropper-image'>",
+          '#prefix' => "<div class='cropper-image' style='width:" . $thumb_dimensions['width'] . "px; height:" . $thumb_dimensions['height'] . "px'>",
           '#suffix' => "</div>",
         ];
       }

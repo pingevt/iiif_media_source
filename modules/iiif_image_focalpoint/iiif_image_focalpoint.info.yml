@@ -8,5 +8,6 @@ package: Media
 dependencies:
   - focal_point:focal_point
   - iiif_media_source:iiif_image_style
+  - iiif_media_source:iiif_image_handling
 
 configure: null
