@@ -30,10 +30,8 @@
         }
       });
 
+      once('iiif-crop-cropper', '.field--widget-iiif-image-crop-widget .cropper-image img, .field--widget-iiif-image-widget .cropper-image img', context).forEach(element => {
 
-      let imgs = document.querySelectorAll('.field--widget-iiif-image-crop-widget .cropper-image img, .field--widget-iiif-image-widget .cropper-image img');
-
-      imgs.forEach(element => {
         let cropWrapperInput = element.closest(".field--type-iiif-id").querySelector('.crop-wrapper input');
 
         let initialized = false;

@@ -108,6 +108,9 @@ Submodule: Crop
 - [x] Need JS solution to hide field (copy from FP)
 - [ ] Settings Page to variablize settings for the cropper.js plugin.
 
+General:
+- [ ] Check and confirm Config inspector
+
 Tests:
 - Unit Tests
   - [ ] Need to test and finish Dimension in `IiifImageUrlParams`

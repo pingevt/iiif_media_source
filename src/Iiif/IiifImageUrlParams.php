@@ -447,7 +447,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       'height' => $image->getHeight(),
     ];
 
-    ksm($settings, $image->getWidth());
+    // ksm($settings, $image->getWidth());
 
     // Process the region dimension.
     switch ($settings['region']) {

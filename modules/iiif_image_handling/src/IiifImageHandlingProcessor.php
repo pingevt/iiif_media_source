@@ -131,10 +131,10 @@ class IiifImageHandlingProcessor {
           '#title' => t('Crop'),
           '#collapsible' => FALSE,
           '#collapsed' => FALSE,
-          '#group' => 'field_iiif_test_field][0][additional_settings',
+          '#group' => $element['#field_name'] . '][0][additional_settings',
         ];
 
-        $element['crop_preview']['#group'] = 'field_iiif_test_field][' . $element['#delta'] . '][preview_group_crop';
+        $element['crop_preview']['#group'] = $element['#field_name'] . '][' . $element['#delta'] . '][preview_group_crop';
         $element['crop_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
         $element['crop_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
 
@@ -146,10 +146,10 @@ class IiifImageHandlingProcessor {
           '#title' => t('Focal Point'),
           '#collapsible' => FALSE,
           '#collapsed' => FALSE,
-          '#group' => 'field_iiif_test_field][0][additional_settings',
+          '#group' => $element['#field_name'] . '][0][additional_settings',
         ];
 
-        $element['fp_preview']['#group'] = 'field_iiif_test_field][' . $element['#delta'] . '][preview_group_focal_point';
+        $element['fp_preview']['#group'] = $element['#field_name'] . '][' . $element['#delta'] . '][preview_group_focal_point';
         $element['fp_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
         $element['fp_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
       }
