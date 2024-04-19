@@ -104,8 +104,9 @@ Submodule: Crop
 - [x] Add in widget to define a crop for the image.
 - [x] Thirdparty settings or something so we can combine everything into 1 form element.
 - [x] Add thirdparty settings for thumbnail size
-- [ ] "Drupalize" js file.
-- [ ] Need JS solution to hide field (copy from FP)
+- [x] "Drupalize" js file.
+- [x] Need JS solution to hide field (copy from FP)
+- [ ] Settings Page to variablize settings for the cropper.js plugin.
 
 Tests:
 - Unit Tests

@@ -10,8 +10,8 @@ iiif_image_crop.crop:
   version: 1.x
   css:
     theme:
-      assets/src/css/crop.css: {}
+      assets/src/css/iiif_crop.css: {}
   js:
-    assets/src/js/crop.js: {}
+    assets/src/js/iiif_crop.js: {}
   dependencies:
     - iiif_image_crop/iiif_image_crop.cropperjs
