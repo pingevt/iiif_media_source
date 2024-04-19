@@ -152,6 +152,14 @@ function iiif_image_focalpoint_field_widget_third_party_settings_form(WidgetInte
       '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint'),
     ];
 
+    $element['focal_point_preview_image_style_size'] = [
+      '#title' => t('Preview image style size (in pixels)'),
+      '#type' => 'number',
+      '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size') ?? 150,
+      '#description' => t('The preview image will be shown while editing the content. What is its max size.'),
+      '#weight' => 16,
+    ];
+
     return $element;
   }
 }
@@ -162,10 +170,13 @@ function iiif_image_focalpoint_field_widget_third_party_settings_form(WidgetInte
 function iiif_image_focalpoint_field_widget_settings_summary_alter(array &$summary, array $context) {
   $add = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint');
 
-  // ksm($add);
-
   if ($add) {
     $summary[] = t('Adding IIIF Focal Point');
+
+    $size = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size');
+    if ($size) {
+      $summary[] = t('Thumbnail size: ' . $size . "px");
+    }
   }
 }
 

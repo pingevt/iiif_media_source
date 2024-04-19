@@ -22,7 +22,9 @@ class IiifImageHandlingProcessor {
 
     // $element['#field_name'] = $field_name;
     $element['#process'][] = [static::class, 'processCrop'];
-    $element['#process'][] = [static::class, 'process'];
+    if (!in_array([static::class, 'process'], $element['#process'])) {
+      $element['#process'][] = [static::class, 'process'];
+    }
 
     $element['#item'] = $items[$delta]->getValue();
 
@@ -34,8 +36,7 @@ class IiifImageHandlingProcessor {
       $element['#item']['width'] = $img->getwidth();
       $element['#item']['height'] = $img->getHeight();
 
-
-      $crop_size = $widget->getSetting('preview_image_style_size') ?? 500;
+      $crop_size = $widget->getThirdPartySetting('iiif_image_crop', 'crop_preview_image_style_size') ?? 500;
       $scaled_url = $img->getScaledUrl($crop_size, $crop_size);
 
       $element['crop_preview'] = [
@@ -61,8 +62,6 @@ class IiifImageHandlingProcessor {
    *
    */
   public static function buildElementFocalPoint(array $element, FormStateInterface $form_state, $context) {
-    // ksm($element, $form_state, $context);
-
     $items = $context['items'];
     $delta = $context['delta'];
     $widget = $context['widget'];
@@ -70,7 +69,13 @@ class IiifImageHandlingProcessor {
     unset($element['thumbnail']);
 
     $element['#process'][] = [static::class, 'processFocalPoint'];
-    $element['#process'][] = [static::class, 'process'];
+    if (!in_array([static::class, 'process'], $element['#process'])) {
+      $element['#process'][] = [static::class, 'process'];
+    }
+    else {
+      unset($element['#process'][array_search([static::class, 'process'], $element['#process'])]);
+      $element['#process'][] = [static::class, 'process'];
+    }
 
     $element['#item'] = $items[$delta]->getValue();
 
@@ -85,7 +90,7 @@ class IiifImageHandlingProcessor {
       // ksm($widget->getSettings());
       // ksm($widget->getThirdPartySettings());
 
-      $crop_size = $widget->getSetting('preview_image_style_size') ?? 500;
+      $crop_size = $widget->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size') ?? 500;
       $scaled_url = $img->getScaledUrl($crop_size, $crop_size);
 
       $element['fp_preview'] = [
@@ -103,113 +108,51 @@ class IiifImageHandlingProcessor {
       'offsets' => $widget->getSetting('offsets'),
     ];
 
-    ksm($element);
-    $element['additional_settings'] = array(
-      '#type' => 'vertical_tabs',
-      // '#type' => 'horizontal_tabs',
-      '#title' => 'Vertical Tabs',
-      '#weight' => 99,
-      // '#parents' => [
-      //   $element['#field_name'],
-      //   $delta,
-      // ],
-    );
-
-    $element['preview_group_crop'] = [
-      '#type' => 'details',
-      '#title' => t('Crop'),
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-      '#group' => 'field_iiif_test_field][0][additional_settings',
-      // '#tree' => FALSE,
-      // 'crop_preview' => $element['crop_preview'],
-    ];
-    // $element['crop_preview']['#group'] = 'field_iiif_test_field][0][preview_group_crop';
-    // $element['crop_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-    // $element['crop_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
-    // $element['preview_group_crop']['name'] = array(
-    //   '#type' => 'textfield',
-    //   '#title' => 'Name',
-    // );
-
-
-    $element['preview_group_focal_point'] = [
-      '#type' => 'details',
-      '#title' => t('FP'),
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-      '#group' => 'field_iiif_test_field][0][additional_settings',
-      // '#optional' => FALSE,
-      // '#tree' => FALSE,
-      // 'fp_preview' => $element['fp_preview'],
-    ];
-    // $element['fp_preview']['#group'] = 'field_iiif_test_field][0][preview_group_focal_point';
-    // $element['fp_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-    // $element['fp_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
-
-    // $element['preview_group_focal_point']['name'] = array(
-    //   '#type' => 'textfield',
-    //   '#title' => 'Name',
-    // );
-    // ksm($element);
-
-    // unset($element['crop_preview']);
-    // unset($element['fp_preview']);
 
     return $element;
   }
 
-
-
+  /**
+   *
+   */
   public static function process($element, FormStateInterface $form_state, $form) {
-    ksm($element);
 
-    if (isset($element['crop_preview']) && !isset($element['crop_preview']['#group'])) {
+    if (isset($element['crop_preview']) && isset($element['fp_preview'])) {
+      $element['additional_settings'] = array(
+        '#type' => 'vertical_tabs',
+        '#title' => 'Vertical Tabs',
+        '#weight' => 99,
+      );
 
+      if (isset($element['crop_preview']) && !isset($element['crop_preview']['#group'])) {
 
-      $element['crop_preview']['#group'] = 'field_iiif_test_field][0][preview_group_crop';
-      $element['crop_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-      $element['crop_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
+        $element['preview_group_crop'] = [
+          '#type' => 'details',
+          '#title' => t('Crop'),
+          '#collapsible' => FALSE,
+          '#collapsed' => FALSE,
+          '#group' => 'field_iiif_test_field][0][additional_settings',
+        ];
 
-    }
+        $element['crop_preview']['#group'] = 'field_iiif_test_field][' . $element['#delta'] . '][preview_group_crop';
+        $element['crop_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
+        $element['crop_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
 
-    if (isset($element['fp_preview']) && !isset($element['fp_preview']['#group'])) {
+      }
 
+      if (isset($element['fp_preview']) && !isset($element['fp_preview']['#group'])) {
+        $element['preview_group_focal_point'] = [
+          '#type' => 'details',
+          '#title' => t('Focal Point'),
+          '#collapsible' => FALSE,
+          '#collapsed' => FALSE,
+          '#group' => 'field_iiif_test_field][0][additional_settings',
+        ];
 
-      $element['fp_preview']['#group'] = 'field_iiif_test_field][0][preview_group_focal_point';
-      $element['fp_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-      $element['fp_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
-
-
-
-      // $form['additional_settings'] = array(
-      //   '#type' => 'vertical_tabs',
-      //   '#weight' => 99,
-      // );
-
-      // $element['preview_group_crop'] = [
-      //   '#type' => 'details',
-      //   '#title' => t('Crop'),
-      //   '#collapsible' => FALSE,
-      //   '#collapsed' => FALSE,
-      //   '#group' => 'additional_settings',
-      // ];
-
-      // $element['preview_group_crop']['name2'] = array(
-      //   '#type' => 'textfield',
-      //   '#title' => 'Name',
-      // );
-
-      // $element['preview_group_focal_point'] = [
-      //   '#type' => 'details',
-      //   '#title' => t('FP'),
-      //   '#collapsible' => FALSE,
-      //   '#collapsed' => FALSE,
-      //   '#group' => 'additional_settings',
-      // ];
-
-      // $element['preview']['#group'] = 'preview_group_focal_point';
-      // $element['crop_preview']['#group'] = 'preview_group_crop';
+        $element['fp_preview']['#group'] = 'field_iiif_test_field][' . $element['#delta'] . '][preview_group_focal_point';
+        $element['fp_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
+        $element['fp_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
+      }
     }
 
     return $element;
@@ -241,7 +184,7 @@ class IiifImageHandlingProcessor {
       // $url = $item['_image']->getFullUrl();
       // todo; should we make our own crop type?
       $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
-// ksm($url, $crop_type);
+      // ksm($url, $crop_type);
 
       // ksm($item['full_url'], $crop_type);
       $crop = Crop::findCrop($item['full_url'], $crop_type);
@@ -272,7 +215,7 @@ class IiifImageHandlingProcessor {
     // Add the crop field.
     $element['crop'] = self::createCropField($element['#field_name'], $element_selectors, $default_crop_value);
 
-    ksm($element);
+    // ksm($element);
 
     return $element;
   }
@@ -366,9 +309,6 @@ class IiifImageHandlingProcessor {
 
     // $img = $items[$delta]->getImg($items[$delta]->getValue());
 
-
-
-
     $element_selectors = [
       'focal_point' => 'focal-point-' . implode('-', $element['#parents']),
     ];
@@ -410,8 +350,6 @@ class IiifImageHandlingProcessor {
     // Add the focal point field.
     $element['focal_point'] = self::createFocalPointField($element['#field_name'], $element_selectors, $default_focal_point_value);
 
-
-    ksm($element);
     return $element;
   }
 
