@@ -52,7 +52,7 @@ abstract class IiifBase {
     // @todo cache this call on usage and for long term.
     $url = implode("/", [$this->server, $this->prefix, $this->iiifId, "info.json"]);
     $data = $this->call($url);
-ksm($url, $data);
+    // ksm($url, $data);
     if ($data) {
       $this->info = json_decode($data->getBody()->__toString());
     }
@@ -76,7 +76,7 @@ ksm($url, $data);
     // ];
     // ksm($headers);
     try {
-      $response = $this->httpClient->get("http://media.nga.gov/iiif/0f89f4fa-f116-4087-acac-e1bca883d150/info.json", $headers);
+      $response = $this->httpClient->get($url, $headers);
     }
     catch (\Exception $e) {
       // todo: log or something.

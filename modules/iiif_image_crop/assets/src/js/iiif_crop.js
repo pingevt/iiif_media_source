@@ -13,7 +13,7 @@
     attach: function (context) {
 
       once('iiif-crop-hide-field', '.crop', context).forEach(function (el) {
-        console.log(el);
+        // console.log(el);
         var $wrapper = $(el).closest('.crop-wrapper');
         // Add the "visually-hidden" class unless the focal point offset field
         // has an error. This will show the field for everyone when there is an
@@ -30,8 +30,8 @@
         }
       });
 
-      once('iiif-crop-cropper', '.field--widget-iiif-image-crop-widget .cropper-image img, .field--widget-iiif-image-widget .cropper-image img', context).forEach(element => {
-
+      once('iiif-crop-cropper', '.field--widget-iiif-image-crop-widget .cropper-image > img.iiif-crop-img:not(.cropper-hidden), .field--widget-iiif-image-widget .cropper-image > img.iiif-crop-img:not(.cropper-hidden)', context).forEach(element => {
+        console.log("h", element);
         let cropWrapperInput = element.closest(".field--type-iiif-id").querySelector('.crop-wrapper input');
 
         let initialized = false;

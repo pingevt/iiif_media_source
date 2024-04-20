@@ -10,6 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\crop\Entity\Crop;
 
 class IiifImageHandlingProcessor {
+
   /**
    *
    */
@@ -45,6 +46,9 @@ class IiifImageHandlingProcessor {
         '#weight' => 1,
         '#attributes' => [
           'style' => "margin: 0 1rem 3rem 0",
+          'class' => [
+            'iiif-crop-img',
+          ],
         ],
         '#prefix' => "<div class='cropper-image'>",
         '#suffix' => "</div>",
@@ -108,7 +112,6 @@ class IiifImageHandlingProcessor {
       'offsets' => $widget->getSetting('offsets'),
     ];
 
-
     return $element;
   }
 
@@ -157,7 +160,6 @@ class IiifImageHandlingProcessor {
 
     return $element;
   }
-
 
   /**
    * {@inheritdoc}
