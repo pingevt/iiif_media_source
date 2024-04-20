@@ -99,6 +99,7 @@ Submodule: Focalpoint
 - [x] Add in widget to define a focal point of the image.
 - [x] Thirdparty settings or something so we can combine everything into 1 form element.
 - [x] Add thirdparty settings for thumbnail size
+- [ ] Allow for Contextual Media field
 
 Submodule: Crop
 - [x] Add in widget to define a crop for the image.
@@ -107,6 +108,7 @@ Submodule: Crop
 - [x] "Drupalize" js file.
 - [x] Need JS solution to hide field (copy from FP)
 - [ ] Settings Page to variablize settings for the cropper.js plugin.
+- [ ] Allow for Contextual Media field
 
 General:
 - [ ] Check and confirm Config inspector
