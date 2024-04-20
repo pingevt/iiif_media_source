@@ -56,7 +56,7 @@ class IiifImageHandlingProcessor {
     }
 
     $element['#crop'] = [
-      'offsets' => $widget->getSetting('offsets'),
+      'iiif_crop_offsets' => $widget->getSetting('iiif_crop_offsets'),
     ];
 
     return $element;
@@ -108,8 +108,8 @@ class IiifImageHandlingProcessor {
 
     }
 
-    $element['#focal_point'] = [
-      'offsets' => $widget->getSetting('offsets'),
+    $element['#iiif_focal_point'] = [
+      'iiif_fp_offsets' => $widget->getSetting('iiif_fp_offsets'),
     ];
 
     return $element;
@@ -121,11 +121,11 @@ class IiifImageHandlingProcessor {
   public static function process($element, FormStateInterface $form_state, $form) {
 
     if (isset($element['crop_preview']) && isset($element['fp_preview'])) {
-      $element['additional_settings'] = array(
+      $element['additional_settings'] = [
         '#type' => 'vertical_tabs',
         '#title' => 'Vertical Tabs',
         '#weight' => 99,
-      );
+      ];
 
       if (isset($element['crop_preview']) && !isset($element['crop_preview']['#group'])) {
 
@@ -198,7 +198,7 @@ class IiifImageHandlingProcessor {
       }
     }
 
-    $default_crop_value = $item['crop'] ?? $element['#crop']['offsets'];
+    $default_crop_value = $item['crop'] ?? $element['#crop']['iiif_crop_offsets'];
 
     // Add the crop indicator to preview.
     if (isset($element['crop_preview'])) {
@@ -312,19 +312,19 @@ class IiifImageHandlingProcessor {
     // $img = $items[$delta]->getImg($items[$delta]->getValue());
 
     $element_selectors = [
-      'focal_point' => 'focal-point-' . implode('-', $element['#parents']),
+      'iiif_focal_point' => 'focal-point-' . implode('-', $element['#parents']),
     ];
 
-    if (!isset($item['focal_point']) && isset($item['full_url'])) {
+    if (!isset($item['iiif_focal_point']) && isset($item['full_url'])) {
       $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
       $crop = Crop::findCrop($item['full_url'], $crop_type);
       if ($crop) {
         $anchor = \Drupal::service('iiif_image_focalpoint.focal_point_manager')->absoluteToRelative($crop->x->value, $crop->y->value, $item['width'], $item['height']);
-        $item['focal_point'] = "{$anchor['x']},{$anchor['y']}";
+        $item['iiif_focal_point'] = "{$anchor['x']},{$anchor['y']}";
       }
     }
 
-    $default_focal_point_value = $item['focal_point'] ?? $element['#focal_point']['offsets'];
+    $default_focal_point_value = $item['iiif_focal_point'] ?? $element['#iiif_focal_point']['iiif_fp_offsets'];
 
     // Add the focal point indicator to preview.
     if (isset($element['fp_preview'])) {
@@ -350,7 +350,7 @@ class IiifImageHandlingProcessor {
     }
 
     // Add the focal point field.
-    $element['focal_point'] = self::createFocalPointField($element['#field_name'], $element_selectors, $default_focal_point_value);
+    $element['iiif_focal_point'] = self::createFocalPointField($element['#field_name'], $element_selectors, $default_focal_point_value);
 
     return $element;
   }
@@ -398,15 +398,14 @@ class IiifImageHandlingProcessor {
       '#default_value' => $default_focal_point_value,
       '#element_validate' => [[static::class, 'validateFocalPoint']],
       '#attributes' => [
-        'class' => ['focal-point', $element_selectors['focal_point']],
-        'data-selector' => $element_selectors['focal_point'],
+        'class' => ['focal-point', $element_selectors['iiif_focal_point']],
+        'data-selector' => $element_selectors['iiif_focal_point'],
         'data-field-name' => $field_name,
       ],
       '#wrapper_attributes' => [
         'class' => ['iiif-focal-point-wrapper'],
       ],
       '#attached' => [
-        // 'library' => ['focal_point/drupal.focal_point'],
         'library' => ['iiif_image_focalpoint/iiif_image_focalpoint.focalpoint'],
       ],
     ];
@@ -431,7 +430,7 @@ class IiifImageHandlingProcessor {
       '#tag' => 'div',
       '#attributes' => [
         'class' => ['iiif-focal-point-indicator'],
-        'data-selector' => $element_selectors['focal_point'],
+        'data-selector' => $element_selectors['iiif_focal_point'],
         'data-delta' => $delta,
       ],
       '#weight' => -1,

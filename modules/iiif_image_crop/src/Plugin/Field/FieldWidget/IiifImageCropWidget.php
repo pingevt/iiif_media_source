@@ -30,9 +30,8 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
    */
   public static function defaultSettings() {
     return [
-      'preview_image_style' => 'thumbnail',
-      'preview_image_style_size' => 150,
-      'offsets' => '0,0,100,100',
+      'iiif_crop_preview_image_style_size' => 150,
+      'iiif_crop_offsets' => '0,0,100,100',
     ] + parent::defaultSettings();
   }
 
@@ -43,39 +42,18 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
     $form = parent::settingsForm($form, $form_state);
 
     // We need a preview image for this widget.
-    $form['preview_image_style']['#required'] = TRUE;
-    unset($form['preview_image_style']['#empty_option']);
-    // @todo Implement https://www.drupal.org/node/2872960
-    //   The preview image should not be generated using a crop effect
-    //   and should maintain the aspect ratio of the original image.
-    $form['preview_image_style'] = [
-      '#title' => $this->t('Preview image style'),
-      '#type' => 'select',
-      '#options' => image_style_options(FALSE),
-      '#empty_option' => '<' . $this->t('no preview') . '>',
-      '#default_value' => $this->getSetting('preview_image_style'),
-      '#description' => $this->t('The preview image will be shown while editing the content.'),
-      '#weight' => 15,
-    ];
-
-    $form['preview_image_style']['#description'] = t(
-      $form['preview_image_style']['#description']->getUntranslatedString() . "<br/>Do not choose an image style that alters the aspect ratio of the original image nor an image style that uses a crop effect.",
-      $form['preview_image_style']['#description']->getArguments(),
-      $form['preview_image_style']['#description']->getOptions()
-    );
-
-    $form['preview_image_style_size'] = [
+    $form['iiif_crop_preview_image_style_size'] = [
       '#title' => $this->t('Preview image style size (in pixels)'),
       '#type' => 'number',
-      '#default_value' => $this->getSetting('preview_image_style_size'),
+      '#default_value' => $this->getSetting('iiif_crop_preview_image_style_size'),
       '#description' => $this->t('The preview image will be shown while editing the content. What is its max size.'),
       '#weight' => 16,
     ];
 
-    $form['offsets'] = [
+    $form['iiif_crop_offsets'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default crop value'),
-      '#default_value' => $this->getSetting('offsets'),
+      '#default_value' => $this->getSetting('iiif_crop_offsets'),
       '#description' => $this->t('Specify the crop of this image in the form "leftoffset,topoffset,width,height" where all numbers are in percents. Ex: 25,75,50,5'),
       '#size' => 13,
       '#maxlength' => 13,
@@ -93,8 +71,8 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $offsets = $this->getSetting('offsets');
-    $summary[] = $this->t('Default crop: @offsets', ['@offsets' => $offsets]);
+    $iiif_crop_offsets = $this->getSetting('iiif_crop_offsets');
+    $summary[] = $this->t('Default crop: @iiif_crop_offsets', ['@iiif_crop_offsets' => $iiif_crop_offsets]);
 
     return $summary;
   }
@@ -119,6 +97,28 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
     $element = IiifImageHandlingProcessor::buildElementCrop($element, $form_state, $context);
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Validation Callback; Crop process field.
+   */
+  public static function validateCrop($element, FormStateInterface $form_state) {
+    // todo: VALIDATE!
+    // if (empty($element['#value']) || (FALSE === \Drupal::service('iiif_image_crop.crop_manager')->validateCrop($element['#value']))) {
+    //   $replacements = ['@title' => strtolower($element['#title'])];
+    //   $form_state->setError($element, new TranslatableMarkup('The @title field should be in the form "leftoffset,topoffset" where offsets are in percentages. Ex: 25,75.', $replacements));
+    // }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Validation Callback; Crop widget setting.
+   */
+  public function validateCropWidget(array &$element, FormStateInterface $form_state) {
+    static::validateCrop($element, $form_state);
   }
 
 }

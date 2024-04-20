@@ -71,15 +71,15 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
           // ksm($crop);
 
           if ($crop) {
-            $focal_point = NULL;
+            $iiif_focal_point = NULL;
             // Use the default focal point on new crop entities.
             if ($crop->isNew()) {
-              $focal_point = \Drupal::config('iiif_image_focalpoint.settings')->get('default_value');
+              $iiif_focal_point = \Drupal::config('iiif_image_focalpoint.settings')->get('default_value');
             }
 
             // Use the focal point set over the UI.
-            if (!empty($item->focal_point)) {
-              $focal_point = $item->focal_point;
+            if (!empty($item->iiif_focal_point)) {
+              $iiif_focal_point = $item->iiif_focal_point;
 
               // Keep the original focal_point value to be able to use it during hooks.
               if (!$crop->get('x')->isEmpty() && !$crop->get('y')->isEmpty()) {
@@ -87,18 +87,17 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
                 $y = $crop->get('y')->value;
                 $width = $item->width ?? 0;
                 $height = $item->height ?? 0;
-                $focal_point_original = $focal_point_manager->absoluteToRelative($x, $y, $width, $height);
-                $entity->{$field->getName()}->focal_point_original = implode(',', $focal_point_original);
+                $iiif_focal_point_original = $focal_point_manager->absoluteToRelative($x, $y, $width, $height);
+                $entity->{$field->getName()}->iiif_focal_point_original = implode(',', $iiif_focal_point_original);
               }
             }
 
-            // ksm($focal_point, $item);
-
-            if ($focal_point && $item->width && $item->height) {
-              [$x, $y] = explode(',', $focal_point);
+            if ($iiif_focal_point && $item->width && $item->height) {
+              [$x, $y] = explode(',', $iiif_focal_point);
               $focal_point_manager->saveCropEntity($x, $y, $item->width, $item->height, $crop);
             }
             else {
+              // todo: log error.
               // ksm("didn't save crop");
             }
           }

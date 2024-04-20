@@ -100,7 +100,6 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
   }
 }
 
-
 /**
  * Implements hook_field_widget_third_party_settings_form().
  */
@@ -114,10 +113,10 @@ function iiif_image_crop_field_widget_third_party_settings_form(WidgetInterface 
       '#default_value' => $plugin->getThirdPartySetting('iiif_image_crop', 'add_iiif_crop') ?? FALSE,
     ];
 
-    $element['crop_preview_image_style_size'] = [
+    $element['iiif_crop_preview_image_style_size'] = [
       '#title' => t('Preview image style size (in pixels)'),
       '#type' => 'number',
-      '#default_value' => $plugin->getThirdPartySetting('iiif_image_crop', 'crop_preview_image_style_size') ?? 150,
+      '#default_value' => $plugin->getThirdPartySetting('iiif_image_crop', 'iiif_crop_preview_image_style_size') ?? 150,
       '#description' => t('The preview image will be shown while editing the content. What is its max size.'),
       '#weight' => 16,
     ];
@@ -134,7 +133,7 @@ function iiif_image_crop_field_widget_settings_summary_alter(array &$summary, ar
   if ($add) {
     $summary[] = t('Adding IIIF Crop');
 
-    $size = $context['widget']->getThirdPartySetting('iiif_image_crop', 'crop_preview_image_style_size');
+    $size = $context['widget']->getThirdPartySetting('iiif_image_crop', 'iiif_crop_preview_image_style_size');
     if ($size) {
       $summary[] = t('Thumbnail size: ' . $size . "px");
     }
