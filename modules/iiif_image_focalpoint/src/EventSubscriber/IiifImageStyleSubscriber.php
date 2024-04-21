@@ -2,8 +2,6 @@
 
 namespace Drupal\iiif_image_focalpoint\EventSubscriber;
 
-use Drupal\Core\Config\ConfigCrudEvent;
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\iiif_image_style\Event\IiifImageStyleSettingsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -30,7 +28,7 @@ class IiifImageStyleSubscriber implements EventSubscriberInterface {
    *
    */
   public function imgStyleSettingsAlter(IiifImageStyleSettingsEvent $event) {
-    // ksm('altering', $event);
+    // ksm('altering', $event);.
   }
 
 }

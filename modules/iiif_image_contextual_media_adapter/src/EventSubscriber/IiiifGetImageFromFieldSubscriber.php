@@ -131,6 +131,8 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
 
   /**
    *
+   *
+   * todo: move to base class to re-use.
    */
   public function retrieveContextualCrop($context, $crop_type, $original_uri, $entity_parent) {
 

@@ -40,12 +40,53 @@ use Symfony\Component\Mime\MimeTypes;
  */
 class IiifImageMediaSource extends MediaSourceBase {
 
+  /**
+   * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
   protected $logger;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
   protected $messenger;
+
+  /**
+   * The http client.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
   protected $httpClient;
+
+  /**
+   * The resource fetcher.
+   *
+   * @var \Drupal\media\OEmbed\ResourceFetcherInterface
+   */
   protected $resourceFetcher;
+
+  /**
+   * The url resolver.
+   *
+   * @var \Drupal\media\OEmbed\UrlResolverInterface
+   */
   protected $urlResolver;
+
+  /**
+   * The iframe helper.
+   *
+   * @var \Drupal\media\IFrameUrlHelper
+   */
   protected $iFrameUrlHelper;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
   protected $fileSystem;
 
   /**
@@ -56,7 +97,7 @@ class IiifImageMediaSource extends MediaSourceBase {
   protected $token;
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
@@ -97,19 +138,8 @@ class IiifImageMediaSource extends MediaSourceBase {
    * {@inheritdoc}
    */
   protected function getSourceFieldName() {
-    // If the Field UI module is installed, and has a specific prefix
-    // configured, use that. Otherwise, just default to using 'field_' as
-    // a prefix, which is the default that Field UI ships with.
-    // $prefix = $this->configFactory->get('field_ui.settings')
-    //   ->get('field_prefix') ?? 'field_';
-    // // Some media sources are using a deriver, so their plugin IDs may contain
-    // // a separator (usually ':') which is not allowed in field names.
-    // $base_id = $prefix . 'media_' . str_replace(static::DERIVATIVE_SEPARATOR, '_', $this->getPluginId());
-    // $tries = 0;
-    // $storage = $this->entityTypeManager->getStorage('field_storage_config');
 
-    $prefix = $this->configFactory->get('field_ui.settings')
-      ->get('field_prefix') ?? 'field_';
+    $prefix = $this->configFactory->get('field_ui.settings')->get('field_prefix') ?? 'field_';
     $base_id = $prefix . 'media_iiif_id';
     $tries = 0;
     $storage = $this->entityTypeManager->getStorage('field_storage_config');
@@ -157,7 +187,7 @@ class IiifImageMediaSource extends MediaSourceBase {
     // $json_arr = json_decode($remote_field->value);
     // ksm($attribute_name, $remote_field, $media);
     // If the source field is not required, it may be empty.
-    if ($remote_field === FAlSE) {
+    if ($remote_field === FALSE) {
       return parent::getMetadata($media, $attribute_name);
     }
 
@@ -174,8 +204,6 @@ class IiifImageMediaSource extends MediaSourceBase {
       // default:
       //   return $json_arr->$attribute_name ?? parent::getMetadata($media, $attribute_name);.
     }
-
-    return;
   }
 
   /**

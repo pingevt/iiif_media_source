@@ -5,12 +5,6 @@
  * IIIF Data.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Url;
-use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
-use Drupal\node\Entity\Node;
-
 /**
  * Implements hook_theme().
  */
@@ -42,36 +36,23 @@ function template_preprocess_iiif_image(&$variables) {
     ],
   ];
 
-
-
-
-
-
-  // ksm($variables['content']);
-
+  // ksm($variables['content']);.
   // $image = $variables['image'];
-
   // $fp_x = $variables['crop']? (int) $variables['crop']->x->value : 0;
   // $fp_y = $variables['crop']? (int) $variables['crop']->y->value : 0;
-
   // $dest_width = $variables['dest_width']? (int) $variables['dest_width'] : NULL;
   // $dest_height = $variables['dest_height']? (int) $variables['dest_height'] : NULL;
-
   // $dest_ratio = ($dest_height != 0) ? $dest_width / $dest_height : 1;
-
   // $orig_width = $image->getWidth();
   // $orig_height = $image->getHeight();
-
   // $orig_ratio = $orig_width / $orig_height;
-
   // // @todo this should all be exported to a cropper class or something.
   // if ($variables['size_type'] == "full") {
   //   $region = "full";
   //   $size = "max";
   //   $rotation = 0;
   //   $quality = 'default';
-
-  //   $variables['content'] = [
+  // $variables['content'] = [
   //     'image' => [
   //       '#theme' => 'image',
   //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
@@ -88,8 +69,7 @@ function template_preprocess_iiif_image(&$variables) {
   //   $size = "$dest_width,$dest_height";
   //   $rotation = 0;
   //   $quality = 'default';
-
-  //   $variables['content'] = [
+  // $variables['content'] = [
   //     'image' => [
   //       '#theme' => 'image',
   //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
@@ -100,15 +80,13 @@ function template_preprocess_iiif_image(&$variables) {
   //       ],
   //     ],
   //   ];
-
   // }
   // elseif ($variables['size_type'] == "resize") {
   //   $region = "full";
   //   $size = "!$dest_width,$dest_height";
   //   $rotation = 0;
   //   $quality = 'default';
-
-  //   $variables['content'] = [
+  // $variables['content'] = [
   //     'image' => [
   //       '#theme' => 'image',
   //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
@@ -128,8 +106,7 @@ function template_preprocess_iiif_image(&$variables) {
   //     $rx2 = (int) ($fp_x + ($region_width / 2));
   //     $ry1 = 0;
   //     $ry2 = $orig_height;
-
-  //     if ($rx1 < 0) {
+  // if ($rx1 < 0) {
   //       $rx2 += abs($rx1);
   //       $rx1 = 0;
   //     }
@@ -143,9 +120,8 @@ function template_preprocess_iiif_image(&$variables) {
   //     $rx1 = 0;
   //     $rx2 = $orig_width;
   //     $ry1 = (int) ($fp_y - ($region_height / 2));
-  //     $ry2 = (int) ($region_height + $ry1);
-
-  //     if ($ry1 < 0) {
+  //     $ry2 = (int) ($region_height + $ry1);.
+  // if ($ry1 < 0) {
   //       $ry2 += abs($ry1);
   //       $ry1 = 0;
   //     }
@@ -153,14 +129,12 @@ function template_preprocess_iiif_image(&$variables) {
   //       $ry1 -= $ry2 - $orig_height;
   //       $ry2 = $orig_height;
   //     }
-  //   }
-
-  //   $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
+  //   }.
+  // $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
   //   $size = "!$dest_width,$dest_height";
   //   $rotation = 0;
   //   $quality = 'default';
-
-  //   $variables['content'] = [
+  // $variables['content'] = [
   //     'image' => [
   //       '#theme' => 'image',
   //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
@@ -177,31 +151,27 @@ function template_preprocess_iiif_image(&$variables) {
   //   $rx2 = (int) ($fp_x + ($dest_width / 2));
   //   $ry1 = (int) ($fp_y - ($dest_height / 2));
   //   $ry2 = (int) ($fp_y + ($dest_height / 2));
-
-  //   if ($rx1 < 0) {
+  // if ($rx1 < 0) {
   //     $rx2 += abs($rx1);
   //     $rx1 = 0;
   //   }
   //   if ($rx2 > $orig_height) {
   //     $rx1 -= $rx2 - $orig_height;
   //     $rx2 = $orig_height;
-  //   }
-
-  //   if ($ry1 < 0) {
+  //   }.
+  // if ($ry1 < 0) {
   //     $ry2 += abs($ry1);
   //     $ry1 = 0;
   //   }
   //   if ($ry2 > $orig_height) {
   //     $ry1 -= $ry2 - $orig_height;
   //     $ry2 = $orig_height;
-  //   }
-
-  //   $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
+  //   }.
+  // $region = "$rx1,$ry1," . ($rx2 - $rx1) . "," . ($ry2 - $ry1);
   //   $size = "!$dest_width,$dest_height";
   //   $rotation = 0;
   //   $quality = 'default';
-
-  //   $variables['content'] = [
+  // $variables['content'] = [
   //     'image' => [
   //       '#theme' => 'image',
   //       '#uri' => $image->getBuiltImageUrl($region, $size, $rotation, $quality),
@@ -212,8 +182,7 @@ function template_preprocess_iiif_image(&$variables) {
   //       ],
   //     ],
   //   ];
-  // }
-
+  // }.
 }
 
 /**
@@ -229,15 +198,11 @@ function iiif_media_source_media_view(&$build) {
 function iiif_media_source_preprocess_media(&$variables) {
   // $media = $variables['elements']['#media'];
   // if (isset($media->entity_reference_entity_modify)) {
-
-  //   $override_data = explode(":", $media->entity_reference_entity_modify);
+  // $override_data = explode(":", $media->entity_reference_entity_modify);
   //   $override_data = array_merge($override_data, explode(".", $override_data[2]));
-
-  //   $parent_node = Node::load($override_data[3]);
+  // $parent_node = Node::load($override_data[3]);
   //   $vals = $parent_node->{$override_data[4]}->getValue();
-
   // }
-
 }
 
 /**

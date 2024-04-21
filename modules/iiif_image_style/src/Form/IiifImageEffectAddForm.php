@@ -5,7 +5,6 @@ namespace Drupal\iiif_image_style\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\iiif_image_style\IiifImageEffectManager;
 use Drupal\iiif_image_style\IiifImageStyleInterface;
-use Drupal\image\ImageStyleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

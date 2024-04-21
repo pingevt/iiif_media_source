@@ -7,7 +7,6 @@ use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\crop\Entity\Crop;
 use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
 
 /**

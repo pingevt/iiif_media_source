@@ -2,8 +2,6 @@
 
 namespace Drupal\iiif_image_style\EventSubscriber;
 
-use Drupal\Core\Config\ConfigCrudEvent;
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\iiif_image_style\Event\IiifImageStyleSettingsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

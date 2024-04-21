@@ -10,6 +10,9 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
+/**
+ *
+ */
 interface IiifImageEffectInterface extends PluginInspectionInterface, ConfigurableInterface, DependentPluginInterface {
 
   /**

@@ -7,11 +7,9 @@ namespace Drupal\iiif_image_style\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\iiif_image_style\EventsTrait;
-use Drupal\iiif_image_style\Event\IiifImageStyleSettingsEvent;
-use Drupal\iiif_image_style\IiifImageStyleInterface;
-use Drupal\iiif_media_source\Iiif\IiifImage;
-use Drupal\iiif_image_style\IiifImageEffectPluginCollection;
 use Drupal\iiif_image_style\IiifImageEffectInterface;
+use Drupal\iiif_image_style\IiifImageEffectPluginCollection;
+use Drupal\iiif_image_style\IiifImageStyleInterface;
 
 /**
  * Defines the iiif image style entity type.
@@ -101,7 +99,7 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   /**
    * {@inheritdoc}
    */
-  public function deleteImageEffect( IiifImageEffectInterface $effect) {
+  public function deleteImageEffect(IiifImageEffectInterface $effect) {
     $this->getEffects()->removeInstanceId($effect->getUuid());
     $this->save();
     return $this;
@@ -145,20 +143,17 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   /**
    * {@inheritdoc}
    */
-  // public function getParams(IiifImage $image = NULL): ?array {
-
-  //   $params = $this->params;
+  // Public function getParams(IiifImage $image = NULL): ?array {
+  // $params = $this->params;
   //   $e = new IiifImageStyleSettingsEvent($this, $image, $params);
   //   $this->eventDispatcher()->dispatch($e, IiifImageStyleSettingsEvent::EVENT_NAME);
-
-  //   return $this->params ?? [];
-  // }
+  // return $this->params ?? [];
+  // }.
 
   /**
    * {@inheritdoc}
    */
-  // public function getFormat(): string {
+  // Public function getFormat(): string {
   //   return $this->params['format'] ?? "";
-  // }
-
+  // }.
 }

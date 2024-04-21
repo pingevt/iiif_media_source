@@ -77,7 +77,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
       ],
     ];
     $form['size_h'] = [
@@ -100,7 +100,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
             'or',
             ['value' => '^pct:n'],
           ],
-        ]
+        ],
       ],
     ];
 

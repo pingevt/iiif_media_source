@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\iiif_media_source\Unit;
 
-use Drupal\Tests\UnitTestCase;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Tests\UnitTestCase;
 
 /**
  *
@@ -13,13 +13,14 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 class IiifImageTests extends UnitTestCase {
 
   /**
-   * json string of an image source.
+   * Json string of an image source.
    *
    * @var string
    */
   protected $sourceInfo1 = '{"@context" : "http://iiif.io/api/image/2/context.json","@id" : "https://api.nga.gov/iiif/e8bb571a-a90d-45fa-8589-cd98b4f952a4","protocol" : "http://iiif.io/api/image","width" : 3209,"height" : 5109,"sizes" : [{ "width" : 50, "height" : 79 },{ "width" : 100, "height" : 159 },{ "width" : 200, "height" : 319 },{ "width" : 401, "height" : 638 },{ "width" : 802, "height" : 1277 },{ "width" : 1604, "height" : 2554 }],"tiles" : [{ "width" : 256, "height" : 256, "scaleFactors" : [ 1, 2, 4, 8, 16, 32, 64 ] }],"profile" : ["http://iiif.io/api/image/2/level1.json",{ "formats" : [ "jpg" ],"qualities" : [ "native","color","gray" ],"supports" : ["regionByPct","regionSquare","sizeByForcedWh","sizeByWh","sizeAboveFull","rotationBy90s","mirroring"] }]}';
 
   protected $sourceInfo2 = '{"profile": ["http://iiif.io/api/image/2/level2.json", {"supports": ["canonicalLinkHeader", "profileLinkHeader", "mirroring", "rotationArbitrary", "sizeAboveFull", "regionSquare"], "qualities": ["default", "bitonal", "gray", "color"], "formats": ["jpg", "png", "gif", "webp"]}], "tiles": [{"width": 1024, "scaleFactors": [1, 2, 4, 8, 16, 32, 64, 128]}], "protocol": "http://iiif.io/api/image", "sizes": [{"width": 16, "height": 16}, {"width": 32, "height": 31}, {"width": 63, "height": 61}, {"width": 125, "height": 122}, {"width": 250, "height": 244}, {"width": 500, "height": 487}, {"width": 1000, "height": 974}, {"width": 2000, "height": 1948}], "height": 1948, "width": 2000, "@context": "http://iiif.io/api/image/2/context.json", "@id": "http://puam-loris.aws.princeton.edu/loris/y1972-15.jp2"}';
+
   /**
    * Before a test method is run, setUp() is invoked.
    *

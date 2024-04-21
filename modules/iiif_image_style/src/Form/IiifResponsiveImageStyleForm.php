@@ -76,13 +76,12 @@ final class IiifResponsiveImageStyleForm extends EntityForm {
       '#disabled' => !$responsive_image_style->isNew(),
     ];
 
-    // todo: should this be editable? I don't think so.
+    // @todo should this be editable? I don't think so.
     // $form['status'] = [
     //   '#type' => 'checkbox',
     //   '#title' => $this->t('Enabled'),
     //   '#default_value' => TRUE,
-    // ];
-
+    // ];.
     $image_styles = iiif_image_style_options(TRUE);
 
     $image_styles[IiifResponsiveImageStyleInterface::ORIGINAL_IMAGE] = $this->t('- None (original image) -');
@@ -130,10 +129,10 @@ final class IiifResponsiveImageStyleForm extends EntityForm {
           '#title' => $label,
         ];
         $image_style_mapping = $responsive_image_style->getImageStyleMapping($breakpoint_id, $multiplier);
-        // if (\Drupal::moduleHandler()->moduleExists('help')) {
+        // If (\Drupal::moduleHandler()->moduleExists('help')) {
         //   $description = $this->t('See the <a href=":responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', [':responsive_image_help' => Url::fromRoute('help.page', ['name' => 'responsive_image'])->toString()]);
         // }
-        // else {
+        // else {.
         $description = $this->t('Enable the Help module for more information on the sizes attribute.');
         // }
         $form['keyed_styles'][$breakpoint_id][$multiplier]['image_mapping_type'] = [

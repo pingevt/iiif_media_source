@@ -1,17 +1,16 @@
 <?php
 
+/**
+ * @file
+ */
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Drupal\crop\Entity\Crop;
-use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
-use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
-use Drupal\node\Entity\Node;
-use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Field\WidgetInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
+use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
 
 /**
  * Implements hook_entity_insert().
@@ -38,7 +37,7 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
       // ksm($key, $field->getType());
       if ($field->getType() == 'iiif_id' && $entity->hasField($field->getName())) {
         // ksm("Correct field, i think");
-      // if ($key == "field_media_iiif_image") {
+        // if ($key == "field_media_iiif_image") {
         // ksm($entity->{$field->getName()});
         $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
         // ksm( $crop_type );
@@ -49,16 +48,14 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
             ksm("NOT A IiifId FIELD: ", $item);
             continue;
           }
-          // if (!isset($item->crop)) {
+          // If (!isset($item->crop)) {
           //   ksm("NOT a field with a crop: ", $item);
           //   continue;
-          // }
-
+          // }.
           $crop_manager = \Drupal::service('iiif_image_crop.crop_manager');
           // $crop = $crop_manager->getCropEntity($item->entity, $crop_type);
           $crop = $crop_manager->getCropIiifEntity($item, $crop_type, $entity->id());
           // ksm($crop);
-
           if ($crop) {
             $img_crop = NULL;
             // Use the default focal point on new crop entities.
@@ -84,14 +81,13 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
               }
             }
 
-            // ksm($img_crop, $item);
-
+            // ksm($img_crop, $item);.
             if ($img_crop && $item->width && $item->height) {
               [$x, $y, $w, $h] = explode(',', $img_crop);
               $crop_manager->saveCropEntity($x, $y, $w, $h, $width, $height, $crop);
             }
             else {
-              // ksm("didn't save crop");
+              // ksm("didn't save crop");.
             }
           }
         }
@@ -106,7 +102,6 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
 function iiif_image_crop_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, array $form, FormStateInterface $form_state) {
   if ($plugin->getPluginId() == "iiif_image_widget") {
     // ksm($plugin->getPluginId());
-
     $element['add_iiif_crop'] = [
       '#type' => 'checkbox',
       '#title' => t('Add IIIF Crop'),

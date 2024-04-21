@@ -6,8 +6,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\crop\Entity\Crop;
 use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
 
 /**
@@ -105,11 +103,11 @@ class IiifImageCropWidget extends StringTextfieldWidget implements ContainerFact
    * Validation Callback; Crop process field.
    */
   public static function validateCrop($element, FormStateInterface $form_state) {
-    // todo: VALIDATE!
+    // @todo VALIDATE!
     // if (empty($element['#value']) || (FALSE === \Drupal::service('iiif_image_crop.crop_manager')->validateCrop($element['#value']))) {
     //   $replacements = ['@title' => strtolower($element['#title'])];
     //   $form_state->setError($element, new TranslatableMarkup('The @title field should be in the form "leftoffset,topoffset" where offsets are in percentages. Ex: 25,75.', $replacements));
-    // }
+    // }.
   }
 
   /**

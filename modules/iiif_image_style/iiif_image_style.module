@@ -10,7 +10,6 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Template\Attribute;
 use Drupal\iiif_image_style\Entity\IiifImageStyle;
 use Drupal\iiif_image_style\Entity\IiifResponsiveImageStyle;
-use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
@@ -131,7 +130,6 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
   }
 
   // ksm($variables);
-
   if (isset($variables['sources']) && count($variables['sources']) === 1 && !isset($variables['sources'][0]['media'])) {
     // There is only one source tag with an empty media attribute. This means
     // we can output an image tag with the srcset attribute instead of a
@@ -170,7 +168,7 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
   //   'height' => $variables['height'],
   // ],
   //   $variables['uri']
-  // );
+  // );.
   $iiif_image_style = IiifImageStyle::load($responsive_image_style->getFallbackImageStyle());
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
   foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
@@ -196,6 +194,9 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
 
 }
 
+/**
+ *
+ */
 function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $image, $context) {
 
   $iiif_image_style = IiifImageStyle::load($iiif_image_style_id);
@@ -208,9 +209,7 @@ function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $im
   // $style_settings = $iiif_image_style->getParams();
   // ksm($iiif_image_style, $style_settings);
   // IiifImage::expandSettings($style_settings);
-
   // $params = IiifImageUrlParams::fromSettingsArray($style_settings);
-
   $img_url = $image->getBuiltImageUrl($params);
 
   return $img_url;
@@ -244,14 +243,12 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
 
   // $width = $image->getWidth();
   // $height = $image->getHeight();
-
   // $extension = $image->getDefaultExtension();
   $sizes = [];
   $srcset = [];
   $derivative_mime_types = [];
 
   // ksm($multipliers);
-
   // Traverse the multipliers in reverse so the largest image is processed last.
   // The last image's dimensions are used for img.srcset height and width.
   foreach (array_reverse($multipliers) as $multiplier => $image_style_mapping) {
@@ -287,7 +284,6 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
           // Use the image width as key so we can sort the array later on.
           // Images within a srcset should be sorted from small to large, since
           // the first matching source will be used.
-
           $img_url = $image->getBuiltImageUrl($params);
           $srcset[intval($dimensions['width'])] = $img_url . ' ' . $multiplier;
           $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
@@ -314,7 +310,6 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         // can be used.
         // $style_settings = $iiif_image_style->getParams();
         // $params = IiifImageUrlParams::fromSettingsArray($style_settings);
-
         $img_url = $image->getBuiltImageUrl($params);
 
         $srcset[intval(mb_substr($multiplier, 0, -1) * 100)] = $img_url . ' ' . $multiplier;

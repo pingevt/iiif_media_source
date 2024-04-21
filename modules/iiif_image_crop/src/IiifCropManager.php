@@ -2,12 +2,9 @@
 
 namespace Drupal\iiif_image_crop;
 
-use Drupal\crop\Entity\Crop;
-use Drupal\focal_point\FocalPointManager;
-use Drupal\crop\CropInterface;
-use Drupal\crop\CropStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\crop\CropInterface;
+use Drupal\crop\Entity\Crop;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
@@ -36,14 +33,13 @@ class IiifCropManager {
    *
    */
   public function getCropIiifEntity($item, $crop_type, $mid) {
-// ksm($item, $crop_type, $mid);
+    // ksm($item, $crop_type, $mid);
     // ksm($item, $item->getEntity());
-    // todo: fix this so it doesn't error out when we don't have a crop.
-    // return NULL;
-
+    // @todo fix this so it doesn't error out when we don't have a crop.
+    // return NULL;.
     $img = $item->getImg($item->getValue());
     $url = $img->getFullUrl();
-// ksm($img, $url);
+    // ksm($img, $url);.
     if (Crop::cropExists($url, $crop_type)) {
       /** @var \Drupal\crop\CropInterface $crop */
       $crop = Crop::findCrop($url, $crop_type);
@@ -58,12 +54,10 @@ class IiifCropManager {
       ];
 
       // ksm($values);
-
       $crop = $this->cropStorage->create($values);
     }
 
     // ksm($crop);
-
     return $crop;
   }
 
@@ -98,7 +92,7 @@ class IiifCropManager {
    */
   public function saveCropEntity(float $x, float $y, float $w, float $h, int $width, int $height, CropInterface $crop): CropInterface {
     $absolute = $this->relativeToAbsolute($x, $y, $w, $h, $width, $height);
-// ksm($x, $y, $w, $h, $width, $height);
+    // ksm($x, $y, $w, $h, $width, $height);.
     $crop->setPosition($absolute['x'], $absolute['y']);
     $crop->setSize($absolute['w'], $absolute['h']);
     $crop->save();
@@ -121,7 +115,6 @@ class IiifCropManager {
     // 'square' => transform to "x,y,w,h", but based within the crop.
     // 'x,y,w,h' => transform so that values are inside the crop (or should we really do nothing?)
     // 'pct:x,y,w,h' => transform to "x,y,w,h", but percentages are based on the cropped image.
-
     [$x, $y] = array_values($crop->position());
     [$w, $h] = array_values($crop->size());
 
@@ -154,8 +147,7 @@ class IiifCropManager {
         break;
 
       case 'x,y,w,h':
-        // todo: figure this out.
-
+        // @todo figure this out.
         break;
 
       case 'pct:x,y,w,h':

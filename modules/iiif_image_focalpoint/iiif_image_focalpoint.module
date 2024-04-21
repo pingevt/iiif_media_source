@@ -1,17 +1,16 @@
 <?php
 
+/**
+ * @file
+ */
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
-use Drupal\crop\Entity\Crop;
-use Drupal\node\Entity\Node;
-use Drupal\Core\Field\WidgetInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
+use Drupal\Core\Field\WidgetInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
+use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
 
 /**
  * Implements hook_theme().
@@ -52,7 +51,7 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
       // ksm($key, $field->getType());
       if ($field->getType() == 'iiif_id' && $entity->hasField($field->getName())) {
         // ksm("Correct field, i think");
-      // if ($key == "field_media_iiif_image") {
+        // if ($key == "field_media_iiif_image") {
         // ksm($entity->{$field->getName()});
         // @todo do i need to create settings for this module for croptype? Probably.
         $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
@@ -61,7 +60,7 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
         foreach ($entity->{$field->getName()} as $item) {
 
           if (!$item instanceof IiifId) {
-            // ksm("NOT A IiifId FIELD");
+            // ksm("NOT A IiifId FIELD");.
             continue;
           }
 
@@ -69,7 +68,6 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
           // $crop = $focal_point_manager->getCropEntity($item->entity, $crop_type);
           $crop = $focal_point_manager->getCropIiifEntity($item, $crop_type, $entity->id());
           // ksm($crop);
-
           if ($crop) {
             $iiif_focal_point = NULL;
             // Use the default focal point on new crop entities.
@@ -97,8 +95,8 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
               $focal_point_manager->saveCropEntity($x, $y, $item->width, $item->height, $crop);
             }
             else {
-              // todo: log error.
-              // ksm("didn't save crop");
+              // @todo log error.
+              // ksm("didn't save crop");.
             }
           }
         }
@@ -112,30 +110,25 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
  */
 function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // ksm(func_get_args());
-
   // Add option to Image style.
   // if ($form_id == "iiif_image_style_add_form" || $form_id == "iiif_image_style_edit_form") {
   //   $entity = $form_state->getFormObject()->getEntity();
   //   // ksm($entity);
-
-  //   $settings = $entity->getThirdPartySettings('iiif_image_focalpoint');
-
-  //   // ksm($settings);
-
-  //   $form['crops_and_focal'] = [
+  // $settings = $entity->getThirdPartySettings('iiif_image_focalpoint');
+  // // ksm($settings);
+  // $form['crops_and_focal'] = [
   //     '#type' => 'fieldset',
   //     '#title' => t('Crops and Focal Points'),
   //     '#collapsible' => FALSE,
   //     '#collapsed' => FALSE,
   //   ];
-
-  //   $form['use_iiif_focalpoint'] = [
+  // $form['use_iiif_focalpoint'] = [
   //     '#type' => 'checkbox',
   //     '#title' => t('Use IIIF focal point'),
   //     '#default_value' => $settings['use_iiif_focalpoint'] ?? FALSE,
   //     '#group' => 'crops_and_focal',
   //   ];
-  // }
+  // }.
 }
 
 /**
@@ -144,7 +137,6 @@ function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state
 function iiif_image_focalpoint_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, array $form, FormStateInterface $form_state) {
   if ($plugin->getPluginId() == "iiif_image_widget") {
     // ksm($plugin->getPluginId());
-
     $element['add_iiif_focalpoint'] = [
       '#type' => 'checkbox',
       '#title' => t('Add IIIF focal point'),

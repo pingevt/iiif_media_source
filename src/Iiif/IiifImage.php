@@ -7,10 +7,14 @@ namespace Drupal\iiif_media_source\Iiif;
  */
 class IiifImage extends IiifBase {
 
-  // todo shoud be set in config somewhere?
+  /**
+   * @todo shoud be set in config somewhere?
+   */
   protected $thumbWidth = 200;
 
-  // todo shoud be set in config somewhere?
+  /**
+   * @todo shoud be set in config somewhere?
+   */
   protected $thumbHeight = 200;
 
   /**
@@ -93,8 +97,7 @@ class IiifImage extends IiifBase {
    */
   public function getScaledUrl($width, $height): string {
 
-    // TODO: create settings obj, so proper validation happens.
-
+    // @todo create settings obj, so proper validation happens.
     $url = implode(DIRECTORY_SEPARATOR, [
       $this->server,
       $this->prefix,

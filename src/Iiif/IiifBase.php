@@ -3,7 +3,6 @@
 namespace Drupal\iiif_media_source\Iiif;
 
 use GuzzleHttp\Psr7\Response;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  *
@@ -52,16 +51,22 @@ abstract class IiifBase {
     // @todo cache this call on usage and for long term.
     $url = implode("/", [$this->server, $this->prefix, $this->iiifId, "info.json"]);
     $data = $this->call($url);
-    // ksm($url, $data);
+    // ksm($url, $data);.
     if ($data) {
       $this->info = json_decode($data->getBody()->__toString());
     }
   }
 
+  /**
+   *
+   */
   public function getInfo() {
     return $this->info;
   }
 
+  /**
+   *
+   */
   public function getInfoEncoded() {
     return json_encode($this->info);
   }
@@ -79,7 +84,7 @@ abstract class IiifBase {
       $response = $this->httpClient->get($url, $headers);
     }
     catch (\Exception $e) {
-      // todo: log or something.
+      // @todo log or something.
       ksm($e);
     }
     return $response;

@@ -7,6 +7,9 @@ use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ *
+ */
 abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffectInterface, ContainerFactoryPluginInterface {
 
   /**

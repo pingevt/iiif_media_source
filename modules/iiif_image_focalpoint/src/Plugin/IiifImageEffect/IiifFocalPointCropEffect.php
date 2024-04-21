@@ -4,11 +4,8 @@ namespace Drupal\iiif_image_focalpoint\Plugin\IiifImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\crop\Entity\Crop;
-use Drupal\iiif_image_style\Attribute\IiifImageEffect;
-use Drupal\iiif_image_style\IiifConfigurableImageEffectBase;
-use Drupal\iiif_image_handling\IiifImageEffectWithCropBase;
 use Drupal\iiif_image_handling\IiifConfigurableImageEffectWithCropBase;
+use Drupal\iiif_image_style\Attribute\IiifImageEffect;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 

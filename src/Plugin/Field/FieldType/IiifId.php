@@ -2,8 +2,8 @@
 
 namespace Drupal\iiif_media_source\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
@@ -119,15 +119,14 @@ class IiifId extends StringItem {
    */
   public function setValue($values, $notify = TRUE) {
     // ksm($values);
-
-    // todo: double check this logic. Is it correct?
+    // @todo double check this logic. Is it correct?
     if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
-      // ksm('bob', $this);
-      $img = $this->getImg($values); // new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);
+      // ksm('bob', $this);.
+      // New IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);.
+      $img = $this->getImg($values);
       // $this->_image = $img;
       // $this->width = $img->getWidth();
       // $this->height = $img->getHeight();
-
       $values['info'] = $img->getInfoEncoded();
     }
 
@@ -135,6 +134,9 @@ class IiifId extends StringItem {
 
   }
 
+  /**
+   *
+   */
   public function getImg($values) {
     $info = new \stdClass();
     if (!empty($values['info'])) {
@@ -150,13 +152,14 @@ class IiifId extends StringItem {
     return $image;
   }
 
+  /**
+   *
+   */
   public function __get($name) {
     // // echo "Getting '$name'\n";
-
-    // if (array_key_exists($name, $this->data)) {
+    // If (array_key_exists($name, $this->data)) {
     //     return $this->data[$name];
-    // }
-
+    // }.
     // $trace = debug_backtrace();
     // trigger_error(
     //   'Undefined property via __get(): ' . $name .
@@ -164,7 +167,6 @@ class IiifId extends StringItem {
     //   ' on line ' . $trace[0]['line'],
     //   E_USER_NOTICE);
     // return null;
-
     if ($name == "width") {
 
       $img = $this->getImg($this->getValue());
@@ -174,7 +176,6 @@ class IiifId extends StringItem {
     if ($name == "height") {
       $img = $this->getImg($this->getValue());
       // ksm("height", $img->getHeight());
-
       return $img->getHeight();
     }
 

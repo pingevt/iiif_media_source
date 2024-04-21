@@ -8,8 +8,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\iiif_image_style\Event\IiiifImageFormatterEvent;
-use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,13 +24,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class IiifImageFormatter extends StringFormatter {
 
-  // protected $sizingOptions = [
+  // Protected $sizingOptions = [
   //   'full' => 'Full',
   //   'scale_and_crop' => "Scale and Crop",
   //   'resize' => "Resize",
   //   'scale' => "Scale",
   //   'crop' => "Crop",
-  // ];
+  // ];.
 
   /**
    * The event Dispatcher.

@@ -7,8 +7,6 @@ namespace Drupal\iiif_image_style\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\iiif_image_style\Entity\IiifImageStyle;
-use Drupal\iiif_media_source\Iiif\IiifImage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

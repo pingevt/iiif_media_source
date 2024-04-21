@@ -16,9 +16,8 @@ class IiifFocalPointManager extends FocalPointManager {
   public function getCropIiifEntity($item, $crop_type, $mid) {
 
     // ksm($item, $item->getEntity());
-    // todo: fix this so it doesn't error out when we don't have a crop.
-    // return NULL;
-
+    // @todo fix this so it doesn't error out when we don't have a crop.
+    // return NULL;.
     $img = $item->getImg($item->getValue());
     $url = $img->getFullUrl();
 
@@ -39,7 +38,6 @@ class IiifFocalPointManager extends FocalPointManager {
     }
 
     // ksm($crop);
-
     return $crop;
   }
 

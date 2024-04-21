@@ -6,9 +6,6 @@ use Drupal\crop\Entity\Crop;
 use Drupal\iiif_image_handling\Event\IiifEffectFindCropEvent;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectBase;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectInterface;
-
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -40,6 +37,9 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
     );
   }
 
+  /**
+   *
+   */
   protected function getCrop($image, $crop_type, $context): ?Crop {
     $crop = Crop::findCrop($image->getFullUrl(), $crop_type);
 

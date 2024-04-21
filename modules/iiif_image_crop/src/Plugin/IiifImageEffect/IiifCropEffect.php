@@ -2,11 +2,9 @@
 
 namespace Drupal\iiif_image_crop\Plugin\IiifImageEffect;
 
-use Drupal\crop\Entity\Crop;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\iiif_image_handling\IiifImageEffectWithCropBase;
 use Drupal\iiif_image_style\Attribute\IiifImageEffect;
-use Drupal\iiif_image_style\IiifImageEffectBase;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
@@ -54,4 +52,5 @@ class IiifCropEffect extends IiifImageEffectWithCropBase {
 
     return $summary;
   }
+
 }

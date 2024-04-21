@@ -2,13 +2,13 @@
 
 namespace Drupal\iiif_image_handling;
 
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\crop\Entity\Crop;
 
+/**
+ *
+ */
 class IiifImageHandlingProcessor {
 
   /**
@@ -28,8 +28,7 @@ class IiifImageHandlingProcessor {
     $element['#item'] = $items[$delta]->getValue();
 
     if (!$items[$delta]->isEmpty()) {
-      // ksm($items[$delta]);
-
+      // ksm($items[$delta]);.
       $img = $items[$delta]->getImg($items[$delta]->getValue());
       $element['#item']['full_url'] = $img->getFullUrl();
       $element['#item']['width'] = $img->getwidth();
@@ -82,8 +81,7 @@ class IiifImageHandlingProcessor {
     $element['#item'] = $items[$delta]->getValue();
 
     if (!$items[$delta]->isEmpty()) {
-      // ksm($items[$delta]);
-
+      // ksm($items[$delta]);.
       $img = $items[$delta]->getImg($items[$delta]->getValue());
       $element['#item']['full_url'] = $img->getFullUrl();
       $element['#item']['width'] = $img->getwidth();
@@ -91,7 +89,6 @@ class IiifImageHandlingProcessor {
 
       // ksm($widget->getSettings());
       // ksm($widget->getThirdPartySettings());
-
       $crop_size = $widget->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size') ?? 500;
       $scaled_url = $img->getScaledUrl($crop_size, $crop_size);
 
@@ -175,24 +172,22 @@ class IiifImageHandlingProcessor {
   public static function processCrop($element, FormStateInterface $form_state, $form) {
     $item = $element['#item'];
     // ksm($element);
-
     $element_selectors = [
       'iiif_crop' => 'iiif-crop-' . implode('-', $element['#parents']),
     ];
 
     if (!isset($item['iiif_crop']) && isset($item['full_url'])) {
       // $url = $item['_image']->getFullUrl();
-      // todo; should we make our own crop type?
+      // @todo ; should we make our own crop type?
       $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
-      // ksm($url, $crop_type);
-
-      // ksm($item['full_url'], $crop_type);
+      // ksm($url, $crop_type);.
+      // ksm($item['full_url'], $crop_type);.
       $crop = Crop::findCrop($item['full_url'], $crop_type);
 
       if ($crop) {
         $anchor = \Drupal::service('iiif_image_crop.crop_manager')->absoluteToRelative($crop->x->value, $crop->y->value, $crop->width->value, $crop->height->value, $item['width'], $item['height']);
         $item['iiif_crop'] = implode(',', [...$anchor]);
-        // ksm($anchor, $item);
+        // ksm($anchor, $item);.
       }
     }
 
@@ -216,7 +211,6 @@ class IiifImageHandlingProcessor {
     $element['iiif_crop'] = self::createCropField($element['#field_name'], $element_selectors, $default_crop_value);
 
     // ksm($element);
-
     return $element;
   }
 
@@ -226,11 +220,11 @@ class IiifImageHandlingProcessor {
    * Validation Callback; Crop process field.
    */
   public static function validateCrop($element, FormStateInterface $form_state) {
-    // todo: VALIDATE!
+    // @todo VALIDATE!
     // if (empty($element['#value']) || (FALSE === \Drupal::service('iiif_image_crop.crop_manager')->validateCrop($element['#value']))) {
     //   $replacements = ['@title' => strtolower($element['#title'])];
     //   $form_state->setError($element, new TranslatableMarkup('The @title field should be in the form "leftoffset,topoffset" where offsets are in percentages. Ex: 25,75.', $replacements));
-    // }
+    // }.
   }
 
   /**
@@ -256,7 +250,7 @@ class IiifImageHandlingProcessor {
    *   The preview link form element.
    */
   private static function createCropField($field_name, array $element_selectors, $default_crop_value) {
-    // ksm($field_name, $element_selectors, $default_crop_value);
+    // ksm($field_name, $element_selectors, $default_crop_value);.
     $field = [
       '#type' => 'textfield',
       '#title' => new TranslatableMarkup('Crop'),
@@ -279,36 +273,14 @@ class IiifImageHandlingProcessor {
     return $field;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /**
+   *
+   */
   public static function processFocalPoint($element, FormStateInterface $form_state, $form) {
-    // ksm($element, $form_state, $form);
-
-
+    // ksm($element, $form_state, $form);.
     $item = $element['#item'];
 
     // $img = $items[$delta]->getImg($items[$delta]->getValue());
-
     $element_selectors = [
       'iiif_focal_point' => 'focal-point-' . implode('-', $element['#parents']),
     ];
@@ -333,17 +305,14 @@ class IiifImageHandlingProcessor {
       ];
 
       // $preview['thumbnail']['indicator'] = self::createFocalPointIndicator($element['#delta'], $element_selectors);
-
       // unset($preview['thumbnail']['#group']);
       // $preview['indicator']['#group'] = $preview['thumbnail']['#group'];
       // $preview['indicator']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-      // $preview['indicator']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
-
+      // $preview['indicator']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];.
       // Use the existing preview weight value so that the focal point indicator
       // and thumbnail appear in the correct order.
       $preview['#weight'] = $element['fp_preview']['#weight'] ?? 0;
-      // unset($preview['thumbnail']['#weight']);
-
+      // unset($preview['thumbnail']['#weight']);.
       $element['fp_preview'] = $preview;
     }
 

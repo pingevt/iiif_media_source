@@ -38,7 +38,6 @@ class IiifImageStyleFormatter extends StringFormatter {
     $element = parent::settingsForm($form, $form_state);
 
     // $field_img_api_version = $this->fieldDefinition->getSettings()['img_api_version'];
-
     $image_styles = iiif_image_style_options(FALSE);
     // $description_link = Link::fromTextAndUrl(
     //   $this->t('Configure Image Styles'),
@@ -87,7 +86,6 @@ class IiifImageStyleFormatter extends StringFormatter {
    */
   public function settingsSummary() {
     // $summary = parent::settingsSummary();
-
     $image_styles = iiif_image_style_options(FALSE);
     // Unset possible 'No defined styles' option.
     unset($image_styles['']);

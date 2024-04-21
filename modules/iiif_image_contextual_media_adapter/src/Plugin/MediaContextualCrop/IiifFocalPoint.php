@@ -145,7 +145,7 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
     // the preview page opens in a new tab, rather than a modal dialog via AJAX.
     // $preview_link_attributes = &$element['preview']['preview_link']['#attributes'];
     // unset($preview_link_attributes['data-dialog-type']);
-    // $preview_link_attributes['class'] = array_diff($preview_link_attributes['class'], ['use-ajax']);
+    // $preview_link_attributes['class'] = array_diff($preview_link_attributes['class'], ['use-ajax']);.
     return $element;
   }
 
@@ -186,28 +186,23 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
     $crop = reset($crop) ?: NULL;
 
     // Create a new crop.
-    // if ($crop == NULL) {
-
-    //   /** @var \Drupal\file\FileInterface[] $files */
+    // if ($crop == NULL) {.
+    // /** @var \Drupal\file\FileInterface[] $files */
     //   $files = $this->entityTypeManager
     //     ->getStorage('file')
     //     ->loadByProperties(['uri' => $original_uri]);
-
-    //   /** @var \Drupal\file\FileInterface|null $file */
+    // /** @var \Drupal\file\FileInterface|null $file */
     //   $file = reset($files) ?: NULL;
-
-    //   $values = [
+    // $values = [
     //     'type' => $crop_type,
     //     'entity_id' => $file->id(),
     //     'entity_type' => 'file',
     //     'uri' => $original_uri,
     //     'context' => $context,
     //   ];
-
-    //   // Create new cron.
+    // // Create new cron.
     //   $crop = $cropStorage->create($values);
     // }
-
     return $crop;
 
   }

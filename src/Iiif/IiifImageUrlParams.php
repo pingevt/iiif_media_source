@@ -5,7 +5,7 @@ namespace Drupal\iiif_media_source\Iiif;
 /**
  * Class to handle and verify URL params for IIIF Image urls.
  *
- * WIP
+ * WIP.
  */
 final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
@@ -16,10 +16,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    */
   private $version = 2.1;
 
-  // todo: look at custom config entity types
+  // @todo look at custom config entity types
   // https://www.drupal.org/docs/drupal-apis/configuration-api/configuration-schemametadata#s-custom-types
-
-  // todo add validation based on IIIF image settings?
+  // @todo add validation based on IIIF image settings?
 
   /**
    * Url Parameters and Data to build yrl correctly.
@@ -50,9 +49,11 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     $this->setVersion($version);
   }
 
+  /**
+   *
+   */
   public function __set($key, $value) {
-    // todo any other validation.
-
+    // @todo any other validation.
     if (isset($this->params[$key])) {
       $this->params[$key] = $value;
     }
@@ -93,6 +94,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     return $obj;
   }
 
+  /**
+   *
+   */
   private function buildFromArray(array $settings): void {
     foreach ($settings as $k => $v) {
       if (isset($this->params[$k])) {
@@ -338,7 +342,6 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -448,12 +451,10 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     ];
 
     // ksm($settings, $image->getWidth());
-
     // Process the region dimension.
     switch ($settings['region']) {
-      // case 'full':
-      //   break;
-
+      // Case 'full':
+      //   break;.
       case 'square':
         /**
          * Defined in IIIF as:
@@ -491,7 +492,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
       case '^max':
         // Upscale as permitted by maxWidth, maxHeight, maxArea.
-        // todo
+        // @todo .
         break;
 
       case 'w,':
@@ -501,8 +502,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^w,':
-        // todo
-
+        // @todo
         break;
 
       case ',h':
@@ -513,8 +513,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^,h':
-        // todo
-
+        // @todo
         break;
 
       case 'pct:n':
@@ -525,8 +524,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^pct:n':
-        // todo
-
+        // @todo
         break;
 
       case 'w,h':
@@ -537,8 +535,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^w,h':
-        // todo
-
+        // @todo
         break;
 
       case '!w,h':
@@ -558,8 +555,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^!w,h':
-        // todo
-
+        // @todo
         break;
 
     }
@@ -598,7 +594,6 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     }
 
     // Validate maxWidth/maxHeight/MaxArea.
-
     return $dimensions;
   }
 
@@ -620,9 +615,8 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     // Process the region dimension.
     switch ($settings['region']) {
-      // case 'full':
-      //   break;
-
+      // Case 'full':
+      //   break;.
       case 'square':
         /**
          * Defined in IIIF as:

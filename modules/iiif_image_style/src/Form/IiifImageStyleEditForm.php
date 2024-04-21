@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Drupal\iiif_image_style\Form;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\iiif_image_style\Entity\IiifImageStyle;
-use Drupal\iiif_image_style\IiifImageEffectManager;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectInterface;
-use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_image_style\IiifImageEffectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
