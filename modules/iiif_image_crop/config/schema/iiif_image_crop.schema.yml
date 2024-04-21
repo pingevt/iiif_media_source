@@ -9,19 +9,24 @@ iiif_image_crop.settings:
       type: string
       label: 'The default value to use for IIIF Inage Crop when none is specified'
 
-# field.widget.settings.image_focal_point:
-#   type: mapping
-#   label: 'Focal Point widget settings'
-#   mapping:
-#     progress_indicator:
-#       type: string
-#       label: 'Progress indicator'
-#     preview_image_style:
-#       type: string
-#       label: 'Preview image style'
-#     preview_link:
-#       type: boolean
-#       label: 'Preview link'
-#     offsets:
-#       type: string
-#       label: 'Focal point offsets'
+field.widget.settings.iiif_image_crop_widget:
+  type: mapping
+  label: 'Focal Point widget settings'
+  mapping:
+    iiif_crop_preview_image_style_size:
+      type: string
+      label: 'Preview Image size'
+    iiif_crop_offsets:
+      type: string
+      label: 'Offsets string'
+
+field.widget.third_party.iiif_image_crop:
+  type: mapping
+  label: 'Add Focal ppint to IIIF Image Widget'
+  mapping:
+    add_iiif_crop:
+      type: boolean
+      label: 'Add Crop functionality'
+    iiif_crop_preview_image_style_size:
+      type: int
+      label: 'The preview image size for editing the crop'

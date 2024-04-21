@@ -93,11 +93,6 @@ iiif_image_style.effect.iiif_image_settings:
       type: string
       label: ''
 
-
-
-
-
-
 iiif_image_style.responsive_image.*:
   type: config_entity
   label: IIIF Responsive Image Style

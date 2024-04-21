@@ -1,0 +1,32 @@
+iiif_image_focalpoint.settings:
+  type: config_object
+  label: 'IIIF Inage Focal Point settings'
+  mapping:
+    crop_type:
+      type: string
+      label: 'Crop type to be used with IIIF Inage Crop'
+    default_value:
+      type: string
+      label: 'The default value to use for IIIF Inage Crop when none is specified'
+
+field.widget.settings.iiif_image_focal_point_widget:
+  type: mapping
+  label: 'Focal Point widget settings'
+  mapping:
+    iiif_fp_preview_image_style_size:
+      type: int
+      label: 'Preview Image size'
+    iiif_fp_offsets:
+      type: string
+      label: 'Offsets string'
+
+field.widget.third_party.iiif_image_focalpoint:
+  type: mapping
+  label: 'Add Focal Point to IIIF an IIIF Image Widget'
+  mapping:
+    add_iiif_focalpoint:
+      type: boolean
+      label: 'Add focalpoint functionality'
+    focal_point_preview_image_style_size:
+      type: int
+      label: 'The preview image size for editing hte Focal point'

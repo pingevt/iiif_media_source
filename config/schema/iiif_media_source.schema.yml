@@ -1,0 +1,13 @@
+field.field_settings.iiif_id:
+  type: mapping
+  label: 'IIIF Field settings'
+  mapping:
+    server:
+      type: string
+      label: Server
+    prefix:
+      type: string
+      label: Prefix
+    img_api_version:
+      type: string
+      label: API Version
