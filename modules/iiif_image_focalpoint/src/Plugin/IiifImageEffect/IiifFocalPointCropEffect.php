@@ -7,6 +7,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\crop\Entity\Crop;
 use Drupal\iiif_image_style\Attribute\IiifImageEffect;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectBase;
+use Drupal\iiif_image_handling\IiifImageEffectWithCropBase;
+use Drupal\iiif_image_handling\IiifConfigurableImageEffectWithCropBase;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
@@ -18,15 +20,15 @@ use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
   label: new TranslatableMarkup("Focal Point Crop"),
   description: new TranslatableMarkup("Simply crop a photo to a specific size, with a focal point.")
 )]
-class IiifFocalPointCropEffect extends IiifConfigurableImageEffectBase {
+class IiifFocalPointCropEffect extends IiifConfigurableImageEffectWithCropBase {
 
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
 
     $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
-    $crop = Crop::findCrop($image->getFullUrl(), $crop_type);
+    $crop = $this->getCrop($image, $crop_type, $context);
 
     $offset = ['x' => 0, 'y' => 0];
     $center = ['x' => 0, 'y' => 0];

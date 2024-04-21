@@ -131,6 +131,7 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
 
       $view_value = [
         '#theme' => 'iiif_responsive_image_style',
+        '#item' => $item,
         '#image' => $item->getImg($item->getValue()),
         '#iiif_responsive_image_style' => $this->getSetting('responsive_image_style'),
         '#attributes' => [

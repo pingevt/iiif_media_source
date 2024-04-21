@@ -4,6 +4,7 @@ namespace Drupal\iiif_image_crop\Plugin\IiifImageEffect;
 
 use Drupal\crop\Entity\Crop;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\iiif_image_handling\IiifImageEffectWithCropBase;
 use Drupal\iiif_image_style\Attribute\IiifImageEffect;
 use Drupal\iiif_image_style\IiifImageEffectBase;
 use Drupal\iiif_media_source\Iiif\IiifImage;
@@ -17,15 +18,15 @@ use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
   label: new TranslatableMarkup("Crop Source"),
   description: new TranslatableMarkup("Simple Crop")
 )]
-class IiifCropEffect extends IiifImageEffectBase {
+class IiifCropEffect extends IiifImageEffectWithCropBase {
 
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
 
     $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
-    $crop = Crop::findCrop($image->getFullUrl(), $crop_type);
+    $crop = $this->getCrop($image, $crop_type, $context);
 
     if (!$crop) {
       return;

@@ -15,13 +15,11 @@ class IiifImageHandlingProcessor {
    *
    */
   public static function buildElementCrop(array $element, FormStateInterface $form_state, $context) {
-    // ksm($element, $form_state, $context);
 
     $items = $context['items'];
     $delta = $context['delta'];
     $widget = $context['widget'];
 
-    // $element['#field_name'] = $field_name;
     $element['#process'][] = [static::class, 'processCrop'];
     if (!in_array([static::class, 'process'], $element['#process'])) {
       $element['#process'][] = [static::class, 'process'];
@@ -40,7 +38,7 @@ class IiifImageHandlingProcessor {
       $crop_size = $widget->getThirdPartySetting('iiif_image_crop', 'crop_preview_image_style_size') ?? 500;
       $scaled_url = $img->getScaledUrl($crop_size, $crop_size);
 
-      $element['crop_preview'] = [
+      $element['iiif_crop_preview'] = [
         '#theme' => 'image',
         '#uri' => $scaled_url,
         '#weight' => 1,
@@ -55,7 +53,7 @@ class IiifImageHandlingProcessor {
       ];
     }
 
-    $element['#crop'] = [
+    $element['#iiif_crop'] = [
       'iiif_crop_offsets' => $widget->getSetting('iiif_crop_offsets'),
     ];
 
@@ -120,14 +118,14 @@ class IiifImageHandlingProcessor {
    */
   public static function process($element, FormStateInterface $form_state, $form) {
 
-    if (isset($element['crop_preview']) && isset($element['fp_preview'])) {
+    if (isset($element['iiif_crop_preview']) && isset($element['fp_preview'])) {
       $element['additional_settings'] = [
         '#type' => 'vertical_tabs',
         '#title' => 'Vertical Tabs',
         '#weight' => 99,
       ];
 
-      if (isset($element['crop_preview']) && !isset($element['crop_preview']['#group'])) {
+      if (isset($element['iiif_crop_preview']) && !isset($element['iiif_crop_preview']['#group'])) {
 
         $element['preview_group_crop'] = [
           '#type' => 'details',
@@ -137,9 +135,9 @@ class IiifImageHandlingProcessor {
           '#group' => $element['#field_name'] . '][0][additional_settings',
         ];
 
-        $element['crop_preview']['#group'] = $element['#field_name'] . '][' . $element['#delta'] . '][preview_group_crop';
-        $element['crop_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-        $element['crop_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
+        $element['iiif_crop_preview']['#group'] = $element['#field_name'] . '][' . $element['#delta'] . '][preview_group_crop';
+        $element['iiif_crop_preview']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
+        $element['iiif_crop_preview']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
 
       }
 
@@ -179,10 +177,10 @@ class IiifImageHandlingProcessor {
     // ksm($element);
 
     $element_selectors = [
-      'crop' => 'crop-' . implode('-', $element['#parents']),
+      'iiif_crop' => 'iiif-crop-' . implode('-', $element['#parents']),
     ];
 
-    if (!isset($item['crop']) && isset($item['full_url'])) {
+    if (!isset($item['iiif_crop']) && isset($item['full_url'])) {
       // $url = $item['_image']->getFullUrl();
       // todo; should we make our own crop type?
       $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
@@ -193,29 +191,29 @@ class IiifImageHandlingProcessor {
 
       if ($crop) {
         $anchor = \Drupal::service('iiif_image_crop.crop_manager')->absoluteToRelative($crop->x->value, $crop->y->value, $crop->width->value, $crop->height->value, $item['width'], $item['height']);
-        $item['crop'] = implode(',', [...$anchor]);
+        $item['iiif_crop'] = implode(',', [...$anchor]);
         // ksm($anchor, $item);
       }
     }
 
-    $default_crop_value = $item['crop'] ?? $element['#crop']['iiif_crop_offsets'];
+    $default_crop_value = $item['iiif_crop'] ?? $element['#iiif_crop']['iiif_crop_offsets'];
 
     // Add the crop indicator to preview.
-    if (isset($element['crop_preview'])) {
+    if (isset($element['iiif_crop_preview'])) {
       $preview = [
-        'thumbnail' => $element['crop_preview'],
+        'thumbnail' => $element['iiif_crop_preview'],
       ];
 
       // Use the existing preview weight value so that the crop indicator
       // and thumbnail appear in the correct order.
-      $preview['#weight'] = $element['crop_preview']['#weight'] ?? 0;
+      $preview['#weight'] = $element['iiif_crop_preview']['#weight'] ?? 0;
       unset($preview['thumbnail']['#weight']);
 
-      $element['crop_preview'] = $preview;
+      $element['iiif_crop_preview'] = $preview;
     }
 
     // Add the crop field.
-    $element['crop'] = self::createCropField($element['#field_name'], $element_selectors, $default_crop_value);
+    $element['iiif_crop'] = self::createCropField($element['#field_name'], $element_selectors, $default_crop_value);
 
     // ksm($element);
 
@@ -266,8 +264,8 @@ class IiifImageHandlingProcessor {
       '#default_value' => $default_crop_value,
       '#element_validate' => [[static::class, 'validateCrop']],
       '#attributes' => [
-        'class' => ['crop', $element_selectors['crop']],
-        'data-selector' => $element_selectors['crop'],
+        'class' => ['iiif_crop', $element_selectors['iiif_crop']],
+        'data-selector' => $element_selectors['iiif_crop'],
         'data-field-name' => $field_name,
       ],
       '#wrapper_attributes' => [

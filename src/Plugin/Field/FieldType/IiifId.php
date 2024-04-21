@@ -6,7 +6,10 @@ use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\iiif_media_source\Event\IiiifGetImageFromFieldEvent;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 
 /**
@@ -22,6 +25,17 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
  * )
  */
 class IiifId extends StringItem {
+
+  protected $dispatcher;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(ComplexDataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
+
+    $this->dispatcher = \Drupal::service('event_dispatcher');
+  }
 
   /**
    * {@inheritdoc}
@@ -104,7 +118,7 @@ class IiifId extends StringItem {
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-// ksm($values);
+    // ksm($values);
 
     // todo: double check this logic. Is it correct?
     if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
@@ -126,7 +140,14 @@ class IiifId extends StringItem {
     if (!empty($values['info'])) {
       $info = json_decode($values['info']);
     }
-    return new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value'], $info);
+
+    $image = new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value'], $info);
+
+    // Dispatch Event.
+    $event = new IiiifGetImageFromFieldEvent($this, $image, $values);
+    $this->dispatcher->dispatch($event, IiiifGetImageFromFieldEvent::EVENT_NAME);
+
+    return $image;
   }
 
   public function __get($name) {

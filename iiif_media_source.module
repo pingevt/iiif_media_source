@@ -18,16 +18,8 @@ function iiif_media_source_theme($existing, $type, $theme, $path) {
   return [
     'iiif_image' => [
       'variables' => [
+        'item' => NULL,
         'image' => '',
-        // 'crop' => '',
-        // 'size_type' => 'resize_and_crop',
-        // 'dest_width' => 100,
-        // 'dest_height' => 100,
-        // 'region' => '',
-        // 'size' => '',
-        // 'rotation' => '',
-        // 'quality' => '',
-        // 'format' => '',
         'url_params' => NULL,
         'attributes' => [],
       ],

@@ -20,6 +20,7 @@ function iiif_image_style_theme($existing, $type, $theme, $path) {
   return [
     'iiif_image_style' => [
       'variables' => [
+        'item' => NULL,
         'image' => '',
         'iiif_image_style' => '',
         'attributes' => [],
@@ -27,6 +28,7 @@ function iiif_image_style_theme($existing, $type, $theme, $path) {
     ],
     'iiif_responsive_image_style' => [
       'variables' => [
+        'item' => NULL,
         'image' => '',
         'iiif_responsive_image_style' => '',
         'attributes' => [],
@@ -64,11 +66,16 @@ function iiif_image_style_theme($existing, $type, $theme, $path) {
  */
 function template_preprocess_iiif_image_style(&$variables) {
   $image = $variables['image'];
+  $context = [];
+  if (!empty($variables['item'])) {
+    $context['field'] = $variables['item'];
+  }
+
   if ($variables['iiif_image_style']) {
     $image_style = IiifImageStyle::load($variables['iiif_image_style']);
     $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
     foreach ($image_style->getEffects() as $effectId => $effect) {
-      $effect->applyEffect($image, $params);
+      $effect->applyEffect($image, $params, $context);
     }
 
     $img_url = $image->getBuiltImageUrl($params);
@@ -96,6 +103,11 @@ function template_preprocess_iiif_image_style(&$variables) {
 function template_preprocess_iiif_responsive_image_style(&$variables) {
 
   $image = $variables['image'];
+
+  $context = [];
+  if (!empty($variables['item'])) {
+    $context['field'] = $variables['item'];
+  }
 
   $responsive_image_style = IiifResponsiveImageStyle::load($variables['iiif_responsive_image_style']);
   // If a responsive image style is not selected, log the error and stop
@@ -133,7 +145,7 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
     $variables['img_element'] = [
       '#theme' => 'image',
       // '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
-      '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image),
+      '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image, $context),
       '#attributes' => [],
     ];
   }
@@ -144,7 +156,7 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
     $variables['img_element'] = [
       '#theme' => 'image',
       // '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
-      '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image),
+      '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image, $context),
       '#attributes' => [],
     ];
   }
@@ -162,7 +174,7 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
   $iiif_image_style = IiifImageStyle::load($responsive_image_style->getFallbackImageStyle());
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
   foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
-    $effect->applyEffect($image, $params);
+    $effect->applyEffect($image, $params, $context);
   }
 
   $dimensions = $params->transformDimensions($image);
@@ -184,13 +196,13 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
 
 }
 
-function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $image) {
+function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $image, $context) {
 
   $iiif_image_style = IiifImageStyle::load($iiif_image_style_id);
 
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
   foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
-    $effect->applyEffect($image, $params);
+    $effect->applyEffect($image, $params, $context);
   }
 
   // $style_settings = $iiif_image_style->getParams();
@@ -225,6 +237,11 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
 
   $image = $variables['image'];
 
+  $context = [];
+  if (!empty($variables['item'])) {
+    $context['field'] = $variables['item'];
+  }
+
   // $width = $image->getWidth();
   // $height = $image->getHeight();
 
@@ -246,7 +263,7 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
           $iiif_image_style = IiifImageStyle::load($image_style_name);
           $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
           foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
-            $effect->applyEffect($image, $params);
+            $effect->applyEffect($image, $params, $context);
           }
 
           $img_url = $image->getBuiltImageUrl($params);
@@ -282,7 +299,7 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         $iiif_image_style = IiifImageStyle::load($image_style_mapping['image_mapping']);
         $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
         foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
-          $effect->applyEffect($image, $params);
+          $effect->applyEffect($image, $params, $context);
         }
 
         // Get MIME type.

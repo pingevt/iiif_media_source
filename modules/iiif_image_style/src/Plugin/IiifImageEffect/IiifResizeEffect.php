@@ -22,7 +22,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
     $params->size = "w,h";
     $params->size_w = $this->configuration["size_w"];
     $params->size_h = $this->configuration["size_h"];

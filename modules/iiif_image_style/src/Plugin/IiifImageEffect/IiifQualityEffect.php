@@ -22,7 +22,7 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
     $params->quality = $this->configuration['quality'];
   }
 

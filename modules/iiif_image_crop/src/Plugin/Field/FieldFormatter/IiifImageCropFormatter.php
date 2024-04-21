@@ -90,13 +90,12 @@ class IiifImageCropFormatter extends IiifImageFormatter {
       // Process settings.
       $style_settings = $this->getSettings();
 
-      // ksm($style_settings);
-
       $params = IiifImageUrlParams::fromSettingsArray($style_settings);
       $this->cropManager->applyCrop($img, $params, $crop);
 
       $view_value = [
         '#theme' => 'iiif_image',
+        'item' => NULL,
         '#image' => $img,
         '#url_params' => $params,
       ];

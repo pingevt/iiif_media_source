@@ -22,7 +22,7 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
     $params->region = $this->configuration['region'];
     $params->region_x = $this->configuration['region_x'];
     $params->region_y = $this->configuration['region_y'];

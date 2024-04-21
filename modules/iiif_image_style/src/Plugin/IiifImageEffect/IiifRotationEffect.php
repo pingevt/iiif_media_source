@@ -22,7 +22,7 @@ class IiifRotationEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
     $params->rotation = $this->configuration['rotation'];
   }
 

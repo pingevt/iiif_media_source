@@ -1,7 +1,7 @@
-name: 'Iiif image style'
+name: 'IIIF Image Styles'
 type: module
 description: '@todo Add description.'
-package: '@todo Add package'
+package: 'Media'
 core_version_requirement: ^10
 
 dependencies:

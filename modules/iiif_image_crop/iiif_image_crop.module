@@ -67,8 +67,8 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
             }
 
             // Use the focal point set over the UI.
-            if (!empty($item->crop)) {
-              $img_crop = $item->crop;
+            if (!empty($item->iiif_crop)) {
+              $img_crop = $item->iiif_crop;
               $image = $item->getImg($item->getValue());
               $width = $image->getWidth();
               $height = $image->getHeight();

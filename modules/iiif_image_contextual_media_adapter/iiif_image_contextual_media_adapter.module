@@ -1,20 +1,11 @@
 <?php
 
-/**
- *
- */
-
-/**
- * Implements hook_theme().
- */
-function iiif_image_handling_theme($existing, $type, $theme, $path) {
-  return [];
-}
+use Drupal\media_library_media_modify\Form\FileEditForm;
 
 /**
  * Implements hook_media_source_info_alter().
  */
-function iiif_image_handling_media_source_info_alter(array &$sources): void {
+function iiif_image_contextual_media_adapter_media_source_info_alter(array &$sources): void {
   if (empty($sources['iiif_image']['forms']['media_library_media_modify_edit'])) {
     $sources['iiif_image']['forms']['media_library_media_modify_edit'] = FileEditForm::class;
   }

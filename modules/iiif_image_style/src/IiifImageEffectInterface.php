@@ -23,7 +23,7 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    * @return bool
    *   TRUE on success. FALSE if unable to perform the image effect on the image.
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params);
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL);
 
   /**
    * Returns a render array summarizing the configuration of the image effect.

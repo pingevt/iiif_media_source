@@ -131,6 +131,7 @@ class IiifImageStyleFormatter extends StringFormatter {
 
       $view_value = [
         '#theme' => 'iiif_image_style',
+        '#item' => $item,
         '#image' => $item->getImg($item->getValue()),
         '#iiif_image_style' => $this->getSetting('image_style'),
         '#attributes' => [
