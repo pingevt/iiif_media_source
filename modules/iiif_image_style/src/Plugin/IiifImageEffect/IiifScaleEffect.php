@@ -27,6 +27,7 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
     $params->size = 'pct:n';
     $params->size_n = $this->configuration['size_n'];
 
+    return TRUE;
   }
 
   /**

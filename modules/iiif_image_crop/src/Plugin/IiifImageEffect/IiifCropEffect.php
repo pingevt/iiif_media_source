@@ -39,6 +39,7 @@ class IiifCropEffect extends IiifImageEffectWithCropBase {
     $params->region_w = $size['width'];
     $params->region_h = $size['height'];
 
+    return TRUE;
   }
 
   /**

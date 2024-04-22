@@ -12,6 +12,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\media\MediaInterface;
@@ -97,9 +98,16 @@ class IiifImageMediaSource extends MediaSourceBase {
   protected $token;
 
   /**
+   * The Stream Wrapper Mnaager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token, StreamWrapperManagerInterface $stream_wrapper_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
     $this->logger = $logger;
     $this->messenger = $messenger;
@@ -109,6 +117,7 @@ class IiifImageMediaSource extends MediaSourceBase {
     $this->iFrameUrlHelper = $iframe_url_helper;
     $this->fileSystem = $file_system;
     $this->token = $token;
+    $this->streamWrapperManager = $stream_wrapper_manager;
   }
 
   /**
@@ -130,7 +139,8 @@ class IiifImageMediaSource extends MediaSourceBase {
       $container->get('media.oembed.url_resolver'),
       $container->get('media.oembed.iframe_url_helper'),
       $container->get('file_system'),
-      $container->get('token')
+      $container->get('token'),
+      $container->get('stream_wrapper_manager')
     );
   }
 
@@ -230,7 +240,7 @@ class IiifImageMediaSource extends MediaSourceBase {
     $thumbnails_directory = $form_state->getValue('thumbnails_directory');
 
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+    $stream_wrapper_manager = $this->streamWrapperManager;
 
     if (!$stream_wrapper_manager->isValidUri($thumbnails_directory)) {
       $form_state->setErrorByName('thumbnails_directory', $this->t('@path is not a valid path.', [

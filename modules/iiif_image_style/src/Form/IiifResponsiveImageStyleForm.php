@@ -265,6 +265,7 @@ final class IiifResponsiveImageStyleForm extends EntityForm {
       $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
 
+    return TRUE;
   }
 
 }

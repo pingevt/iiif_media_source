@@ -51,12 +51,8 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
       $crop_context_ref = $entity_parent->entity_reference_entity_modify ?? NULL;
 
       if ($crop_context_ref) {
-        // ksm($entity_parent);
-        // ksm($crop_context_ref);
 
-        // ksm($this->configFactory);
-
-        // $crop_context_ref = $entity_parent->entity_reference_entity_modify ?? NULL;
+        $crop_data = [];
         if ($crop_context_ref != NULL && $referringItem = $entity_parent->_referringItem) {
           $media_override = $referringItem->getValue() ?? [];
           // ksm($referringItem, $media_override);
@@ -76,12 +72,13 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
 
         // ksm($item_class, $media_image_field);
 
+        $iiif_focal_point_override_value = "";
+        $iiif_crop_override_value = "";
+
         if ($crop_data != [] && $media_image_field != NULL) {
 
           foreach ($crop_data as $field_name => $data_values) {
             if ($media_image_field == $field_name) {
-              // ksm($media_image_field, $crop_data[$media_image_field]);
-
               // Prepare Crop Data.
               $override_data = current($crop_data[$media_image_field]);
               $iiif_focal_point_override_value = $override_data['iiif_focal_point'] ?? "";

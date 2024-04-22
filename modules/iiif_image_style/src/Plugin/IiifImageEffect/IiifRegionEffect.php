@@ -28,6 +28,8 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
     $params->region_y = $this->configuration['region_y'];
     $params->region_w = $this->configuration['region_w'];
     $params->region_h = $this->configuration['region_h'];
+
+    return TRUE;
   }
 
   /**

@@ -26,6 +26,8 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
     $params->size = "w,h";
     $params->size_w = $this->configuration["size_w"];
     $params->size_h = $this->configuration["size_h"];
+
+    return TRUE;
   }
 
   /**

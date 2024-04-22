@@ -117,6 +117,7 @@ class IiifFocalPointScaleAndCropEffect extends IiifConfigurableImageEffectWithCr
     $params->size_w = $dest_width;
     $params->size_h = $dest_height;
 
+    return TRUE;
   }
 
   /**

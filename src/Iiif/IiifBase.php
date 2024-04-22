@@ -76,17 +76,13 @@ abstract class IiifBase {
    */
   protected function call(string $url, array $headers = []): ?Response {
     $response = NULL;
-    // $headers = [
-    //   'User-Agent' => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-    // ];
-    // ksm($headers);
     try {
       $response = $this->httpClient->get($url, $headers);
     }
     catch (\Exception $e) {
       // @todo log or something.
-      ksm($e);
     }
+
     return $response;
   }
 

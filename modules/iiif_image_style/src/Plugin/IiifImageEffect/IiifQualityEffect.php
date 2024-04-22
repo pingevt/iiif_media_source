@@ -24,6 +24,8 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
    */
   public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
     $params->quality = $this->configuration['quality'];
+
+    return TRUE;
   }
 
   /**

@@ -46,8 +46,7 @@ class IiifEffectFindCropSubscriber implements EventSubscriberInterface {
         $crop_context_ref = $entity_parent->entity_reference_entity_modify ?? NULL;
 
         if ($crop_context_ref) {
-
-          // $crop_context_ref = $entity_parent->entity_reference_entity_modify ?? NULL;
+          $crop_data = [];
           if ($crop_context_ref != NULL && $referringItem = $entity_parent->_referringItem) {
             $media_override = $referringItem->getValue() ?? [];
             // If there is overwritten data.

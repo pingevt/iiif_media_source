@@ -24,6 +24,8 @@ class IiifRotationEffect extends IiifConfigurableImageEffectBase {
    */
   public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
     $params->rotation = $this->configuration['rotation'];
+
+    return TRUE;
   }
 
   /**

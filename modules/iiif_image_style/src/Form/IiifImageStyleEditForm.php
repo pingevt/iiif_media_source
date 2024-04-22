@@ -250,6 +250,8 @@ class IiifImageStyleEditForm extends IiifImageStyleFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
     $this->messenger()->addStatus($this->t('Changes to the style have been saved.'));
+
+    return TRUE;
   }
 
   /**

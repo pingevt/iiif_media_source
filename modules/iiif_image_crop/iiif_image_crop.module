@@ -45,7 +45,7 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
         foreach ($entity->{$field->getName()} as $item) {
 
           if (!$item instanceof IiifId) {
-            ksm("NOT A IiifId FIELD: ", $item);
+            // todo: log an error.
             continue;
           }
           // If (!isset($item->crop)) {
@@ -62,6 +62,9 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
             if ($crop->isNew()) {
               $img_crop = \Drupal::config('crop.settings')->get('default_value');
             }
+
+            $width = NULL;
+            $height = NULL;
 
             // Use the focal point set over the UI.
             if (!empty($item->iiif_crop)) {

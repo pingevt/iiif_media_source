@@ -4,6 +4,8 @@
  * @file
  */
 
+use Drupal\media_library_media_modify\Form\FileEditForm;
+
 /**
  * Implements hook_theme().
  */

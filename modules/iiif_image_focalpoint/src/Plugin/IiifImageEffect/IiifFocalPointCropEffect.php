@@ -99,6 +99,7 @@ class IiifFocalPointCropEffect extends IiifConfigurableImageEffectWithCropBase {
     $params->region_w = ($rx2 - $rx1);
     $params->region_h = ($ry2 - $ry1);
 
+    return TRUE;
   }
 
   /**
