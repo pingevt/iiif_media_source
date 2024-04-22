@@ -2,7 +2,7 @@ iiif_image_focalpoint.focalpoint:
   version: 1.x
   css:
     theme:
-      assets/src/css/iiif_focal_point.css: {}
+      assets/dist/css/iiif_focal_point.css: {}
   js:
-    assets/src/js/iiif_focal_point.js: {}
+    assets/dist/js/iiif_focal_point.js: {}
   dependencies:

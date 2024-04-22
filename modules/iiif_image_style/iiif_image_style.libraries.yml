@@ -2,4 +2,4 @@ admin:
   version: VERSION
   css:
     theme:
-      assets/src/css/admin.css: {}
+      assets/dist/css/admin.css: {}
