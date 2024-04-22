@@ -97,7 +97,7 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
     $component_data = [
       'type' => 'image_focal_point',
       'settings' => [
-        'progess_indicator' => 'throbber',
+        'progress_indicator' => 'throbber',
         'preview_image_style' => $preview_image_style ?? 'crop_thumbnail',
         'preview_link' => TRUE,
         'offsets' => $default_values['data-crop-settings'] ?? '30,30',

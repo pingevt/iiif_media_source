@@ -122,7 +122,7 @@ class IiifCrop extends MediaContextualCropPluginBase {
     $component_data = [
       'type' => 'image_widget_crop',
       'settings' => [
-        'progess_indicator' => 'throbber',
+        'progress_indicator' => 'throbber',
         'preview_image_style' => $preview_image_style ?? 'thumbnail',
         'crop_preview_image_style' => 'crop_thumbnail',
         'crop_list' => $image_style_crops,

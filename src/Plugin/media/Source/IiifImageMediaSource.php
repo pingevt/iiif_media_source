@@ -98,7 +98,7 @@ class IiifImageMediaSource extends MediaSourceBase {
   protected $token;
 
   /**
-   * The Stream Wrapper Mnaager.
+   * The Stream Wrapper Manager.
    *
    * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    */

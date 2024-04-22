@@ -22,7 +22,7 @@ field.widget.settings.iiif_image_crop_widget:
 
 field.widget.third_party.iiif_image_crop:
   type: mapping
-  label: 'Add Focal ppint to IIIF Image Widget'
+  label: 'Add Focal Point to IIIF Image Widget'
   mapping:
     add_iiif_crop:
       type: boolean

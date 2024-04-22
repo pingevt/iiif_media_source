@@ -83,7 +83,7 @@ class IiifImageWidget extends WidgetBase implements ContainerFactoryPluginInterf
         '#attributes' => [
           'style' => "margin: 0 1rem 3rem 0",
         ],
-        '#wieght' => $element['value']['#weight'] - 0.1,
+        '#weight' => $element['value']['#weight'] - 0.1,
       ];
 
     }

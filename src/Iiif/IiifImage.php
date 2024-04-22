@@ -8,12 +8,12 @@ namespace Drupal\iiif_media_source\Iiif;
 class IiifImage extends IiifBase {
 
   /**
-   * @todo shoud be set in config somewhere?
+   * @todo should be set in config somewhere?
    */
   protected $thumbWidth = 200;
 
   /**
-   * @todo shoud be set in config somewhere?
+   * @todo should be set in config somewhere?
    */
   protected $thumbHeight = 200;
 
@@ -115,7 +115,7 @@ class IiifImage extends IiifBase {
    *
    */
   public function getDefaultExtension(): string {
-    // Asummption here that the first element is the default Extension.
+    // Assumption here that the first element is the default Extension.
     return isset($this->info->profile[1]->formats) ? current($this->info->profile[1]->formats) : "jpg";
   }
 

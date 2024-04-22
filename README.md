@@ -1,10 +1,10 @@
 # IIIF Media source
 
-todo: write descritpion
+todo: write description
 implementing the Image API 3.0
 
-Crop (Not Crop API entity): Primarily used for redifining the source image.
-Focal Point: Used primarily for "Art Direction" when automaitlly sizing images so we don't loose focus
+Crop (Not Crop API entity): Primarily used for redefining the source image.
+Focal Point: Used primarily for "Art Direction" when automatically sizing images so we don't loose focus
 
 ## Table of contents
 
@@ -107,7 +107,7 @@ Submodule: Crop
 - [x] Add thirdparty settings for thumbnail size
 - [x] "Drupalize" js file.
 - [x] Need JS solution to hide field (copy from FP)
-- [ ] Settings Page to variablize settings for the cropper.js plugin.
+- [ ] Settings Page to variabalize settings for the cropper.js plugin.
 - [ ] Allow for Contextual Media field
 
 General:
