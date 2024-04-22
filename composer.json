@@ -1,0 +1,27 @@
+{
+  "name": "drupal/iiif_media_source",
+  "type": "drupal-module",
+  "description": "Layout Paragraphs",
+  "keywords": [
+    "Drupal",
+    "IIIF",
+    "Media"
+  ],
+  "homepage": "https://www.drupal.org/project/iiif_media_source",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/iiif_media_source",
+    "source": "http://cgit.drupalcode.org/iiif_media_source"
+  },
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  },
+  "require": {
+  },
+  "require-dev": {
+  }
+}

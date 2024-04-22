@@ -2,7 +2,7 @@
 
 ## Testing archiving:
 
-`git archive -o external_site_monitor.tar HEAD`
+`git archive -o iiif_media_source.tar HEAD`
 
 ## npm commands
 <!--
