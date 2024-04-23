@@ -42,8 +42,6 @@ include:
     ref: $_GITLAB_TEMPLATES_REF
     file:
       - "/includes/include.drupalci.main.yml"
-      # For Drupal 7, remove the above line and uncomment the below.
-      # - "/includes/include.drupalci.main-d7.yml"
       - "/includes/include.drupalci.variables.yml"
       - "/includes/include.drupalci.workflows.yml"
 #
@@ -68,7 +66,7 @@ variables:
   # SKIP_CSPELL: 1
   # Broaden test coverage.
   OPT_IN_TEST_CURRENT: 1
-  OPT_IN_TEST_PREVIOUS_MINOR: 1
+  # OPT_IN_TEST_PREVIOUS_MINOR: 1
   OPT_IN_TEST_PREVIOUS_MAJOR: 1
   OPT_IN_TEST_NEXT_MAJOR: 1
   OPT_IN_TEST_MAX_PHP: 1
