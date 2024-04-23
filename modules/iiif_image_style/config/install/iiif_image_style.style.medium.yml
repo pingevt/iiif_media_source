@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+name: medium
+label: 'Medium (220×220)'
+effects:
+  63a87b6f-4a7d-4345-a440-9e314cc9a4be:
+    uuid: 63a87b6f-4a7d-4345-a440-9e314cc9a4be
+    id: iiif_image_size
+    weight: 1
+    data:
+      size: '!w,h'
+      size_w: '220'
+      size_h: '220'
+      size_n: ''

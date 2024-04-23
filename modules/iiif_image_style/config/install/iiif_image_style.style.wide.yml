@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+name: wide
+label: 'Wide (1090)'
+effects:
+  949a4da3-8464-4de7-9bb7-41265e733591:
+    uuid: 949a4da3-8464-4de7-9bb7-41265e733591
+    id: iiif_image_size
+    weight: 1
+    data:
+      size: 'w,'
+      size_w: '1090'
+      size_h: ''
+      size_n: ''

@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+name: large
+label: 'Large (480x480)'
+effects:
+  d0497e27-6c2c-4d65-a932-6c6f1f10e4db:
+    uuid: d0497e27-6c2c-4d65-a932-6c6f1f10e4db
+    id: iiif_image_size
+    weight: 1
+    data:
+      size: '!w,h'
+      size_w: '480'
+      size_h: '480'
+      size_n: ''

@@ -67,7 +67,7 @@ Image Styles / Responsive Images
 - [x] IIIF Image style formatter
 - [x] IIIF Responsive Image style formatter
 - [x] We're going to need plugins... Imagestyle with plugins for the transformers.
-- [ ] Add in some default IIIF Image Styles
+- [x] Add in some default IIIF Image Styles
 - [ ] Admin librabry w/ CSS.
 - [ ] Add in preview on Image Styles.
 - [ ] Document plugin so others can create plugins.
@@ -118,4 +118,8 @@ Tests:
 - Unit Tests
   - [ ] Need to test and finish Dimension in `IiifImageUrlParams`
 - Functional Tests
+ - [ ]
 - Browser Tests
+  - [ ] Check each image style effect and combination. We should be able to set it and check the end of any image url string.
+  - [ ] Check responsive images
+  - [ ] Check "fallbacks" for responsive images

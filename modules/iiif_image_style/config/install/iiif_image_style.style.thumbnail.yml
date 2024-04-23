@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+name: thumbnail
+label: 'Thumbnail (100×100)'
+effects:
+  7dc7b3f3-102f-4cd5-bc40-2a628447645e:
+    uuid: 7dc7b3f3-102f-4cd5-bc40-2a628447645e
+    id: iiif_image_size
+    weight: 1
+    data:
+      size: '!w,h'
+      size_w: '100'
+      size_h: '100'
+      size_n: ''

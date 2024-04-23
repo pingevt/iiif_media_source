@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies: {  }
+name: media_library
+label: 'Media Library thumbnail (220×220)'
+effects:
+  2a09d0fc-2526-4598-ace3-75e840d91339:
+    uuid: 2a09d0fc-2526-4598-ace3-75e840d91339
+    id: iiif_image_size
+    weight: 1
+    data:
+      size: '!w,h'
+      size_w: '220'
+      size_h: '220'
+      size_n: ''
