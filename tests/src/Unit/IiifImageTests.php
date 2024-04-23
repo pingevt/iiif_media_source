@@ -8,7 +8,9 @@ use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Unit tests for iiif_media_source
  *
+ * @group iiif_media_source
  */
 class IiifImageTests extends UnitTestCase {
 
