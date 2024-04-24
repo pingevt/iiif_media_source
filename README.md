@@ -50,7 +50,9 @@ todo:
 Field:
 - [x] Field - should just be a copy of a text field
   - [x] Field has settings for server/prefix
+  - [ ] re-work Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId:getImg() so it doesn't require the values param.
   - [ ] Could add in some validation? but not sure what that would be... https://iiif.io/api/image/3.0/#2-uri-syntax
+  - [ ] getLocalThumbnailUri() still has hardcoded URLs.
 - [x] Default Widget should just be plain text, i think.
 - [x] Default Formatter should just display ID.
   - [ ] need to verify and have fallbacks for each section.
