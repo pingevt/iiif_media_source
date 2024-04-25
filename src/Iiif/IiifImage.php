@@ -2,6 +2,8 @@
 
 namespace Drupal\iiif_media_source\Iiif;
 
+use Drupal\Core\File\FileSystemInterface;
+
 /**
  *
  */
@@ -131,6 +133,62 @@ class IiifImage extends IiifBase {
     }
 
     return 2.0;
+  }
+
+  /**
+   *
+   */
+  public function downloadImage(IiifImageUrlParams $params, string $directory) {
+
+    // $remote_thumbnail_url = $this->getBuiltImageUrl($params);
+
+    // // ksm($remote_thumbnail_url);
+    // if (!$remote_thumbnail_url) {
+    //   return NULL;
+    // }
+
+    // // Ensure that the destination directory is writable, and if it's not,
+    // // log an error and bail out.
+    // if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+    //   // $this->logger->warning('Could not prepare thumbnail destination directory @dir for oEmbed media.', [
+    //   //   '@dir' => $directory,
+    //   // ]);
+    //   return NULL;
+    // }
+
+    // // The local filename of the thumbnail is always a hash of its remote URL.
+    // // If a file with that name already exists in the thumbnails directory,
+    // // regardless of its extension, return its URI.
+    // // $remote_thumbnail_url = $remote_thumbnail_url->toString();
+    // $hash = Crypt::hashBase64($remote_thumbnail_url);
+    // $files = $this->fileSystem->scanDirectory($directory, "/^$hash\..*/");
+    // if (count($files) > 0) {
+    //   return reset($files)->uri;
+    // }
+
+    // // The local thumbnail doesn't exist yet, so we need to download it.
+    // try {
+    //   $response = $this->httpClient->request('GET', $remote_thumbnail_url);
+    //   // ksm($response);
+    //   if ($response->getStatusCode() === 200) {
+    //     $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $ext;
+    //     // ksm($local_thumbnail_uri);
+    //     $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileSystemInterface::EXISTS_REPLACE);
+    //     return $local_thumbnail_uri;
+    //   }
+    // }
+    // catch (TransferException $e) {
+    //   $this->logger->warning('Failed to download remote thumbnail file due to "%error".', [
+    //     '%error' => $e->getMessage(),
+    //   ]);
+    // }
+    // catch (FileException $e) {
+    //   $this->logger->warning('Could not download remote thumbnail from {url}.', [
+    //     'url' => $remote_thumbnail_url,
+    //   ]);
+    // }
+
+
   }
 
 }

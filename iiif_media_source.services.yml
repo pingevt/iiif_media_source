@@ -1,7 +1,7 @@
 services:
   iiif_media_source.iiif_img:
     class: Drupal\iiif_media_source\Iii\IiifImage
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@file_system', '@http_client']
 
   # iiif_media_source.focal_point_manager:
   #   class: Drupal\iiif_media_source\IiifFocalPointManager
