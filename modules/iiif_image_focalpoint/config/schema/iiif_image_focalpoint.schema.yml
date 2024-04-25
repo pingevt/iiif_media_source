@@ -27,6 +27,9 @@ field.widget.third_party.iiif_image_focalpoint:
     add_iiif_focalpoint:
       type: boolean
       label: 'Add focalpoint functionality'
-    focal_point_preview_image_style_size:
+    iiif_fp_preview_image_style_size:
       type: int
       label: 'The preview image size for editing hte Focal point'
+    iiif_fp_offsets:
+      type: string
+      label: 'Offsets string'

@@ -143,12 +143,21 @@ function iiif_image_focalpoint_field_widget_third_party_settings_form(WidgetInte
       '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'add_iiif_focalpoint'),
     ];
 
-    $element['focal_point_preview_image_style_size'] = [
+    $element['iiif_fp_preview_image_style_size'] = [
       '#title' => t('Preview image style size (in pixels)'),
       '#type' => 'number',
-      '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size') ?? 150,
+      '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'iiif_fp_preview_image_style_size') ?? 150,
       '#description' => t('The preview image will be shown while editing the content. What is its max size.'),
-      '#weight' => 16,
+    ];
+
+    $element['iiif_fp_offsets'] = [
+      '#type' => 'textfield',
+      '#title' => t('Default focal point value'),
+      '#default_value' => $plugin->getThirdPartySetting('iiif_image_focalpoint', 'iiif_fp_offsets') ?? "50,50",
+      '#description' => t('Specify the default focal point of this widget in the form "leftoffset,topoffset" where iiif_fp_offsets are in percentages. Ex: 25,75.'),
+      '#size' => 7,
+      '#maxlength' => 7,
+      '#required' => TRUE,
     ];
 
     return $element;
@@ -164,9 +173,13 @@ function iiif_image_focalpoint_field_widget_settings_summary_alter(array &$summa
   if ($add) {
     $summary[] = t('Adding IIIF Focal Point');
 
-    $size = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size');
+    $size = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'iiif_fp_preview_image_style_size');
     if ($size) {
       $summary[] = t('Thumbnail size: ' . $size . "px");
+    }
+    $offset = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'iiif_fp_offsets');
+    if ($offset) {
+      $summary[] = t('FP Offset: ' . $offset);
     }
   }
 }

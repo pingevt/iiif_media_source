@@ -30,3 +30,6 @@ field.widget.third_party.iiif_image_crop:
     iiif_crop_preview_image_style_size:
       type: int
       label: 'The preview image size for editing the crop'
+    iiif_crop_offsets:
+      type: string
+      label: 'Offsets string'

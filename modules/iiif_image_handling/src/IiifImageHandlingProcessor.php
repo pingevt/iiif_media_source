@@ -20,6 +20,9 @@ class IiifImageHandlingProcessor {
     $delta = $context['delta'];
     $widget = $context['widget'];
 
+    $thirdPartySettings = $widget->getThirdPartySettings();
+    $crop_settings = $thirdPartySettings['iiif_image_crop'] ?? $widget->getSettings();
+
     $element['#process'][] = [static::class, 'processCrop'];
     if (!in_array([static::class, 'process'], $element['#process'])) {
       $element['#process'][] = [static::class, 'process'];
@@ -34,7 +37,7 @@ class IiifImageHandlingProcessor {
       $element['#item']['width'] = $img->getwidth();
       $element['#item']['height'] = $img->getHeight();
 
-      $crop_size = $widget->getThirdPartySetting('iiif_image_crop', 'crop_preview_image_style_size') ?? 500;
+      $crop_size = $crop_settings['crop_preview_image_style_size'] ?? 500;
       $scaled_url = $img->getScaledUrl($crop_size, $crop_size);
 
       $element['iiif_crop_preview'] = [
@@ -50,10 +53,12 @@ class IiifImageHandlingProcessor {
         '#prefix' => "<div class='cropper-image'>",
         '#suffix' => "</div>",
       ];
+
+
     }
 
     $element['#iiif_crop'] = [
-      'iiif_crop_offsets' => $widget->getSetting('iiif_crop_offsets'),
+      'iiif_crop_offsets' => $crop_settings['iiif_crop_offsets'],
     ];
 
     return $element;
@@ -69,6 +74,9 @@ class IiifImageHandlingProcessor {
 
     unset($element['thumbnail']);
 
+    $thirdPartySettings = $widget->getThirdPartySettings();
+    $fp_settings = $thirdPartySettings['iiif_image_focalpoint'] ?? $widget->getSettings();
+
     $element['#process'][] = [static::class, 'processFocalPoint'];
     if (!in_array([static::class, 'process'], $element['#process'])) {
       $element['#process'][] = [static::class, 'process'];
@@ -81,15 +89,12 @@ class IiifImageHandlingProcessor {
     $element['#item'] = $items[$delta]->getValue();
 
     if (!$items[$delta]->isEmpty()) {
-      // ksm($items[$delta]);.
       $img = $items[$delta]->getImg($items[$delta]->getValue());
       $element['#item']['full_url'] = $img->getFullUrl();
       $element['#item']['width'] = $img->getwidth();
       $element['#item']['height'] = $img->getHeight();
 
-      // ksm($widget->getSettings());
-      // ksm($widget->getThirdPartySettings());
-      $crop_size = $widget->getThirdPartySetting('iiif_image_focalpoint', 'focal_point_preview_image_style_size') ?? 500;
+      $crop_size = $fp_settings['iiif_crop_preview_image_style_size'] ?? 500;
       $scaled_url = $img->getScaledUrl($crop_size, $crop_size);
 
       $element['fp_preview'] = [
@@ -104,7 +109,7 @@ class IiifImageHandlingProcessor {
     }
 
     $element['#iiif_focal_point'] = [
-      'iiif_fp_offsets' => $widget->getSetting('iiif_fp_offsets'),
+      'iiif_fp_offsets' => $fp_settings['iiif_fp_offsets'],
     ];
 
     return $element;
