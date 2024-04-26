@@ -122,8 +122,12 @@ Tests:
 - Unit Tests
   - [ ] Need to test and finish Dimension in `IiifImageUrlParams`
 - Functional Tests
- - [ ]
+  - [ ]
 - Browser Tests
   - [ ] Check each image style effect and combination. We should be able to set it and check the end of any image url string.
   - [ ] Check responsive images
   - [ ] Check "fallbacks" for responsive images
+  - [ ] lazy and eager loading attr
+    - [ ] Default IIIF Image Formater
+    - [ ] Crop Image Formatter
+    - [ ] Focal Point Image formatter
