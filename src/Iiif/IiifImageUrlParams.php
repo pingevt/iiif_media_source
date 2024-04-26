@@ -593,6 +593,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       }
     }
 
+    // Force int values.
+    $dimensions = array_map('intval', $dimensions);
+
     // Validate maxWidth/maxHeight/MaxArea.
     return $dimensions;
   }
@@ -646,6 +649,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
         break;
     }
+
+    // Force int values.
+    $position = array_map('intval', $position);
 
     return $position;
   }
