@@ -11,3 +11,93 @@ field.field_settings.iiif_id:
     img_api_version:
       type: string
       label: API Version
+
+field.storage_settings.iiif_id:
+  type: mapping
+  label: 'String settings'
+  mapping:
+    max_length:
+      type: integer
+      label: 'Maximum length'
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
+    is_ascii:
+      type: boolean
+      label: 'Contains US ASCII characters only'
+
+field.widget.settings.iiif_id_widget:
+  type: mapping
+  label: 'IIIF field'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of IIIF field'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.iiif_image_widget:
+  type: mapping
+  label: 'IIIF field'
+  mapping:
+    size:
+      type: integer
+      label: 'Size of IIIF field'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.formatter.settings.iiif_id_formatter:
+  type: mapping
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to the entity'
+
+field.formatter.settings.iiif_image_formatter:
+  type: mapping
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to the entity'
+    region:
+      type: string
+      label:
+    region_x:
+      type: string
+      label:
+    region_y:
+      type: string
+      label:
+    region_w:
+      type: string
+      label:
+    region_h:
+      type: string
+      label:
+    size:
+      type: string
+      label:
+    size_w:
+      type: string
+      label:
+    size_h:
+      type: string
+      label:
+    rotation:
+      type: integer
+      label:
+    quality:
+      type: string
+      label:
+    format:
+      type: string
+      label:
+    image_loading:
+      type: mapping
+      label: 'Image loading settings'
+      mapping:
+        attribute:
+          type: string
+          label: 'Loading attribute'
