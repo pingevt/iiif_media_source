@@ -92,6 +92,12 @@ class IiifImageFormatter extends StringFormatter {
 
     $options += IiifImageUrlParams::getDefaultSettings();
 
+    $options += [
+      'image_loading' => [
+        'attribute' => 'lazy',
+      ],
+    ];
+
     return $options;
   }
 
@@ -282,6 +288,30 @@ class IiifImageFormatter extends StringFormatter {
       ],
     ];
 
+    // Image Loading.
+    $image_loading = $this->getSetting('image_loading');
+    $form['image_loading'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Image loading'),
+      '#weight' => 10,
+      '#description' => $this->t('Lazy render images with native image loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load images.'),
+    ];
+    $loading_attribute_options = [
+      'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
+      'eager' => $this->t('Eager (<em>loading="eager"</em>)'),
+    ];
+    $form['image_loading']['attribute'] = [
+      '#title' => $this->t('Image loading attribute'),
+      '#type' => 'radios',
+      '#default_value' => $image_loading['attribute'],
+      '#options' => $loading_attribute_options,
+      '#description' => $this->t('Select the loading attribute for images. <a href=":link">Learn more about the loading attribute for images.</a>', [
+        ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
+      ]),
+    ];
+    $form['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
+    $form['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible. This is the browser default for legacy reasons. Only use this option when the image is always expected to render.');
+
     return $form;
   }
 
@@ -298,6 +328,11 @@ class IiifImageFormatter extends StringFormatter {
     $summary[] = $this->t('Rotation: @rotation', ['@rotation' => $params->getRotation()]);
     $summary[] = $this->t('Quality: @quality', ['@quality' => $params->getQuality()]);
     $summary[] = $this->t('Format: @format', ['@format' => $params->getFormat()]);
+
+    $image_loading = $this->getSetting('image_loading');
+    $summary[] = $this->t('Image loading: @attribute', [
+      '@attribute' => $image_loading['attribute'],
+    ]);
 
     return $summary;
   }
