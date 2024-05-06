@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - iiif_media_source
+    - iiif_media_source_test
+    - node
+  enforced:
+    module:
+    - iiif_media_source_test
+id: node.field_iiif_test_4
+field_name: field_iiif_test_4
+entity_type: node
+type: iiif_id
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: iiif_media_source
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

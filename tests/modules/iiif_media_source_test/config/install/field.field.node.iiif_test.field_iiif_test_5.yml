@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_iiif_test_5
+    - node.type.iiif_test
+  module:
+    - iiif_media_source
+    - iiif_media_source_test
+  enforced:
+    module:
+    - iiif_media_source_test
+id: node.iiif_test.field_iiif_test_5
+field_name: field_iiif_test_5
+entity_type: node
+bundle: iiif_test
+label: 'IIIF Test 5'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  server: 'https://media.nga.gov'
+  prefix: iiif
+  img_api_version: '2'
+field_type: iiif_id

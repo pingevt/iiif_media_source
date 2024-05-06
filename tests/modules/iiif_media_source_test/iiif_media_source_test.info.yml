@@ -1,0 +1,10 @@
+name: IIIF Media Source TEST
+type: module
+description: 'Required config for testing IIIF Fields'
+core_version_requirement: ^10
+package: Testing
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:user
+  - iiif_media_source:iiif_media_source
