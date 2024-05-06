@@ -343,6 +343,7 @@ class IiifImageFormatter extends StringFormatter {
   public function viewElements(FieldItemListInterface $items, $langcode): array {
 
     $build = [];
+    $image_loading = $this->getSetting('image_loading');
 
     foreach ($items as $delta => $item) {
 
@@ -353,6 +354,9 @@ class IiifImageFormatter extends StringFormatter {
         '#theme' => 'iiif_image',
         '#image' => $item->getImg($item->getValue()),
         '#url_params' => $params,
+        '#attributes' => [
+          'loading' => $image_loading['attribute'],
+        ],
       ];
       $build[$delta] = $view_value;
     }
