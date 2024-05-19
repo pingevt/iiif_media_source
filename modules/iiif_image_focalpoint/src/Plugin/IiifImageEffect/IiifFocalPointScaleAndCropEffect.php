@@ -31,8 +31,8 @@ class IiifFocalPointScaleAndCropEffect extends IiifConfigurableImageEffectWithCr
     $center = ['x' => 0, 'y' => 0];
 
     if ($params->getSetting('region') == "full") {
-      $orig_width = $image->getWidth();
-      $orig_height = $image->getHeight();
+      $orig_width = $image->getWidth() ?? 1;
+      $orig_height = $image->getHeight() ?? 1;
     }
     else {
 
