@@ -139,7 +139,7 @@ class IiifId extends StringItem {
    */
   public function getImg($values) {
     $info = new \stdClass();
-    if (!empty($values['info'])) {
+    if (!empty($values['info']) && json_decode($values['info'])) {
       $info = json_decode($values['info']);
     }
 

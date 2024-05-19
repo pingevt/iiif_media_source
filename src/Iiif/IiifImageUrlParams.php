@@ -445,6 +445,15 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   public function transformDimensions(IiifImage $image): array {
     $settings = $this->params;
 
+    // If for some reason we don't image data yet, just return a 1x1.
+    if ($image->getWidth() === NULL && $image->getHeight() === NULL) {
+      return [
+        'width' => 1,
+        'height' => 1,
+      ];
+    }
+
+    // New Dimensions.
     $dimensions = [
       'width' => $image->getWidth(),
       'height' => $image->getHeight(),
