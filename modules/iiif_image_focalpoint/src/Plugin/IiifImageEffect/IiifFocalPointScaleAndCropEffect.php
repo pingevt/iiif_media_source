@@ -84,9 +84,9 @@ class IiifFocalPointScaleAndCropEffect extends IiifConfigurableImageEffectWithCr
         $rx2 += abs($rx1);
         $rx1 = 0;
       }
-      if ($rx2 > $orig_height) {
-        $rx1 -= $rx2 - $orig_height;
-        $rx2 = $orig_height;
+      if ($rx2 > $orig_width) {
+        $rx1 -= $rx2 - $orig_width;
+        $rx2 = $orig_width;
       }
     }
     else {
