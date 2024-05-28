@@ -66,7 +66,7 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
 
         // Recover field image in the media.
         $media_image_field = NULL;
-        $field_definition = $entity_parent->getSource()->getSourceFieldDefinition($entity_parent->bundle->entity);
+        $field_definition = $event->field->getFieldDefinition();
         $item_class = $field_definition->getItemDefinition()->getClass();
         $media_image_field = $field_definition->getName();
 
