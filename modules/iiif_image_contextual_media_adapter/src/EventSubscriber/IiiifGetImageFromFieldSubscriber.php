@@ -117,7 +117,7 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
         $anchor = $current_crop->anchor();
         $size = $current_crop->size();
 
-        if ($anchor['x'] != $absolute['x'] || $anchor['y'] != $absolute['y'] || $size['w'] != $absolute['w'] || $size['h'] != $absolute['h']) {
+        if ($anchor['x'] != $absolute['x'] || $anchor['y'] != $absolute['y'] || $size['width'] != $absolute['width'] || $size['height'] != $absolute['height']) {
           $current_crop->setPosition($absolute['x'], $absolute['y']);
           $current_crop->setSize($absolute['w'], $absolute['h']);
           $current_crop->save();
