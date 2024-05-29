@@ -92,6 +92,9 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
         $crop_type = $this->configFactory->get('iiif_image_focalpoint.settings')->get('crop_type');
         $original_uri = $event->image->getFullUrl();
         $current_crop = $this->retrieveContextualCrop($crop_context_ref, $crop_type, $original_uri, $entity_parent);
+        if (empty($iiif_focal_point_override_value)) {
+          $iiif_focal_point_override_value = $this->configFactory->get('iiif_image_focalpoint.settings')->get('default_value');
+        }
 
         // Recalculate coordinate.
         [$x, $y] = explode(',', $iiif_focal_point_override_value);
@@ -108,6 +111,9 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
         // Create or Update Crop.
         $crop_type = $this->configFactory->get('iiif_image_crop.settings')->get('crop_type');
         $current_crop = $this->retrieveContextualCrop($crop_context_ref, $crop_type, $original_uri, $entity_parent);
+        if (empty($iiif_crop_override_value)) {
+          $iiif_crop_override_value = $this->configFactory->get('iiif_image_crop.settings')->get('default_value');
+        }
 
         // Recalculate coordinate.
         [$x, $y, $w, $h] = explode(',', $iiif_crop_override_value);
