@@ -20,6 +20,13 @@ class IiifImage extends IiifBase {
   protected $thumbHeight = 200;
 
   /**
+   * Build the full manifest URL.
+   */
+  public function getManifestUrl() {
+    return implode("/", [$this->server, $this->prefix, $this->iiifId, "info.json"]);
+  }
+
+  /**
    *
    */
   public function getWidth(): ?int {
