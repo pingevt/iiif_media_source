@@ -1,6 +1,6 @@
 services:
   iiif_image_contextual_media_adapter.image_from_field_subscriber:
-    class: '\Drupal\iiif_image_contextual_media_adapter\EventSubscriber\IiiifGetImageFromFieldSubscriber'
+    class: '\Drupal\iiif_image_contextual_media_adapter\EventSubscriber\IiifGetImageFromFieldSubscriber'
     arguments: ['@entity_type.manager', '@iiif_image_focalpoint.focal_point_manager', '@iiif_image_crop.crop_manager', '@config.factory']
     tags:
       - { name: 'event_subscriber' }

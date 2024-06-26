@@ -112,7 +112,7 @@ class FieldFormatterTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types');
     $session->statusCodeEquals(200);
 
-    // Form Dispaly Settings.
+    // Form Display Settings.
     $this->drupalGet('admin/structure/types/manage/iiif_test/form-display');
     $session->statusCodeEquals(200);
 

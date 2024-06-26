@@ -34,7 +34,7 @@ class IiifImageHandlingProcessor {
       // ksm($items[$delta]);.
       $img = $items[$delta]->getImg($items[$delta]->getValue());
       $element['#item']['full_url'] = $img->getFullUrl();
-      $element['#item']['width'] = $img->getwidth();
+      $element['#item']['width'] = $img->getWidth();
       $element['#item']['height'] = $img->getHeight();
 
       $crop_size = $crop_settings['crop_preview_image_style_size'] ?? 500;
@@ -91,7 +91,7 @@ class IiifImageHandlingProcessor {
     if (!$items[$delta]->isEmpty()) {
       $img = $items[$delta]->getImg($items[$delta]->getValue());
       $element['#item']['full_url'] = $img->getFullUrl();
-      $element['#item']['width'] = $img->getwidth();
+      $element['#item']['width'] = $img->getWidth();
       $element['#item']['height'] = $img->getHeight();
 
       $crop_size = $fp_settings['iiif_crop_preview_image_style_size'] ?? 500;

@@ -5,17 +5,17 @@ namespace Drupal\iiif_image_contextual_media_adapter\EventSubscriber;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\focal_point\FocalPointManager;
-use Drupal\iiif_media_source\Event\IiiifGetImageFromFieldEvent;
+use Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent;
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\iiif_image_crop\IiifCropManager;
 
 /**
- * Class IiiifGetImageFromFieldSubscriber.
+ * Class IiifGetImageFromFieldSubscriber.
  *
  * Create Crop entities for Contextual Crops.
  */
-class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
+class IiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
 
   protected $entityTypeManager;
   protected $focalPointManager;
@@ -35,14 +35,14 @@ class IiiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     return [
       // Static class constant => method on this class.
-      IiiifGetImageFromFieldEvent::EVENT_NAME => 'imgFromField',
+      IiifGetImageFromFieldEvent::EVENT_NAME => 'imgFromField',
     ];
   }
 
   /**
    * Subscribe to the user login event dispatched.
    */
-  public function imgFromField(IiiifGetImageFromFieldEvent $event) {
+  public function imgFromField(IiifGetImageFromFieldEvent $event) {
     // ksm($event);
 
     $entity_parent = $event->field->getEntity() ?? NULL;

@@ -1,0 +1,7 @@
+actuals
+bitonal
+cropperjs
+Drupalize
+pingevt
+variabalize
+zoomable

@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\iiif_media_source\Event\IiiifGetImageFromFieldEvent;
+use Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 
 /**
@@ -146,8 +146,8 @@ class IiifId extends StringItem {
     $image = new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value'], $info);
 
     // Dispatch Event.
-    $event = new IiiifGetImageFromFieldEvent($this, $image, $values);
-    $this->dispatcher->dispatch($event, IiiifGetImageFromFieldEvent::EVENT_NAME);
+    $event = new IiifGetImageFromFieldEvent($this, $image, $values);
+    $this->dispatcher->dispatch($event, IiifGetImageFromFieldEvent::EVENT_NAME);
 
     return $image;
   }

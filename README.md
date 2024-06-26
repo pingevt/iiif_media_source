@@ -70,7 +70,7 @@ Image Styles / Responsive Images
 - [x] IIIF Responsive Image style formatter
 - [x] We're going to need plugins... Imagestyle with plugins for the transformers.
 - [x] Add in some default IIIF Image Styles
-- [ ] Admin librabry w/ CSS.
+- [ ] Admin library w/ CSS.
 - [ ] Add in preview on Image Styles.
 - [ ] Document plugin so others can create plugins.
 - [ ] Documentation and helper text for forms.
@@ -99,15 +99,15 @@ Submodule: Image Handling
 
 Submodule: Focalpoint
 - [x] Add in widget to define a focal point of the image.
-- [x] Thirdparty settings or something so we can combine everything into 1 form element.
-- [x] Add thirdparty settings for thumbnail size
+- [x] Third party settings or something so we can combine everything into 1 form element.
+- [x] Add third party settings for thumbnail size
 - [ ] Allow for Contextual Media field
 - [ ] Make sure settings are correct for Widget and 3rd party settings. (Add Test)
 
 Submodule: Crop
 - [x] Add in widget to define a crop for the image.
-- [x] Thirdparty settings or something so we can combine everything into 1 form element.
-- [x] Add thirdparty settings for thumbnail size
+- [x] Third party settings or something so we can combine everything into 1 form element.
+- [x] Add third party settings for thumbnail size
 - [x] "Drupalize" js file.
 - [x] Need JS solution to hide field (copy from FP)
 - [ ] Settings Page to variabalize settings for the cropper.js plugin.
@@ -128,6 +128,6 @@ Tests:
   - [ ] Check responsive images
   - [ ] Check "fallbacks" for responsive images
   - [ ] lazy and eager loading attr
-    - [ ] Default IIIF Image Formater
+    - [ ] Default IIIF Image Formatter
     - [ ] Crop Image Formatter
     - [ ] Focal Point Image formatter

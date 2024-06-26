@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * IIIF Image Crop formatter.
  *
- * This uses the cropped iamge as the source.
+ * This uses the cropped image as the source.
  *
  * @FieldFormatter(
  *   id = "iiif_image_crop_formatter",

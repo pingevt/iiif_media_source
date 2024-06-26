@@ -9,7 +9,7 @@ use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
 /**
  * Event to allow altering of a IiifImage Url.
  */
-class IiiifGetImageFromFieldEvent extends Event {
+class IiifGetImageFromFieldEvent extends Event {
 
   // This makes it easier for subscribers to reliably use our event name.
   const EVENT_NAME = 'iiif_image_from_field';
