@@ -10,6 +10,8 @@ use Drupal\iiif_image_style\EventsTrait;
 use Drupal\iiif_image_style\IiifImageEffectInterface;
 use Drupal\iiif_image_style\IiifImageEffectPluginCollection;
 use Drupal\iiif_image_style\IiifImageStyleInterface;
+use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
  * Defines the iiif image style entity type.
@@ -143,17 +145,20 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   /**
    * {@inheritdoc}
    */
-  // Public function getParams(IiifImage $image = NULL): ?array {
-  // $params = $this->params;
-  //   $e = new IiifImageStyleSettingsEvent($this, $image, $params);
-  //   $this->eventDispatcher()->dispatch($e, IiifImageStyleSettingsEvent::EVENT_NAME);
-  // return $this->params ?? [];
-  // }.
+  public function buildUrl(IiifImage $image): string {
+    $img_url = "";
 
-  /**
-   * {@inheritdoc}
-   */
-  // Public function getFormat(): string {
-  //   return $this->params['format'] ?? "";
-  // }.
+    // Grab the base params.
+    $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
+    // Apply all effects.
+    foreach ($this->getEffects() as $effect) {
+      $effect->applyEffect($image, $params, []);
+    }
+
+    // Build full URL.
+    $img_url = $image->getBuiltImageUrl($params);
+
+    return $img_url;
+  }
+
 }
