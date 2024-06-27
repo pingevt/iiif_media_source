@@ -2,8 +2,6 @@
 
 namespace Drupal\iiif_media_source\Iiif;
 
-use Drupal\Core\File\FileSystemInterface;
-
 /**
  *
  */
@@ -92,8 +90,8 @@ class IiifImage extends IiifBase {
   public function getBuiltImageUrl(IiifImageUrlParams $params): string {
 
     $url = implode(DIRECTORY_SEPARATOR, [
-      $this->server,
-      $this->prefix,
+      rtrim($this->server, DIRECTORY_SEPARATOR),
+      ltrim($this->prefix, DIRECTORY_SEPARATOR),
       $this->iiifId,
       $params->buildUrlString(),
     ]);
@@ -194,8 +192,6 @@ class IiifImage extends IiifBase {
     //     'url' => $remote_thumbnail_url,
     //   ]);
     // }
-
-
   }
 
 }
