@@ -13,8 +13,25 @@ use Drupal\Component\Annotation\Plugin;
  */
 final class IiifImageEffect extends Plugin {
 
+  /**
+   * Iiif image Effect ID.
+   *
+   * @var string
+   */
   public $id;
+
+  /**
+   * Iiif image Effect label.
+   *
+   * @var string
+   */
   public $label;
+
+  /**
+   * Iiif image Effect description.
+   *
+   * @var string
+   */
   public $description;
 
 }

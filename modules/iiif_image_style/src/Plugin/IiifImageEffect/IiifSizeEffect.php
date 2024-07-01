@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Iiif Image Effect to change the image size.
  */
 #[IiifImageEffect(
   id: "iiif_image_size",
@@ -75,7 +75,8 @@ class IiifSizeEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('w'),
       '#type' => 'number',
       '#default_value' => $this->configuration['size_w'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
           ':input[data-states="size"]' => [
@@ -98,7 +99,8 @@ class IiifSizeEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('h'),
       '#type' => 'number',
       '#default_value' => $this->configuration['size_h'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
           ':input[data-states="size"]' => [
@@ -121,7 +123,8 @@ class IiifSizeEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('n'),
       '#type' => 'number',
       '#default_value' => $this->configuration['size_n'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#min' => 0,
       '#max' => 100,
       '#step' => 0.1,

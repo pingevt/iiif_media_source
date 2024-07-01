@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Iiif Image Effect to change the image format.
  */
 #[IiifImageEffect(
   id: "iiif_image_scale",
@@ -62,7 +62,8 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('n'),
       '#type' => 'number',
       '#default_value' => $params['size_n'] ?? NULL,
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#required' => TRUE,
       '#min' => 0,
       '#max' => 100,

@@ -13,7 +13,9 @@ class IiifImageEffectPluginCollection extends DefaultLazyPluginCollection {
    * {@inheritdoc}
    *
    * @return \Drupal\iiif_image_style\IiifImageEffectInterface
+   *   The Iiif Image Effect plugin.
    */
+  // phpcs:ignore
   public function &get($instance_id) {
     return parent::get($instance_id);
   }

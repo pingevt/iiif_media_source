@@ -37,21 +37,13 @@ class IiifImageStyleFormatter extends StringFormatter {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
-    // $field_img_api_version = $this->fieldDefinition->getSettings()['img_api_version'];
     $image_styles = iiif_image_style_options(FALSE);
-    // $description_link = Link::fromTextAndUrl(
-    //   $this->t('Configure Image Styles'),
-    //   Url::fromRoute('entity.image_style.collection')
-    // );
     $element['image_style'] = [
       '#title' => $this->t('Image style'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('image_style'),
       '#empty_option' => $this->t('None (original image)'),
       '#options' => $image_styles,
-      // '#description' => $description_link->toRenderable() + [
-      //   '#access' => $this->currentUser->hasPermission('administer image styles'),
-      // ],
     ];
 
     // Image loading setting.

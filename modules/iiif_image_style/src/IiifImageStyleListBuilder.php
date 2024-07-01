@@ -8,7 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of iiif image styles.
+ * Provides a listing of Iiif image styles.
  */
 final class IiifImageStyleListBuilder extends ConfigEntityListBuilder {
 
@@ -29,7 +29,7 @@ final class IiifImageStyleListBuilder extends ConfigEntityListBuilder {
     /** @var \Drupal\iiif_image_style\IiifImageStyleInterface $entity */
     $row['label'] = $entity->label();
     $row['id'] = $entity->id();
-    // $row['status'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
+
     return $row + parent::buildRow($entity);
   }
 

@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Iiif Image Effect to change the image rotation.
  */
 #[IiifImageEffect(
   id: "iiif_image_rotation",
@@ -54,13 +54,13 @@ class IiifRotationEffect extends IiifConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-
+    // @todo add in mirroring.
     // Rotation.
     $form['rotation'] = [
       '#title' => $this->t('Rotation'),
       '#type' => 'number',
       '#default_value' => $this->configuration['rotation'],
-      '#description' => $this->t(''),
+      '#description' => $this->t('The degrees of clockwise rotation from 0 up to 360.'),
       '#min' => 0,
       '#max' => 360,
       '#step' => 0.1,

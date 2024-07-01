@@ -155,6 +155,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    * Gets all the image styles IDs involved in the responsive image mapping.
    *
    * @return string[]
+   *   An array of strings that are the image style ids.
    */
   public function getImageStyleIds();
 

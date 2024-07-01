@@ -25,7 +25,7 @@ class IiifImageStyleSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   *
+   * Alter the current IIIF Image Style.
    */
   public function imgStyleSettingsAlter(IiifImageStyleSettingsEvent $event) {
 

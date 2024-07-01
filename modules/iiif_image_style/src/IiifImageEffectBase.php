@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- *
+ * Base class for all IiifImageEffect plugins.
  */
 abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffectInterface, ContainerFactoryPluginInterface {
 

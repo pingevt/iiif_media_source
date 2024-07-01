@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Iiif Image Effect to change the image format.
  */
 #[IiifImageEffect(
   id: "iiif_image_format",

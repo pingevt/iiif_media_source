@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Iiif Image Effect to change the image region.
  */
 #[IiifImageEffect(
   id: "iiif_image_region",
@@ -77,7 +77,8 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('x'),
       '#type' => 'number',
       '#default_value' => $this->configuration['region_x'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -92,7 +93,8 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('y'),
       '#type' => 'number',
       '#default_value' => $this->configuration['region_y'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -107,7 +109,8 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('w'),
       '#type' => 'number',
       '#default_value' => $this->configuration['region_w'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -122,7 +125,8 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('h'),
       '#type' => 'number',
       '#default_value' => $this->configuration['region_h'],
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [

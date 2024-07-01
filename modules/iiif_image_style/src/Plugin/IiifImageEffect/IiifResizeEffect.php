@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Iiif Image Effect to change resize the image.
  */
 #[IiifImageEffect(
   id: "iiif_image_resize",
@@ -63,7 +63,8 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('w'),
       '#type' => 'number',
       '#default_value' => $params['size_w'] ?? NULL,
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
           ':input[data-states="size"]' => [
@@ -86,7 +87,8 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
       '#title' => $this->t('h'),
       '#type' => 'number',
       '#default_value' => $params['size_h'] ?? NULL,
-      '#description' => $this->t(''),
+      // phpcs:ignore
+      // '#description' => $this->t(''),
       '#states' => [
         'invisible' => [
           ':input[data-states="size"]' => [

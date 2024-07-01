@@ -11,7 +11,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Defines the interface for Iiif image effects.
  */
 interface IiifImageEffectInterface extends PluginInspectionInterface, ConfigurableInterface, DependentPluginInterface {
 
@@ -22,9 +22,11 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    *   An image file object.
    * @param \Drupal\iiif_media_source\Iiif\IiifImageUrlParams $params
    *   The current Url Params.
+   * @param array $context
+   *   The context, typically for grabbing the saved Crop from CropAPI.
    *
    * @return bool
-   *   TRUE on success. FALSE if unable to perform the image effect on the image.
+   *   TRUE on success. FALSE if unable to perform image effect on the image.
    */
   public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL);
 

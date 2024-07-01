@@ -14,7 +14,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class IiifImageEffect extends Plugin {
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function __construct(
     public readonly string $id,
