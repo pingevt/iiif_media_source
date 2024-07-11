@@ -76,7 +76,7 @@ class IiifImage extends IiifBase {
       $this->prefix,
       $this->iiifId,
       "full",
-      "max",
+      "full",
       0,
       "default." . $this->getDefaultExtension(),
     ]);
