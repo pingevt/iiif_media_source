@@ -2,7 +2,7 @@ name: 'IIIF Image Styles'
 type: module
 description: '@todo Add description.'
 package: 'Media'
-core_version_requirement: ^10
+core_version_requirement: ^10 | ^11
 
 dependencies:
   - iiif_media_source:iiif_media_source

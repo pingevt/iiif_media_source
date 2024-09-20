@@ -1,7 +1,7 @@
 name: IIIF Image - Manipulation
 type: module
 description: 'Core and shared Elements for IIIF Image manipulation'
-core_version_requirement: ^10
+core_version_requirement: ^10 | ^11
 
 package: Media
 

@@ -1,7 +1,7 @@
 name: IIIF Image - Media Contextual Crop API Adapter
 type: module
 description: 'Adaptor for using Media Contextual Crop API with IIIF images'
-core_version_requirement: ^10
+core_version_requirement: ^10 | ^11
 
 package: Media
 
