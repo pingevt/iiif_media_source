@@ -19,7 +19,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
  *   id = "iiif_id",
  *   label = @Translation("IIIF ID field"),
  *   description = @Translation("A field containing a IIIF id"),
- *   category = @Translation("IIIF"),
+ *   category = "iiif",
  *   default_widget = "iiif_id_widget",
  *   default_formatter = "iiif_id_formatter"
  * )

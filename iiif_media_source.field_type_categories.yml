@@ -1,0 +1,3 @@
+iiif:
+  label: 'IIIF Media'
+  description: 'Field to store IIIF Media References data.'
