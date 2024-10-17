@@ -2,7 +2,7 @@
 
 namespace Drupal\iiif_image_style;
 
-use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Trait to handle event dispatchers.
@@ -12,16 +12,16 @@ trait EventsTrait {
   /**
    * The event Dispatcher.
    *
-   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
+   * @var \Symfony\Component\EventDispatcher\EventDispatcher
    */
   protected $eventDispatcher;
 
   /**
    * Gets the event Dispatcher.
    *
-   * @return \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
+   * @return \Symfony\Component\EventDispatcher\EventDispatcher
    */
-  protected function eventDispatcher(): ContainerAwareEventDispatcher {
+  protected function eventDispatcher(): EventDispatcher {
     if (!$this->eventDispatcher) {
       $this->eventDispatcher = \Drupal::service('event_dispatcher');
 

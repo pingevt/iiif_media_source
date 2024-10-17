@@ -2,7 +2,6 @@
 
 namespace Drupal\iiif_image_crop\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -11,6 +10,7 @@ use Drupal\iiif_image_crop\IiifCropManager;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 use Drupal\iiif_media_source\Plugin\Field\FieldFormatter\IiifImageFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * IIIF Image Crop formatter.
@@ -34,7 +34,7 @@ class IiifImageCropFormatter extends IiifImageFormatter {
    */
   protected $cropManager;
 
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, ContainerAwareEventDispatcher $event_dispatcher, IiifCropManager $crop_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, EventDispatcher $event_dispatcher, IiifCropManager $crop_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $entity_type_manager, $event_dispatcher);
 
     $this->cropManager = $crop_manager;
