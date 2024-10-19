@@ -19,12 +19,20 @@ jobs:
         mariadb-version: ['10.4', '10.6']
         exclude:
           -
-            drupal-core: '10.2.x'
-            php-version: '8.0'
+            drupal-core: '11.0.x'
+            php-version: '8.1'
             mariadb-version: '10.4'
           -
-            drupal-core: '10.2.x'
-            php-version: '8.0'
+            drupal-core: '11.0.x'
+            php-version: '8.2'
+            mariadb-version: '10.4'
+          -
+            drupal-core: '11.0.x'
+            php-version: '8.3'
+            mariadb-version: '10.4'
+          -
+            drupal-core: '11.0.x'
+            php-version: '8.1'
             mariadb-version: '10.6'
 
     container:
