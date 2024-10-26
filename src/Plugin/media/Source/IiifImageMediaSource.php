@@ -191,28 +191,24 @@ class IiifImageMediaSource extends MediaSourceBase {
    * {@inheritdoc}
    */
   public function getMetadata(MediaInterface $media, $attribute_name) {
-
     // Get the text_long field where the JSON object is stored.
     $remote_field = $media->get($this->configuration['source_field']);
-    // $json_arr = json_decode($remote_field->value);
-    // ksm($attribute_name, $remote_field, $media);
     // If the source field is not required, it may be empty.
     if ($remote_field === FALSE) {
       return parent::getMetadata($media, $attribute_name);
     }
 
     switch ($attribute_name) {
+      // Sets the name of the media entity if the data is blank.
+      case 'default_name':
+        $data_value = $remote_field->getValue();
+        return $data_value[0]['value'];
+        break;
 
-      // This is used to set the name of the media entity if the user leaves the field blank.
-      // case 'default_name':
-      //   return $json_arr->alt_text;.
       // This is used to generate the thumbnail field.
       case 'thumbnail_uri':
-        // Return "https://media.nga.gov/iiif/" . $remote_field->value . "/full/!300,300/0/default.jpg";.
-        return $this->getLocalThumbnailUri($remote_field->value) ?: parent::getMetadata($media, 'thumbnail_uri');
-
-      // default:
-      //   return $json_arr->$attribute_name ?? parent::getMetadata($media, $attribute_name);.
+        return $this->getLocalThumbnailUri($media);
+        break;
     }
   }
 
@@ -264,14 +260,21 @@ class IiifImageMediaSource extends MediaSourceBase {
    * If the thumbnail is not already locally stored, this method will attempt
    * to download it.
    *
+   * @param \Drupal\media\MediaInterface $media
+   *   Media Interface object to parse for value.
+   *
    * @return string|null
    *   The local thumbnail URI, or NULL if it could not be downloaded, or if the
    *   resource has no thumbnail at all.
    */
-  protected function getLocalThumbnailUri($id) {
+  protected function getLocalThumbnailUri(MediaInterface $media) {
+    $remote_field = $media->get($this->configuration['source_field']);
+    $remote_field_definition = $remote_field->getFieldDefinition();
+    $path = $remote_field_definition->getSettings()['server'];
+    $prefix = $remote_field_definition->getSettings()['prefix'];
+
     // If there is no remote thumbnail, there's nothing for us to fetch here.
-    // $remote_thumbnail_url = $resource->getThumbnailUrl();
-    $remote_thumbnail_url = "https://media.nga.gov/iiif/" . $id . "/full/!300,300/0/default.jpg";
+    $remote_thumbnail_url = $path . '/' . $prefix . '/' . $remote_field->value . "/full/!300,300/0/default.jpg";
     if (!$remote_thumbnail_url) {
       return NULL;
     }
