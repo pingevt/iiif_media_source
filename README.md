@@ -50,16 +50,16 @@ todo:
 Field:
 - [x] Field - should just be a copy of a text field
   - [x] Field has settings for server/prefix
-  - [ ] re-work Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId:getImg() so it doesn't require the values param.
+  - [ ] (LC) re-work Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId:getImg() so it doesn't require the values param.
   - [ ] Could add in some validation? but not sure what that would be... https://iiif.io/api/image/3.0/#2-uri-syntax
-  - [ ] getLocalThumbnailUri() still has hardcoded URLs.
+  - [x] (LC) getLocalThumbnailUri() still has hardcoded URLs.
 - [x] Default Widget should just be plain text, i think.
 - [x] Default Formatter should just display ID.
-  - [ ] need to verify and have fallbacks for each section.
-  - [ ] Add in loading attribute (lazy, eager) to basic formatter.
+  - [ ] (LC) need to verify and have fallbacks for each section.
 - [x] Secondary (basic image) Widget includes image thumbnail.
 - [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
-- [ ] Do we need the base Iiif class?
+  - [ ] (LC) Add in loading attribute (lazy, eager) to basic formatter.
+- [ ] (LC) Do we need the base Iiif class?
   - [ ] If so, needs to be a service?
   - [ ] Inject it into the field class?
 
@@ -71,14 +71,14 @@ Image Styles / Responsive Images
 - [x] We're going to need plugins... Imagestyle with plugins for the transformers.
 - [x] Add in some default IIIF Image Styles
 - [ ] Admin library w/ CSS.
-- [ ] Add in preview on Image Styles.
-- [ ] Document plugin so others can create plugins.
-- [ ] Documentation and helper text for forms.
-- [ ] Fix errors when using "original image" for responsive images
+- [ ] (LC) Add in preview on Image Styles.
+- [ ] (LC) Document plugin so others can create plugins.
+- [ ] (LC) Documentation and helper text for forms.
+- [ ] (LC) Fix errors when using "original image" for responsive images
 
 Media Source
 - [ ] Source just provides data for fields, if wanted on the media item.
-- [ ] Provides:
+- [ ] (LC) Provides:
   - [ ] version
   - [ ] width
   - [ ] height
@@ -115,19 +115,21 @@ Submodule: Crop
 - [ ] Make sure settings are correct for Widget and 3rd party settings. (Add Test)
 
 General:
-- [ ] Check and confirm Config inspector
+- [ ] (LC) Check and confirm Config inspector
 - [ ] Process js/css files
 
 Tests:
+- Prep
+  - (LC) Need IIIF sources to test against.
 - Unit Tests
-  - [ ] Need to test and finish Dimension in `IiifImageUrlParams`
+  - [ ] (LC) Need to test and finish Dimension in `IiifImageUrlParams`
 - Functional Tests
   - [ ]
 - Browser Tests
-  - [ ] Check each image style effect and combination. We should be able to set it and check the end of any image url string.
+  - [ ] (LC) Check each image style effect and combination. We should be able to set it and check the end of any image url string.
   - [ ] Check responsive images
   - [ ] Check "fallbacks" for responsive images
-  - [ ] lazy and eager loading attr
+  - [ ] (LC) lazy and eager loading attr
     - [ ] Default IIIF Image Formatter
     - [ ] Crop Image Formatter
     - [ ] Focal Point Image formatter
