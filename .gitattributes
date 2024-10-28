@@ -16,5 +16,6 @@ package.json            export-ignore
 phpunit.xml             export-ignore
 postcss.config.js       export-ignore
 .gitlab-ci.yml          export-ignore
+.cspell                 export-ignore
 .cspell/*               export-ignore
 cspell.json             export-ignore
