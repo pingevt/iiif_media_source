@@ -2,6 +2,7 @@
 
 namespace Drupal\iiif_media_source\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -35,7 +36,7 @@ class IiifImageFormatter extends StringFormatter {
   /**
    * The event Dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcher
+   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher|\Symfony\Component\EventDispatcher\EventDispatcher
    */
   protected $eventDispatcher;
 
@@ -58,11 +59,20 @@ class IiifImageFormatter extends StringFormatter {
    *   Any third party settings.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
+   * @param \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher|\Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
    *   The event Dispatcher.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, EventDispatcher $event_dispatcher) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, $event_dispatcher) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $entity_type_manager);
+
+    if (version_compare(\Drupal::VERSION, '11.0.0', '>=') && $event_dispatcher instanceof EventDispatcher) {
+      // Code for Drupal 11 or higher.
+      // echo "Running Drupal 11 or higher: " . \Drupal::VERSION . "\n";
+    }
+    elseif (version_compare(\Drupal::VERSION, '10.0.0', '>=') && $event_dispatcher instanceof ContainerAwareEventDispatcher) {
+      // Code for Drupal 10.
+      // echo "Running Drupal 10: " . \Drupal::VERSION . "\n";
+    }
 
     $this->eventDispatcher = $event_dispatcher;
   }
