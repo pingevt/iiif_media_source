@@ -195,11 +195,11 @@ class IiifId extends StringItem {
   public function __get($name) {
 
     if ($name == "width") {
-      $img = $this->getImg();
+      $img = $this->getIiifImageObj();
       return $img->getWidth();
     }
     if ($name == "height") {
-      $img = $this->getImg();
+      $img = $this->getIiifImageObj();
       return $img->getHeight();
     }
 

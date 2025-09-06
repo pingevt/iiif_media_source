@@ -356,13 +356,12 @@ class IiifImageFormatter extends StringFormatter {
     $image_loading = $this->getSetting('image_loading');
 
     foreach ($items as $delta => $item) {
-
       // Process settings.
       $params = IiifImageUrlParams::fromSettingsArray($this->getSettings());
-      // dpm($item->getValue());
+
       $view_value = [
         '#theme' => 'iiif_image',
-        '#image' => $item->getImg(),
+        '#image' => $item->getIiifImageObj(),
         '#url_params' => $params,
         '#attributes' => [
           'loading' => $image_loading['attribute'],
