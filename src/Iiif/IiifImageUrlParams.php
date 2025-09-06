@@ -50,7 +50,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function __set($key, $value) {
     // @todo any other validation.
@@ -95,7 +95,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * Build the object from an array of settings.
    */
   private function buildFromArray(array $settings): void {
     foreach ($settings as $k => $v) {
@@ -147,7 +147,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     switch ($version) {
       case "2":
-      case 2.0;
+      case 2.0:
       case 2.1:
         $options = [
           'full' => 'full',
@@ -278,8 +278,18 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    */
   private function expandSettings(): void {
 
-    $this->params['region_actual'] = str_replace(['x', 'y', 'w', 'h'], [$this->params['region_x'], $this->params['region_y'], $this->params['region_w'], $this->params['region_h']], $this->params['region']);
-    $this->params['size_actual'] = str_replace(['w', 'h', 'n'], [$this->params['size_w'], $this->params['size_h'], $this->params['size_n'] ?? ""], $this->params['size']);
+    $this->params['region_actual'] = str_replace(['x', 'y', 'w', 'h'], [
+      $this->params['region_x'],
+      $this->params['region_y'],
+      $this->params['region_w'],
+      $this->params['region_h'],
+    ], $this->params['region']);
+
+    $this->params['size_actual'] = str_replace(['w', 'h', 'n'], [
+      $this->params['size_w'],
+      $this->params['size_h'],
+      $this->params['size_n'] ?? "",
+    ], $this->params['size']);
   }
 
   /**
@@ -322,7 +332,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function applyRegionSettings(array $settings): void {
     $keys = [
@@ -374,7 +384,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function applySizeSettings(array $settings): void {
     $keys = [
@@ -440,7 +450,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function transformDimensions(IiifImage $image): array {
     $settings = $this->params;
@@ -462,10 +472,12 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     // ksm($settings, $image->getWidth());
     // Process the region dimension.
     switch ($settings['region']) {
-      // Case 'full':
-      //   break;.
+      // phpcs:disable
+      // case 'full':
+      //   break;
+      // phpcs:enable
       case 'square':
-        /**
+        /*
          * Defined in IIIF as:
          * The region is defined as an area where the width
          * and height are both equal to the length of the shorter dimension of
@@ -511,7 +523,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^w,':
-        // @todo
+        // @todo add this.
         break;
 
       case ',h':
@@ -522,7 +534,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^,h':
-        // @todo
+        // @todo add this.
         break;
 
       case 'pct:n':
@@ -533,7 +545,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^pct:n':
-        // @todo
+        // @todo add this.
         break;
 
       case 'w,h':
@@ -544,7 +556,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^w,h':
-        // @todo
+        // @todo add this.
         break;
 
       case '!w,h':
@@ -564,7 +576,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^!w,h':
-        // @todo
+        // @todo add this.
         break;
 
     }
@@ -610,7 +622,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function transformPosition(IiifImage $image): array {
     $settings = $this->params;
@@ -627,10 +639,12 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     // Process the region dimension.
     switch ($settings['region']) {
-      // Case 'full':
-      //   break;.
+      // phpcs:disable
+      // case 'full':
+      //   break;
+      // phpcs:enable
       case 'square':
-        /**
+        /*
          * Defined in IIIF as:
          * The region is defined as an area where the width
          * and height are both equal to the length of the shorter dimension of
@@ -666,7 +680,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function validateParamsAgainstImage(IiifImage $image): bool {
     return TRUE;

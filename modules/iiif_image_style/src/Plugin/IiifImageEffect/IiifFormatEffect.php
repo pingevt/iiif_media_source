@@ -22,7 +22,7 @@ class IiifFormatEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
     $params->format = $this->configuration['format'];
 
     return TRUE;

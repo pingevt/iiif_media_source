@@ -41,12 +41,13 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration,
-                                    $plugin_id,
-                                    $plugin_definition,
-                              EntityTypeManagerInterface $entityTypeManager,
-                              FocalPointManager $focalPointManager,
-                                ConfigFactory $config
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entityTypeManager,
+    FocalPointManager $focalPointManager,
+    ConfigFactory $config,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entityTypeManager);
     $this->focalPointManager = $focalPointManager;
@@ -141,11 +142,13 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
   public static function widgetModify(array $element): array {
     $element = parent::widgetModify($element);
 
+    // phpcs:disable
     // Since core does not support nested modal dialogs, we need to ensure that
     // the preview page opens in a new tab, rather than a modal dialog via AJAX.
     // $preview_link_attributes = &$element['preview']['preview_link']['#attributes'];
     // unset($preview_link_attributes['data-dialog-type']);
-    // $preview_link_attributes['class'] = array_diff($preview_link_attributes['class'], ['use-ajax']);.
+    // $preview_link_attributes['class'] = array_diff($preview_link_attributes['class'], ['use-ajax']);
+    // phpcs:enable
     return $element;
   }
 
@@ -185,6 +188,7 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
     $crop = $cropStorage->loadByProperties($base_crop);
     $crop = reset($crop) ?: NULL;
 
+    // phpcs:disable
     // Create a new crop.
     // if ($crop == NULL) {.
     // /** @var \Drupal\file\FileInterface[] $files */
@@ -203,8 +207,8 @@ class IiifFocalPoint extends MediaContextualCropPluginBase {
     // // Create new cron.
     //   $crop = $cropStorage->create($values);
     // }
+    // phpcs:enable
     return $crop;
-
   }
 
 }

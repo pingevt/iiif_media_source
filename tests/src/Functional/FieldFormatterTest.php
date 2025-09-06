@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignorefile
 
 /**
  * Test basic IIIF Field Formatters.

@@ -5,6 +5,8 @@
  * Code here is based heavily on core image and responsive_image modules.
  */
 
+// phpcs:disable Drupal.NamingConventions.ValidFunctionName.InvalidPrefix
+
 use Drupal\breakpoint\BreakpointInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Template\Attribute;
@@ -84,7 +86,8 @@ function template_preprocess_iiif_image_style(&$variables) {
     $img_url = $image->getFullUrl();
   }
 
-  // Grab final url components from the image style, and pass directly to an image formatter.
+  // Grab final url components from the image style, and pass directly to an
+  // image formatter.
   $variables['content'] = [
     'image' => [
       '#theme' => 'image',
@@ -142,7 +145,6 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
     }
     $variables['img_element'] = [
       '#theme' => 'image',
-      // '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
       '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image, $context),
       '#attributes' => [],
     ];
@@ -153,12 +155,12 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
     // double downloads in browsers that don't support the picture tag.
     $variables['img_element'] = [
       '#theme' => 'image',
-      // '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
       '#uri' => _iiif_responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image, $context),
       '#attributes' => [],
     ];
   }
 
+  /*
   // Get width and height from fallback responsive image style and transfer them
   // to img tag so browser can do aspect ratio calculation and prevent
   // recalculation of layout on image load.
@@ -168,7 +170,8 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
   //   'height' => $variables['height'],
   // ],
   //   $variables['uri']
-  // );.
+  // );
+   */
   $iiif_image_style = IiifImageStyle::load($responsive_image_style->getFallbackImageStyle());
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
   foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
@@ -195,7 +198,7 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
 }
 
 /**
- *
+ * Get the URL for an image style.
  */
 function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $image, $context) {
 
@@ -216,11 +219,12 @@ function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $im
 }
 
 /**
+ * Builds the attributes for a source tag.
  *
  * @param array $variables
  *   An array with the following keys:
- *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
- *       ID.
+ *     - responsive_image_style_id: The
+ *       \Drupal\responsive_image\Entity\ResponsiveImageStyle ID.
  *     - width: The width of the image (if known).
  *     - height: The height of the image (if known).
  *     - uri: The URI of the image file.
@@ -355,7 +359,7 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
 /**
  * Gets an array of image styles suitable for using as select list options.
  *
- * @param $include_empty
+ * @param bool $include_empty
  *   If TRUE a ' - None - ' option will be inserted in the options array.
  *
  * @return string[]
@@ -365,7 +369,7 @@ function iiif_image_style_options($include_empty = TRUE) {
   $styles = IiifImageStyle::loadMultiple();
   $options = [];
   if ($include_empty && !empty($styles)) {
-    $options[''] = t(' - None - ');
+    $options[''] = t('- None -');
   }
   foreach ($styles as $name => $style) {
     $options[$name] = $style->label();
@@ -380,7 +384,7 @@ function iiif_image_style_options($include_empty = TRUE) {
 /**
  * Gets an array of image styles suitable for using as select list options.
  *
- * @param $include_empty
+ * @param bool $include_empty
  *   If TRUE a ' - None - ' option will be inserted in the options array.
  *
  * @return string[]
@@ -390,7 +394,7 @@ function iiif_responsive_image_style_options($include_empty = TRUE) {
   $styles = IiifResponsiveImageStyle::loadMultiple();
   $options = [];
   if ($include_empty && !empty($styles)) {
-    $options[''] = t(' - None - ');
+    $options[''] = t('- None -');
   }
   foreach ($styles as $name => $style) {
     $options[$name] = $style->label();

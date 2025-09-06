@@ -3,16 +3,24 @@
 namespace Drupal\iiif_media_source\Iiif;
 
 /**
- *
+ * IIIF Image class.
  */
 class IiifImage extends IiifBase {
 
   /**
+   * Thumbnail width.
+   *
+   * @var int
+   *
    * @todo should be set in config somewhere?
    */
   protected $thumbWidth = 200;
 
   /**
+   * Thumbnail Height.
+   *
+   * @var int
+   *
    * @todo should be set in config somewhere?
    */
   protected $thumbHeight = 200;
@@ -25,21 +33,21 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the image width.
    */
   public function getWidth(): ?int {
     return $this->info->width ?? NULL;
   }
 
   /**
-   *
+   * Get the image height.
    */
   public function getHeight(): ?int {
     return $this->info->height ?? NULL;
   }
 
   /**
-   *
+   * Get the image dimensions.
    */
   public function getDimensions():?array {
     return [
@@ -49,7 +57,7 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the thumbnail URL.
    */
   public function getThumbnailUrl(): string {
 
@@ -67,7 +75,7 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the full URL.
    */
   public function getFullUrl(): string {
 
@@ -85,7 +93,7 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the built image URL.
    */
   public function getBuiltImageUrl(IiifImageUrlParams $params): string {
 
@@ -100,7 +108,7 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the scaled URL.
    */
   public function getScaledUrl($width, $height): string {
 
@@ -119,7 +127,7 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the default extension.
    */
   public function getDefaultExtension(): string {
     // Assumption here that the first element is the default Extension.
@@ -127,7 +135,7 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the API version.
    */
   public function getApiVersion() {
     if (isset($this->info->{'@context'}) && $this->info->{'@context'} == "http://iiif.io/api/image/2/context.json") {
@@ -141,17 +149,15 @@ class IiifImage extends IiifBase {
   }
 
   /**
-   *
+   * Get the image info.
    */
   public function downloadImage(IiifImageUrlParams $params, string $directory) {
-
+    // phpcs:disable
     // $remote_thumbnail_url = $this->getBuiltImageUrl($params);
-
     // // ksm($remote_thumbnail_url);
     // if (!$remote_thumbnail_url) {
     //   return NULL;
     // }
-
     // // Ensure that the destination directory is writable, and if it's not,
     // // log an error and bail out.
     // if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
@@ -160,7 +166,6 @@ class IiifImage extends IiifBase {
     //   // ]);
     //   return NULL;
     // }
-
     // // The local filename of the thumbnail is always a hash of its remote URL.
     // // If a file with that name already exists in the thumbnails directory,
     // // regardless of its extension, return its URI.
@@ -170,7 +175,6 @@ class IiifImage extends IiifBase {
     // if (count($files) > 0) {
     //   return reset($files)->uri;
     // }
-
     // // The local thumbnail doesn't exist yet, so we need to download it.
     // try {
     //   $response = $this->httpClient->request('GET', $remote_thumbnail_url);
@@ -192,6 +196,7 @@ class IiifImage extends IiifBase {
     //     'url' => $remote_thumbnail_url,
     //   ]);
     // }
+    // phpcs:enable
   }
 
 }

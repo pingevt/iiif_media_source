@@ -2,6 +2,8 @@
 
 namespace Drupal\iiif_image_handling\Event;
 
+// phpcs:disable Drupal.Commenting.VariableComment.MissingVar
+
 use Drupal\Component\EventDispatcher\Event;
 
 /**
@@ -13,22 +15,22 @@ class IiifEffectFindCropEvent extends Event {
   const EVENT_NAME = 'iiif_effect_find_crop';
 
   /**
-   *
+   * The crop.
    */
   public $crop;
 
   /**
-   *
+   * The image.
    */
   public $image;
 
   /**
-   *
+   * The crop type.
    */
   public $cropType;
 
   /**
-   *
+   * The context.
    */
   public $context;
 

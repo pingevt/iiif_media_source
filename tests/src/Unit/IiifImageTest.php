@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignorefile
 
 namespace Drupal\Tests\iiif_media_source\Unit;
 

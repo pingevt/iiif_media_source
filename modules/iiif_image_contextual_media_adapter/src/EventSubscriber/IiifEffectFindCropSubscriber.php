@@ -14,9 +14,25 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Create Crop entities for Contextual Crops.
  */
 class IiifEffectFindCropSubscriber implements EventSubscriberInterface {
-
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
   protected $entityTypeManager;
+
+  /**
+   * Focal Point Manager.
+   *
+   * @var \Drupal\focal_point\FocalPointManager
+   */
   protected $focalPointManager;
+
+  /**
+   * Config Factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
   protected $configFactory;
 
   public function __construct($entity_type_manager, FocalPointManager $focal_point_manager, ConfigFactory $config_factory) {
@@ -79,7 +95,6 @@ class IiifEffectFindCropSubscriber implements EventSubscriberInterface {
 
           // IIIF Focal Point.
           // Create or Update Crop.
-          // $crop_type = $this->configFactory->get('iiif_image_focalpoint.settings')->get('crop_type');.
           $crop_type = $event->cropType;
           $original_uri = $event->image->getFullUrl();
           $current_crop = $this->retrieveContextualCrop($crop_context_ref, $crop_type, $original_uri, $entity_parent);
@@ -94,6 +109,8 @@ class IiifEffectFindCropSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Retrieve the contextual crop.
+   *
    * @todo move to base class to re-use.
    */
   public function retrieveContextualCrop($context, $crop_type, $original_uri, $entity_parent) {

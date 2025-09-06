@@ -9,3 +9,5 @@ dependencies:
   - drupal:media
 
 configure: null
+
+version: 1.0.0-alpha1

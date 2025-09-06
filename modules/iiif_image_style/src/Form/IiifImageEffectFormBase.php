@@ -53,7 +53,7 @@ abstract class IiifImageEffectFormBase extends FormBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function buildForm(array $form, FormStateInterface $form_state, IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL) {
     $this->imageStyle = $iiif_image_style;
 
     try {

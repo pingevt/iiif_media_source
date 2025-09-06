@@ -9,7 +9,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Crop Source.
  */
 #[IiifImageEffect(
   id: "iiif_image_crop",
@@ -21,7 +21,7 @@ class IiifCropEffect extends IiifImageEffectWithCropBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
 
     $crop_type = \Drupal::config('iiif_image_crop.settings')->get('crop_type');
     $crop = $this->getCrop($image, $crop_type, $context);

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
+
 namespace Drupal\iiif_image_style\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;
@@ -16,7 +18,6 @@ final class IiifImageStyleDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state): array {
-
     return parent::form($form, $form_state);
   }
 
@@ -24,7 +25,6 @@ final class IiifImageStyleDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
     parent::submitForm($form, $form_state);
   }
 

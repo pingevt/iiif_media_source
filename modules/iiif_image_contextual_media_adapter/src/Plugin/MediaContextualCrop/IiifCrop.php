@@ -34,11 +34,12 @@ class IiifCrop extends MediaContextualCropPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration,
-                                    $plugin_id,
-                                    $plugin_definition,
-                              EntityTypeManagerInterface $entityTypeManager,
-                              ImageWidgetCropManager $imageWidgetCropManager
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entityTypeManager,
+    ImageWidgetCropManager $imageWidgetCropManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entityTypeManager);
     $this->imageWidgetCropManager = $imageWidgetCropManager;

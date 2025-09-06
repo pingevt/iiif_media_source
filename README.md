@@ -56,6 +56,7 @@ Field:
 - [x] Default Widget should just be plain text, i think.
 - [x] Default Formatter should just display ID.
   - [ ] (LC) need to verify and have fallbacks for each section.
+  - [ ] Add in loading attribute (lazy, eager) to basic formatter.
 - [x] Secondary (basic image) Widget includes image thumbnail.
 - [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
   - [ ] (LC) Add in loading attribute (lazy, eager) to basic formatter.

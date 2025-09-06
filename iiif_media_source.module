@@ -22,7 +22,7 @@ function iiif_media_source_theme($existing, $type, $theme, $path) {
 }
 
 /**
- *
+ * Implements hook_media_source_info_alter().
  */
 function template_preprocess_iiif_image(&$variables) {
   // ksm($variables);
@@ -36,6 +36,7 @@ function template_preprocess_iiif_image(&$variables) {
     ],
   ];
 
+  // phpcs:disable
   // ksm($variables['content']);.
   // $image = $variables['image'];
   // $fp_x = $variables['crop']? (int) $variables['crop']->x->value : 0;
@@ -182,20 +183,22 @@ function template_preprocess_iiif_image(&$variables) {
   //       ],
   //     ],
   //   ];
-  // }.
+  // }
+  // phpcs:enable
 }
 
 /**
- *
+ * Implements hook_media_source_info_alter().
  */
 function iiif_media_source_media_view(&$build) {
 
 }
 
 /**
- *
+ * Implements hook_preprocess_media().
  */
 function iiif_media_source_preprocess_media(&$variables) {
+  // phpcs:disable
   // $media = $variables['elements']['#media'];
   // if (isset($media->entity_reference_entity_modify)) {
   // $override_data = explode(":", $media->entity_reference_entity_modify);
@@ -203,17 +206,18 @@ function iiif_media_source_preprocess_media(&$variables) {
   // $parent_node = Node::load($override_data[3]);
   //   $vals = $parent_node->{$override_data[4]}->getValue();
   // }
+  // phpcs:enable
 }
 
 /**
- *
+ * Implements hook_entity_prepare_view().
  */
 function iiif_media_source_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode) {
 
 }
 
 /**
- *
+ * Implements hook_entity_view().
  */
 function iiif_media_source_node_view(&$build) {
 

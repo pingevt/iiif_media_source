@@ -10,7 +10,7 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- *
+ * Focal Point Crop.
  */
 #[IiifImageEffect(
   id: "iiif_focal_point_crop",
@@ -22,7 +22,7 @@ class IiifFocalPointCropEffect extends IiifConfigurableImageEffectWithCropBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
 
     $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
     $crop = $this->getCrop($image, $crop_type, $context);
@@ -134,13 +134,13 @@ class IiifFocalPointCropEffect extends IiifConfigurableImageEffectWithCropBase {
       '#title' => $this->t('w'),
       '#type' => 'number',
       '#default_value' => $this->configuration['width'] ?? NULL,
-      '#description' => $this->t(''),
+      '#description' => $this->t('w'),
     ];
     $form['height'] = [
       '#title' => $this->t('h'),
       '#type' => 'number',
       '#default_value' => $this->configuration['height'] ?? NULL,
-      '#description' => $this->t(''),
+      '#description' => $this->t('h'),
     ];
 
     return $form;

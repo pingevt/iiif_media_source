@@ -1,6 +1,6 @@
 name: 'IIIF Image Styles'
 type: module
-description: 'Image Styles for IIIF images. Very similar to Drupal's core Image Styles, but unique since we're dealing with IIIF api.'
+description: "Image Styles for IIIF images. Very similar to Drupal's core Image Styles, but unique since we're dealing with IIIF api."
 package: 'Media'
 core_version_requirement: ^10 | ^11
 

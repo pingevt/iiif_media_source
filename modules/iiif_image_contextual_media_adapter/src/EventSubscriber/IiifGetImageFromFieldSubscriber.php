@@ -6,7 +6,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\focal_point\FocalPointManager;
 use Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent;
-use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\iiif_image_crop\IiifCropManager;
 
@@ -17,9 +16,32 @@ use Drupal\iiif_image_crop\IiifCropManager;
  */
 class IiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
 
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
   protected $entityTypeManager;
+
+  /**
+   * Focal Point Manager.
+   *
+   * @var \Drupal\focal_point\FocalPointManager
+   */
   protected $focalPointManager;
+
+  /**
+   * IIIF Crop Manager.
+   *
+   * @var \Drupal\iiif_image_crop\IiifCropManager
+   */
   protected $cropManager;
+
+  /**
+   * Config Factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
   protected $configFactory;
 
   public function __construct($entity_type_manager, FocalPointManager $focal_point_manager, IiifCropManager $crop_manager, ConfigFactory $config_factory) {
@@ -44,7 +66,6 @@ class IiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
    */
   public function imgFromField(IiifGetImageFromFieldEvent $event) {
     // ksm($event);
-
     $entity_parent = $event->field->getEntity() ?? NULL;
 
     if ($entity_parent) {
@@ -70,8 +91,7 @@ class IiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
         $item_class = $field_definition->getItemDefinition()->getClass();
         $media_image_field = $field_definition->getName();
 
-        // ksm($item_class, $media_image_field);
-
+        // ksm($item_class, $media_image_field);.
         $iiif_focal_point_override_value = "";
         $iiif_crop_override_value = "";
 
@@ -133,9 +153,9 @@ class IiifGetImageFromFieldSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Retrieve or create a contextual crop.
    *
-   *
-   * todo: move to base class to re-use.
+   * @todo move to base class to re-use.
    */
   public function retrieveContextualCrop($context, $crop_type, $original_uri, $entity_parent) {
 

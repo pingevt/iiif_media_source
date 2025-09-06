@@ -30,22 +30,15 @@ class IiifCropManager {
   }
 
   /**
-   *
+   * Get the crop for the image.
    */
   public function getCropIiifEntity($item, $crop_type, $mid) {
-    // ksm($item, $crop_type, $mid);
-    // ksm($item, $item->getEntity());
-    // @todo fix this so it doesn't error out when we don't have a crop.
-    // return NULL;.
     $img = $item->getImg($item->getValue());
     $url = $img->getFullUrl();
-    // ksm($img, $url);.
-    if (Crop::cropExists($url, $crop_type)) {
-      /** @var \Drupal\crop\CropInterface $crop */
-      $crop = Crop::findCrop($url, $crop_type);
-    }
-    else {
 
+    $crop = $this->findCrop($item, $crop_type, $mid, $url);
+
+    if ($crop === NULL) {
       $values = [
         'type' => $crop_type,
         'entity_id' => $mid,
@@ -53,11 +46,9 @@ class IiifCropManager {
         'uri' => $url,
       ];
 
-      // ksm($values);
       $crop = $this->cropStorage->create($values);
     }
 
-    // ksm($crop);
     return $crop;
   }
 
@@ -92,7 +83,6 @@ class IiifCropManager {
    */
   public function saveCropEntity(float $x, float $y, float $w, float $h, int $width, int $height, CropInterface $crop): CropInterface {
     $absolute = $this->relativeToAbsolute($x, $y, $w, $h, $width, $height);
-    // ksm($x, $y, $w, $h, $width, $height);.
     $crop->setPosition($absolute['x'], $absolute['y']);
     $crop->setSize($absolute['w'], $absolute['h']);
     $crop->save();
@@ -101,7 +91,7 @@ class IiifCropManager {
   }
 
   /**
-   *
+   * Apply the crop to the image.
    */
   public function applyCrop($image, IiifImageUrlParams $params, $crop) {
 
@@ -110,11 +100,15 @@ class IiifCropManager {
       return;
     }
 
+    /*
     // We will need to change the region setting in order to apply the crop.
     // 'full' => transform to "x,y,w,h", which is the cropped image settings.
     // 'square' => transform to "x,y,w,h", but based within the crop.
-    // 'x,y,w,h' => transform so that values are inside the crop (or should we really do nothing?)
-    // 'pct:x,y,w,h' => transform to "x,y,w,h", but percentages are based on the cropped image.
+    // 'x,y,w,h' => transform so that values are inside the crop (or should we
+    //     really do nothing?)
+    // 'pct:x,y,w,h' => transform to "x,y,w,h", but percentages are based on the
+    //     cropped image.
+     */
     [$x, $y] = array_values($crop->position());
     [$w, $h] = array_values($crop->size());
 
@@ -164,6 +158,38 @@ class IiifCropManager {
 
         break;
     }
+  }
+
+  /**
+   * Find the crop entity.
+   *
+   * @param string $item
+   *   The item.
+   * @param string $crop_type
+   *   The crop type.
+   * @param string $mid
+   *   The mid.
+   * @param string $url
+   *   The url.
+   *
+   * @return \Drupal\crop\CropInterface|null
+   *   Crop entity or NULL if crop doesn't exist.
+   */
+  protected function findCrop($item, $crop_type, $mid, $url): CropInterface|null {
+    $query = $this->cropStorage->getQuery();
+    $query->accessCheck(FALSE);
+    $query->condition('uri', $url);
+    $query->condition('type', $crop_type);
+    $query->condition('entity_id', $mid);
+    $query->condition('entity_type', $item->getEntity()->bundle());
+    $ids = $query->execute();
+
+    if (count($ids) > 0) {
+      $crop = $this->cropStorage->load(reset($ids));
+      return $crop;
+    }
+
+    return NULL;
   }
 
 }

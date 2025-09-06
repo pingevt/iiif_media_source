@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * iiif_image_focalpoint.module
  */
 
 use Drupal\Core\Entity\EntityInterface;
@@ -65,9 +66,8 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
           }
 
           $focal_point_manager = \Drupal::service('iiif_image_focalpoint.focal_point_manager');
-          // $crop = $focal_point_manager->getCropEntity($item->entity, $crop_type);
+
           $crop = $focal_point_manager->getCropIiifEntity($item, $crop_type, $entity->id());
-          // ksm($crop);
           if ($crop) {
             $iiif_focal_point = NULL;
             // Use the default focal point on new crop entities.
@@ -79,7 +79,8 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
             if (!empty($item->iiif_focal_point)) {
               $iiif_focal_point = $item->iiif_focal_point;
 
-              // Keep the original focal_point value to be able to use it during hooks.
+              // Keep the original focal_point value to be able to use it during
+              // hooks.
               if (!$crop->get('x')->isEmpty() && !$crop->get('y')->isEmpty()) {
                 $x = $crop->get('x')->value;
                 $y = $crop->get('y')->value;
@@ -109,6 +110,7 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
  * Implements hook_form_alter().
  */
 function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // phpcs:disable
   // ksm(func_get_args());
   // Add option to Image style.
   // if ($form_id == "iiif_image_style_add_form" || $form_id == "iiif_image_style_edit_form") {
@@ -128,7 +130,8 @@ function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state
   //     '#default_value' => $settings['use_iiif_focalpoint'] ?? FALSE,
   //     '#group' => 'crops_and_focal',
   //   ];
-  // }.
+  // }
+  // phpcs:enable
 }
 
 /**
@@ -136,7 +139,7 @@ function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state
  */
 function iiif_image_focalpoint_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, array $form, FormStateInterface $form_state) {
   if ($plugin->getPluginId() == "iiif_image_widget") {
-    // ksm($plugin->getPluginId());
+
     $element['add_iiif_focalpoint'] = [
       '#type' => 'checkbox',
       '#title' => t('Add IIIF focal point'),
@@ -175,11 +178,11 @@ function iiif_image_focalpoint_field_widget_settings_summary_alter(array &$summa
 
     $size = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'iiif_fp_preview_image_style_size');
     if ($size) {
-      $summary[] = t('Thumbnail size: ' . $size . "px");
+      $summary[] = t('Thumbnail size: %size px', ['%size' => $size]);
     }
     $offset = $context['widget']->getThirdPartySetting('iiif_image_focalpoint', 'iiif_fp_offsets');
     if ($offset) {
-      $summary[] = t('FP Offset: ' . $offset);
+      $summary[] = t('FP Offset: %offset', ['%offset' => $offset]);
     }
   }
 }

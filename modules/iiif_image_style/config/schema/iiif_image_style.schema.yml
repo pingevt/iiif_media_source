@@ -27,6 +27,19 @@ iiif_image_style.style.*:
 iiif_image_style.effect.*:
   type: mapping
   label: 'Effect settings'
+  mapping:
+    width:
+      type: string
+    height:
+      type: string
+    size:
+      type: string
+    size_n:
+      type: string
+    size_w:
+      type: string
+    size_h:
+      type: string
 
 iiif_image_style.effect.iiif_image_resize:
   type: mapping

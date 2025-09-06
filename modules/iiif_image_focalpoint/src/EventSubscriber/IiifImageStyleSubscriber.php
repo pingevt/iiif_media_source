@@ -25,10 +25,10 @@ class IiifImageStyleSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   *
+   * Alter the image style settings.
    */
   public function imgStyleSettingsAlter(IiifImageStyleSettingsEvent $event) {
-    // ksm('altering', $event);.
+
   }
 
 }

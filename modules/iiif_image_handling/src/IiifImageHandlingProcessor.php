@@ -7,12 +7,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\crop\Entity\Crop;
 
 /**
- *
+ * Provides a class for processing image_crop and image_focal_point fields.
  */
 class IiifImageHandlingProcessor {
 
   /**
-   *
+   * {@inheritdoc}
    */
   public static function buildElementCrop(array $element, FormStateInterface $form_state, $context) {
 
@@ -54,7 +54,6 @@ class IiifImageHandlingProcessor {
         '#suffix' => "</div>",
       ];
 
-
     }
 
     $element['#iiif_crop'] = [
@@ -65,7 +64,7 @@ class IiifImageHandlingProcessor {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public static function buildElementFocalPoint(array $element, FormStateInterface $form_state, $context) {
     $items = $context['items'];
@@ -116,7 +115,7 @@ class IiifImageHandlingProcessor {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public static function process($element, FormStateInterface $form_state, $form) {
 
@@ -215,7 +214,6 @@ class IiifImageHandlingProcessor {
     // Add the crop field.
     $element['iiif_crop'] = self::createCropField($element['#field_name'], $element_selectors, $default_crop_value);
 
-    // ksm($element);
     return $element;
   }
 
@@ -225,11 +223,13 @@ class IiifImageHandlingProcessor {
    * Validation Callback; Crop process field.
    */
   public static function validateCrop($element, FormStateInterface $form_state) {
+    // phpcs:disable
     // @todo VALIDATE!
     // if (empty($element['#value']) || (FALSE === \Drupal::service('iiif_image_crop.crop_manager')->validateCrop($element['#value']))) {
     //   $replacements = ['@title' => strtolower($element['#title'])];
     //   $form_state->setError($element, new TranslatableMarkup('The @title field should be in the form "leftoffset,topoffset" where offsets are in percentages. Ex: 25,75.', $replacements));
-    // }.
+    // }
+    // phpcs:enable
   }
 
   /**
@@ -279,10 +279,9 @@ class IiifImageHandlingProcessor {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public static function processFocalPoint($element, FormStateInterface $form_state, $form) {
-    // ksm($element, $form_state, $form);.
     $item = $element['#item'];
 
     // $img = $items[$delta]->getImg($items[$delta]->getValue());
@@ -301,6 +300,7 @@ class IiifImageHandlingProcessor {
 
     $default_focal_point_value = $item['iiif_focal_point'] ?? $element['#iiif_focal_point']['iiif_fp_offsets'];
 
+    // phpcs:disable
     // Add the focal point indicator to preview.
     if (isset($element['fp_preview'])) {
       $preview = [
@@ -313,12 +313,13 @@ class IiifImageHandlingProcessor {
       // unset($preview['thumbnail']['#group']);
       // $preview['indicator']['#group'] = $preview['thumbnail']['#group'];
       // $preview['indicator']['#process'][] = ['Drupal\Core\Render\Element\RenderElement', 'processGroup'];
-      // $preview['indicator']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];.
+      // $preview['indicator']['#pre_render'][] = ['Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'];
       // Use the existing preview weight value so that the focal point indicator
       // and thumbnail appear in the correct order.
       $preview['#weight'] = $element['fp_preview']['#weight'] ?? 0;
       // unset($preview['thumbnail']['#weight']);.
       $element['fp_preview'] = $preview;
+      // phpcs:enable
     }
 
     // Add the focal point field.

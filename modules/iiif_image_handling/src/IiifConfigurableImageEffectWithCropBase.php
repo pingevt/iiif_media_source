@@ -14,6 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableImageEffectBase implements IiifConfigurableImageEffectInterface {
 
+  /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
   protected $dispatcher;
 
   /**
@@ -38,7 +43,7 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
   }
 
   /**
-   *
+   * Get the crop for the image.
    */
   protected function getCrop($image, $crop_type, $context): ?Crop {
     $crop = Crop::findCrop($image->getFullUrl(), $crop_type);

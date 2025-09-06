@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -203,12 +204,11 @@ class IiifImageMediaSource extends MediaSourceBase {
       case 'default_name':
         $data_value = $remote_field->getValue();
         return $data_value[0]['value'];
-        break;
 
       // This is used to generate the thumbnail field.
       case 'thumbnail_uri':
         return $this->getLocalThumbnailUri($media);
-        break;
+
     }
   }
 
@@ -312,7 +312,7 @@ class IiifImageMediaSource extends MediaSourceBase {
       $response = $this->httpClient->request('GET', $remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {
         $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url, $response);
-        $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileSystemInterface::EXISTS_REPLACE);
+        $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileExists::Replace);
         return $local_thumbnail_uri;
       }
     }

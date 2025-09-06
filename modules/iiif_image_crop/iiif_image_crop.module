@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * iiif_image_crop.module
  */
 
 use Drupal\Core\Entity\EntityInterface;
@@ -45,13 +46,10 @@ function iiif_image_crop_entity_update(EntityInterface $entity) {
         foreach ($entity->{$field->getName()} as $item) {
 
           if (!$item instanceof IiifId) {
-            // todo: log an error.
+            // @todo log an error.
             continue;
           }
-          // If (!isset($item->crop)) {
-          //   ksm("NOT a field with a crop: ", $item);
-          //   continue;
-          // }.
+
           $crop_manager = \Drupal::service('iiif_image_crop.crop_manager');
           // $crop = $crop_manager->getCropEntity($item->entity, $crop_type);
           $crop = $crop_manager->getCropIiifEntity($item, $crop_type, $entity->id());
@@ -142,11 +140,11 @@ function iiif_image_crop_field_widget_settings_summary_alter(array &$summary, ar
 
     $size = $context['widget']->getThirdPartySetting('iiif_image_crop', 'iiif_crop_preview_image_style_size');
     if ($size) {
-      $summary[] = t('Thumbnail size: ' . $size . "px");
+      $summary[] = t('Thumbnail size: %size px', ['%size' => $size]);
     }
     $offset = $context['widget']->getThirdPartySetting('iiif_image_crop', 'iiif_crop_offsets');
     if ($offset) {
-      $summary[] = t('Crop: ' . $offset);
+      $summary[] = t('Crop: %offset', ['%offset' => $offset]);
     }
   }
 }

@@ -82,6 +82,8 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   protected $image_style_mappings = [];
 
   /**
+   * The keyed image style mappings.
+   *
    * @var array
    */
   protected $keyedImageStyleMappings;
@@ -137,7 +139,10 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
       $breakpoint_b = $breakpoints[$b['breakpoint_id']] ?? NULL;
       $first = ((float) mb_substr($a['multiplier'], 0, -1)) * 100;
       $second = ((float) mb_substr($b['multiplier'], 0, -1)) * 100;
-      return [$breakpoint_b ? $breakpoint_b->getWeight() : 0, $first] <=> [$breakpoint_a ? $breakpoint_a->getWeight() : 0, $second];
+      return [
+        $breakpoint_b ? $breakpoint_b->getWeight() : 0,
+        $first,
+      ] <=> [$breakpoint_a ? $breakpoint_a->getWeight() : 0, $second];
     });
   }
 
