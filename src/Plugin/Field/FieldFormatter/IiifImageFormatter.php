@@ -359,10 +359,10 @@ class IiifImageFormatter extends StringFormatter {
 
       // Process settings.
       $params = IiifImageUrlParams::fromSettingsArray($this->getSettings());
-
+      // dpm($item->getValue());
       $view_value = [
         '#theme' => 'iiif_image',
-        '#image' => $item->getImg($item->getValue()),
+        '#image' => $item->getImg(),
         '#url_params' => $params,
         '#attributes' => [
           'loading' => $image_loading['attribute'],

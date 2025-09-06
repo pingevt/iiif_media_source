@@ -26,6 +26,11 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
  */
 class IiifId extends StringItem {
 
+  /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
   protected $dispatcher;
 
   /**
@@ -34,6 +39,7 @@ class IiifId extends StringItem {
   public function __construct(ComplexDataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
 
+    // todo: use dependency injection.
     $this->dispatcher = \Drupal::service('event_dispatcher');
   }
 
@@ -118,26 +124,31 @@ class IiifId extends StringItem {
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    // ksm($values);
-    // @todo double check this logic. Is it correct?
-    if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
-      // ksm('bob', $this);.
-      // New IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value']);.
-      $img = $this->getImg($values);
-      // $this->_image = $img;
-      // $this->width = $img->getWidth();
-      // $this->height = $img->getHeight();
-      $values['info'] = $img->getInfoEncoded();
-    }
+
+    // @todo Double check if we need this or not. Is it correct?
+    // if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
+    //   $img = $this->getImg();
+    //   $values['info'] = $img->getInfoEncoded();
+    // }
 
     parent::setValue($values, $notify);
-
   }
 
   /**
+   * Get an IiifImage object for this field value.
    *
+   * @deprecated in Drupal 10.4.0, will be removed before Drupal 11.5.0.
+   *   Use \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId::getIiifImageObj().
    */
-  public function getImg($values) {
+  public function getImg(array $values = NULL) {
+
+    trigger_error('getImg() is deprecated in Drupal 10.4.0 and will be removed before Drupal 11.5.0. Use \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId::getIiifImageObj() instead.', E_USER_DEPRECATED);
+
+    // If no values are passed, use the current value.
+    if ($values === NULL) {
+      return $this->getIiifImageObj();
+    }
+
     $info = new \stdClass();
     if (!empty($values['info']) && json_decode($values['info'])) {
       $info = json_decode($values['info']);
@@ -153,29 +164,42 @@ class IiifId extends StringItem {
   }
 
   /**
+   * Get an IiifImage object for this field value.
    *
+   * @return \Drupal\iiif_media_source\Iiif\IiifImage
+   *   The IIIF Image object.
+   *
+   * @since 10.4.0
+   * @see getImg() which is deprecated.
+   */
+  public function getIiifImageObj(): IiifImage {
+    $values = $this->getValue();
+
+    $info = new \stdClass();
+    if (!empty($values['info']) && json_decode($values['info'])) {
+      $info = json_decode($values['info']);
+    }
+
+    $image = new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value'], $info);
+
+    // Dispatch Event.
+    $event = new IiifGetImageFromFieldEvent($this, $image, $values);
+    $this->dispatcher->dispatch($event, IiifGetImageFromFieldEvent::EVENT_NAME);
+
+    return $image;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function __get($name) {
-    // // echo "Getting '$name'\n";
-    // If (array_key_exists($name, $this->data)) {
-    //     return $this->data[$name];
-    // }.
-    // $trace = debug_backtrace();
-    // trigger_error(
-    //   'Undefined property via __get(): ' . $name .
-    //   ' in ' . $trace[0]['file'] .
-    //   ' on line ' . $trace[0]['line'],
-    //   E_USER_NOTICE);
-    // return null;
-    if ($name == "width") {
 
-      $img = $this->getImg($this->getValue());
-      // ksm("Width", $img->getWidth());
+    if ($name == "width") {
+      $img = $this->getImg();
       return $img->getWidth();
     }
     if ($name == "height") {
-      $img = $this->getImg($this->getValue());
-      // ksm("height", $img->getHeight());
+      $img = $this->getImg();
       return $img->getHeight();
     }
 
