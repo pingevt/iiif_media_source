@@ -21,7 +21,7 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  server: 'https://media.nga.gov'
-  prefix: iiif
+  server: 'https://iiif-10-5.ddev.site:8182'
+  prefix: iiif/2
   img_api_version: '2'
 field_type: iiif_id
