@@ -45,9 +45,27 @@ abstract class IiifBase {
   protected $info;
 
   /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * Logger channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructor.
    */
   public function __construct(string $server, string $prefix, string $id, \stdClass $info = new \stdClass()) {
+
+    // Set up cache bin.
+    $this->cache = \Drupal::service('cache.iiif_media_source');
+    $this->logger = \Drupal::logger('iiif_media_source');
     $this->httpClient = \Drupal::httpClient();
 
     $this->server = $server;
@@ -61,20 +79,46 @@ abstract class IiifBase {
     else {
       $this->info = $info;
     }
-
   }
 
   /**
-   * Retrieve the manifest.
+   * Retrieve the iiif image manifest.
    */
   protected function retrieveManifest(): void {
-    // @todo cache this call on usage and for long term.
+
+    $cacheKey = 'iiif_manifest_' . md5($this->server . $this->prefix . $this->iiifId);
+    $cache = $this->cache->get($cacheKey);
+
+    if ($cache) {
+      $this->info = $cache->data;
+      return;
+    }
+
     $url = implode("/", [$this->server, $this->prefix, $this->iiifId, "info.json"]);
     $data = $this->call($url);
-    // ksm($url, $data);.
-    if ($data) {
-      $this->info = json_decode($data->getBody()->__toString());
+
+    if ($data && $data->getBody()) {
+      $decodedData = json_decode($data->getBody()->__toString());
+      if (json_last_error() === JSON_ERROR_NONE) {
+        $this->info = $decodedData;
+        // Cache the data for future use.
+        $this->cache->set($cacheKey, $decodedData, strtotime('+1 day'));
+      }
+      else {
+        // Log JSON decoding error.
+        $this->logger->error('JSON decoding error: @error. URL: @url', [
+          '@error' => json_last_error_msg(),
+          '@url' => $url,
+        ]);
+      }
     }
+    else {
+      // Log or handle the case where $data is null or invalid.
+      $this->logger->warning('Failed to retrieve data from URL: @url', [
+        '@url' => $url,
+      ]);    }
+
+    return;
   }
 
   /**

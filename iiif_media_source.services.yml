@@ -3,6 +3,9 @@ services:
     class: Drupal\iiif_media_source\Iii\IiifImage
     arguments: ['@entity_type.manager', '@file_system', '@http_client']
 
-  # iiif_media_source.focal_point_manager:
-  #   class: Drupal\iiif_media_source\IiifFocalPointManager
-  #   arguments: ['@entity_type.manager']
+  cache.iiif_media_source:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: ['iiif_media_source']
