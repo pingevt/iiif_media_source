@@ -12,9 +12,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   /**
    * Version of IIIF Image API to use.
    *
-   * @var float
+   * @var string
    */
-  private $version = 2.1;
+  private $version = "2.1";
 
   // @todo look at custom config entity types
   // https://www.drupal.org/docs/drupal-apis/configuration-api/configuration-schemametadata#s-custom-types
@@ -62,7 +62,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   /**
    * {@inheritdoc}
    */
-  public static function fullImageParams($version = 2.0): static {
+  public static function fullImageParams($version = "2.0"): static {
     $obj = new static($version);
     $obj->buildFromArray([
       'region' => 'full',
@@ -87,7 +87,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   /**
    * {@inheritdoc}
    */
-  public static function fromSettingsArray(array $settings, $version = 2.0): static {
+  public static function fromSettingsArray(array $settings, $version = "2.0"): static {
     $obj = new static($version);
     $obj->buildFromArray($settings);
 
@@ -106,17 +106,38 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * Set the IIIF Image API version. Validate and options will run off of this.
+   * Set the IIIF Image API version.
+   *
+   * Validation and options will run off of this value.
+   *
+   * @param string $version
    */
-  private function setVersion($version): void {
+  private function setVersion(string $version): void {
 
     $acceptable_versions = [
-      2.0,
-      2.1,
-      3.0,
+      "2",
+      "2.1",
+      "3",
     ];
 
-    $this->version = in_array(floatval($version), $acceptable_versions) ? floatval($version) : $this->version;
+    // Normalize some common inputs.
+    if (in_array($version, ["2", "2.0"])) {
+      $version = "2";
+    }
+    if (in_array($version, ["2.1", "2.1.1"])) {
+      $version = "2.1";
+    }
+    if (in_array($version, ["3.0", "3.0.0"])) {
+      $version = "3";
+    }
+    if (in_array($version, $acceptable_versions)) {
+      $this->version = $version;
+    }
+    else {
+      // Throw Warning.
+      trigger_error("Invalid version provided: $version", E_USER_WARNING);
+      $this->version = $this->version;
+    }
   }
 
   /**
@@ -147,8 +168,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     switch ($version) {
       case "2":
-      case 2.0:
-      case 2.1:
+      case "2.1":
         $options = [
           'full' => 'full',
           'x,y,w,h' => 'x,y,w,h',
@@ -157,7 +177,6 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case "3":
-      case 3.0:
         $options = [
           'full' => 'full',
           'square' => 'square',
@@ -178,6 +197,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     switch ($version) {
       case "2":
+      case "2.1":
         $options = [
           'full' => 'full',
           'w,' => 'w,',
@@ -217,6 +237,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     switch ($version) {
       case "2":
+      case "2.1":
         $options = [
           'color' => 'color',
           'gray' => 'gray',
@@ -246,6 +267,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     switch ($version) {
       case "2":
+      case "2.1":
         $options = [
           'jpg' => 'jpg',
           'tif' => 'tif',
@@ -427,9 +449,8 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getVersion(): float {
-
-    return number_format($this->version, 1);
+  public function getVersion(): string {
+    return $this->version;
   }
 
   /**

@@ -100,10 +100,10 @@ interface IiifImageUrlParamsInterface {
   /**
    * Get the version of the IIIF Image API.
    *
-   * @return float
+   * @return string
    *   The version of the IIIF Image API.
    */
-  public function getVersion(): float;
+  public function getVersion(): string;
 
   /**
    * Build the URL string for the IIIF image.

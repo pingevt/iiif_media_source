@@ -85,8 +85,9 @@ class IiifId extends StringItem {
       '#description' => $this->t(''),
       '#required' => TRUE,
       '#options' => [
-        2 => "v2.0",
-        3 => "v3.0",
+        "2" => "v2.0",
+        "2.1" => "v2.1",
+        "3" => "v3.0",
       ],
     ];
 
