@@ -56,26 +56,14 @@ Field:
 - [x] Default Widget should just be plain text, i think.
 - [x] Default Formatter should just display ID.
   - [ ] (LC) need to verify and have fallbacks for each section.
-  - [ ] Add in loading attribute (lazy, eager) to basic formatter.
+  - [ ] ~~Add in loading attribute (lazy, eager) to basic formatter.~~
 - [x] Secondary (basic image) Widget includes image thumbnail.
 - [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
-  - [ ] (LC) Add in loading attribute (lazy, eager) to basic formatter.
-- [ ] (LC) Do we need the base Iiif class?
-  - [ ] If so, needs to be a service?
-  - [ ] Inject it into the field class?
-
-Image Styles / Responsive Images
-- [x] Image Style entity
-- [x] Responsive Image style entity
-- [x] IIIF Image style formatter
-- [x] IIIF Responsive Image style formatter
-- [x] We're going to need plugins... Imagestyle with plugins for the transformers.
-- [x] Add in some default IIIF Image Styles
-- [ ] Admin library w/ CSS.
-- [ ] (LC) Add in preview on Image Styles.
-- [ ] (LC) Document plugin so others can create plugins.
-- [ ] (LC) Documentation and helper text for forms.
-- [ ] (LC) Fix errors when using "original image" for responsive images
+  - [x] (LC) Add in loading attribute (lazy, eager) to basic formatter.
+- [ ] ~~(LC) Do we need the base Iiif class?~~
+  - [ ] ~~If so, needs to be a service?~~
+  - [ ] ~~Inject it into the field class?~~
+- [ ] (LC) Add in options for Image API v3
 
 Media Source
 - [ ] Source just provides data for fields, if wanted on the media item.
@@ -91,6 +79,20 @@ Media Source
   - [ ] maxHeight
   - [ ] maxWidth
   - [ ] supports
+
+Submodule: Image styles
+Image Styles / Responsive Images
+- [x] Image Style entity
+- [x] Responsive Image style entity
+- [x] IIIF Image style formatter
+- [x] IIIF Responsive Image style formatter
+- [x] We're going to need plugins... Imagestyle with plugins for the transformers.
+- [x] Add in some default IIIF Image Styles
+- [ ] Admin library w/ CSS.
+- [ ] (LC) Add in preview on Image Styles.
+- [ ] (LC) Document plugin so others can create plugins.
+- [ ] (LC) Documentation and helper text for forms.
+- [ ] (LC) Fix errors when using "original image" for responsive images
 
 Submodule: Image Handling
 - [x] Class to handle form elements for adding to widgets.
@@ -121,7 +123,7 @@ General:
 
 Tests:
 - Prep
-  - (LC) Need IIIF sources to test against.
+  - [ ] (LC) Need IIIF sources to test against.
 - Unit Tests
   - [ ] (LC) Need to test and finish Dimension in `IiifImageUrlParams`
 - Functional Tests

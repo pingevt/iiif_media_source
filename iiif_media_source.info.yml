@@ -1,6 +1,6 @@
 name: IIIF Media Source
 type: module
-description: 'Creating a Media Source for IIIF data'
+description: 'Creating a Media Source and field for IIIF data'
 core_version_requirement: ^10 | ^11
 
 package: Media
