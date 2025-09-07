@@ -14,30 +14,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: ['10.2.x', '10.3.x', '11.0.x']
-        php-version: ['8.1', '8.2', '8.3']
-        mariadb-version: ['10.4', '10.6']
+        drupal-core: ['10.4.x', '10.5.x', '11.0.x', '11.1.x']
+        php-version: ['8.3']
+        mariadb-version: ['10.6']
         exclude:
-          -
-            drupal-core: '11.0.x'
-            php-version: '8.1'
-            mariadb-version: '10.4'
-          -
-            drupal-core: '11.0.x'
-            php-version: '8.1'
-            mariadb-version: '10.6'
-          -
-            drupal-core: '11.0.x'
-            php-version: '8.2'
-            mariadb-version: '10.4'
-          -
-            drupal-core: '11.0.x'
-            php-version: '8.2'
-            mariadb-version: '10.6'
-          -
-            drupal-core: '11.0.x'
-            php-version: '8.3'
-            mariadb-version: '10.4'
+          # -
+          #   drupal-core: '11.0.x'
+          #   php-version: '8.1'
+          #   mariadb-version: '10.4'
+          # -
+          #   drupal-core: '11.0.x'
+          #   php-version: '8.1'
+          #   mariadb-version: '10.6'
+          # -
+          #   drupal-core: '11.0.x'
+          #   php-version: '8.2'
+          #   mariadb-version: '10.4'
+          # -
+          #   drupal-core: '11.0.x'
+          #   php-version: '8.2'
+          #   mariadb-version: '10.6'
+          # -
+          #   drupal-core: '11.0.x'
+          #   php-version: '8.3'
+          #   mariadb-version: '10.4'
 
     container:
       # See https://github.com/tuutti/docker-images/tree/main/drupal/ci
@@ -115,7 +115,7 @@ jobs:
       # Drush is installed.
       - name: Install drush
         working-directory: ${{ env.DRUPAL_ROOT }}
-        run: composer require "drush/drush ^11.0 || ^12"
+        run: composer require "drush/drush ^11.0 || ^12 || ^13"
 
       - name: Install PHPCS
         working-directory: ${{ env.DRUPAL_ROOT }}
