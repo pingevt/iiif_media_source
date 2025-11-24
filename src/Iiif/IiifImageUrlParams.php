@@ -589,8 +589,40 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
         break;
 
+      // The extracted region should be scaled so that the width of the returned
+      // image is exactly equal to w. If w is greater than the pixel width of
+      // the extracted region, the extracted region is upscaled.
       case '^w,':
-        // @todo add this.
+        if ($image->getApiVersion() == "3") {
+          $target_width = (int) $settings['size_w'];
+          $scale = $target_width / $dimensions['width'];
+          $new_width = $target_width;
+          $new_height = (int) round($dimensions['height'] * $scale);
+
+          // Apply max constraints.
+          $maxWidth = $image->getMaxWidth();
+          $maxHeight = $image->getMaxHeight();
+          $maxArea = $image->getMaxArea();
+
+          if ($maxWidth !== NULL && $new_width > $maxWidth) {
+            $ratio = $maxWidth / $new_width;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxHeight !== NULL && $new_height > $maxHeight) {
+            $ratio = $maxHeight / $new_height;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
+            $ratio = sqrt($maxArea / ($new_width * $new_height));
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+
+          $dimensions['width'] = $new_width;
+          $dimensions['height'] = $new_height;
+        }
         break;
 
       case ',h':

@@ -655,4 +655,154 @@ class IiifImageKernelTest extends KernelTestBase {
     $this->assertEquals(1600, $dimensions['height'], "larger than max: height");
   }
 
+  /**
+   * Tests the '^w,' size option for IIIF v3 with various max constraints.
+   *
+   * This test checks that upscaling or downscaling to a specific width
+   * (preserving aspect ratio) respects maxWidth, maxHeight, and maxArea.
+   *
+   * | Scenario                | Image Properties                  | Requested Width | maxWidth | maxHeight | maxArea | Expected Output         |
+   * |-------------------------|-----------------------------------|-----------------|----------|-----------|---------|------------------------|
+   * | No max props            | width=1000, height=800            | 2000            | null     | null      | null    | 2000x1600              |
+   * | maxWidth only           | width=1000, height=800            | 3000            | 2000     | null      | null    | 2000x1600              |
+   * | maxHeight only          | width=1000, height=800            | 3000            | null     | 1200      | null    | 1500x1200              |
+   * | maxArea only            | width=1000, height=800            | 4000            | null     | null      | 3200000 | 2000x1600              |
+   * | All max props           | width=1000, height=800            | 4000            | 1500     | 1200      | 1600000 | 1414x1131              |
+   * | Requested width < image | width=1000, height=800            | 500             | null     | null      | null    | 500x400                |
+   * | Requested width = image | width=1000, height=800            | 1000            | null     | null      | null    | 1000x800               |
+   */
+  public function testTransformDimensionsV3WUp() {
+    // 1. No max props, upscale to 2000
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 2000,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(2000, $dimensions['width']);
+    $this->assertEquals(1600, $dimensions['height']);
+
+    // 2. maxWidth only, request 3000
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+      'maxWidth' => 2000,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 3000,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(2000, $dimensions['width']);
+    $this->assertEquals(1600, $dimensions['height']);
+
+    // 3. maxHeight only, request 3000
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+      'maxHeight' => 1200,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 3000,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(1500, $dimensions['width']);
+    $this->assertEquals(1200, $dimensions['height']);
+
+    // 4. maxArea only, request 4000
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+      'maxArea' => 3200000,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 4000,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(2000, $dimensions['width']);
+    $this->assertEquals(1600, $dimensions['height']);
+
+    // 5. All max props, request 4000
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+      'maxWidth' => 1500,
+      'maxHeight' => 1200,
+      'maxArea' => 1600000,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 4000,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(1414, $dimensions['width']);
+    $this->assertEquals(1131, $dimensions['height']);
+
+    // 6. Requested width < image
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 500,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(500, $dimensions['width']);
+    $this->assertEquals(400, $dimensions['height']);
+
+    // 7. Requested width = image
+    $image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
+      '@context' => "http://iiif.io/api/image/3/context.json",
+      'width' => 1000,
+      'height' => 800,
+    ]);
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => 'full',
+      'size' => '^w,',
+      'size_w' => 1000,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => "jpg",
+    ], "3.0");
+    $dimensions = $params->transformDimensions($image);
+    $this->assertEquals(1000, $dimensions['width']);
+    $this->assertEquals(800, $dimensions['height']);
+  }
+
 }
