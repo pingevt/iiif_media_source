@@ -786,40 +786,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     }
 
-    // Resize for rotation. sines and cosines!
-    if ($settings['rotation'] === 90 || $settings['rotation'] === 270) {
-      $w = $dimensions['width'];
-      $h = $dimensions['height'];
-      $dimensions['width'] = $h;
-      $dimensions['height'] = $w;
-    }
-    elseif ($settings['rotation'] !== 0 && $settings['rotation'] !== 180 && $settings['rotation'] !== 360) {
-      // Normalize rotation to 0-360.
-      $settings['rotation'] = ($settings['rotation'] % 360);
-
-      // Calculate the new width and height.
-      if (($settings['rotation'] > 0 && $settings['rotation'] < 90) || ($settings['rotation'] > 180 && $settings['rotation'] < 270)) {
-        $w1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
-        $w2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
-
-        $h1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
-        $h2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
-
-        $dimensions['width'] = (int) ceil($w1 + $w2);
-        $dimensions['height'] = (int) ceil($h1 + $h2);
-      }
-      else {
-        $h1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
-        $h2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
-
-        $w1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
-        $w2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
-
-        $dimensions['width'] = (int) ceil($w1 + $w2);
-        $dimensions['height'] = (int) ceil($h1 + $h2);
-      }
-    }
-
+    // Apply rotation to dimensions.
     list($dimensions['width'], $dimensions['height']) =
       $this->applyRotationToDimensions($dimensions['width'], $dimensions['height'], $settings['rotation']);
 
@@ -989,7 +956,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    *   If a parameter is invalid.
    */
   private function validateSettings(array &$settings): void {
-    $numeric_keys = ['size_w', 'size_h', 'size_n', 'region_x', 'region_y', 'region_w', 'region_h', 'rotation'];
+    $numeric_keys = ['size_w', 'size_h', 'size_n', 'region_x', 'region_y', 'region_w', 'region_h'];
     foreach ($numeric_keys as $key) {
       if (isset($settings[$key]) && $settings[$key] !== '') {
         if (!is_numeric($settings[$key]) || $settings[$key] < 0) {
@@ -997,6 +964,14 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         }
       }
     }
+
+    // Validate rotation: must be numeric and between 0 and 360 (inclusive)
+    if (isset($settings['rotation']) && $settings['rotation'] !== '') {
+      if (!is_numeric($settings['rotation']) || $settings['rotation'] < 0 || $settings['rotation'] > 360) {
+        throw new \InvalidArgumentException("Parameter rotation must be a number between 0 and 360.");
+      }
+    }
+
     if (isset($settings['size_n']) && $settings['size_n'] <= 0) {
       throw new \InvalidArgumentException("Parameter size_n (percentage) must be greater than 0.");
     }
@@ -1040,9 +1015,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    *
    * Handles 90/180/270 and arbitrary angles, returning the new width and height.
    *
-   * @param int $width
+   * @param float|int $width
    *   The original width.
-   * @param int $height
+   * @param float|int $height
    *   The original height.
    * @param float|int $rotation
    *   The rotation angle in degrees.
@@ -1050,7 +1025,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    * @return array
    *   An array with two elements: [width, height] after rotation.
    */
-  private function applyRotationToDimensions(int $width, int $height, $rotation): array {
+  private function applyRotationToDimensions(float|int $width, float|int $height, $rotation): array {
     $rotation = $rotation % 360;
     if ($rotation === 90 || $rotation === 270) {
       return [$height, $width];
