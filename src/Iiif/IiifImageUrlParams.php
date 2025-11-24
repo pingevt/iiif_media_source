@@ -532,9 +532,55 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         // nothing.
         break;
 
+      // The extracted region is scaled to the maximum size permitted by
+      // maxWidth, maxHeight, or maxArea as defined in the Technical Properties
+      // section. If the resulting dimensions are greater than the pixel width
+      // and height of the extracted region, the extracted region is upscaled.
       case '^max':
-        // Upscale as permitted by maxWidth, maxHeight, maxArea.
-        // @todo .
+        // Only applies to IIIF v3.
+        if ($image->getApiVersion() == "3") {
+          $maxWidth = $image->getMaxWidth();
+          $maxHeight = $image->getMaxHeight();
+          $maxArea = $image->getMaxArea();
+
+          // Start with no scaling (1.0).
+          $scale = 1.0;
+
+          // If maxWidth is set, calculate scale needed to reach it.
+          if ($maxWidth !== NULL && $dimensions['width'] > 0) {
+            $scale = max($scale, $maxWidth / $dimensions['width']);
+          }
+          // If maxHeight is set, calculate scale needed to reach it.
+          if ($maxHeight !== NULL && $dimensions['height'] > 0) {
+            $scale = max($scale, $maxHeight / $dimensions['height']);
+          }
+          // If maxArea is set, calculate scale needed to reach it.
+          if ($maxArea !== NULL && $dimensions['width'] > 0 && $dimensions['height'] > 0) {
+            $areaScale = sqrt($maxArea / ($dimensions['width'] * $dimensions['height']));
+            $scale = max($scale, $areaScale);
+          }
+
+          // Apply the scaling factor.
+          $dimensions['width'] = (int) round($dimensions['width'] * $scale);
+          $dimensions['height'] = (int) round($dimensions['height'] * $scale);
+
+          // After upscaling, if we exceed any max, clamp down.
+          if ($maxWidth !== NULL && $dimensions['width'] > $maxWidth) {
+            $ratio = $maxWidth / $dimensions['width'];
+            $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
+            $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
+          }
+          if ($maxHeight !== NULL && $dimensions['height'] > $maxHeight) {
+            $ratio = $maxHeight / $dimensions['height'];
+            $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
+            $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
+          }
+          if ($maxArea !== NULL && ($dimensions['width'] * $dimensions['height']) > $maxArea) {
+            $ratio = sqrt($maxArea / ($dimensions['width'] * $dimensions['height']));
+            $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
+            $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
+          }
+        }
         break;
 
       case 'w,':
