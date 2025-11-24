@@ -504,7 +504,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    *   The rotation value.
    */
   public function getRotation(): string {
-    return $this->params['rotation'];
+    return (string) $this->params['rotation'];
   }
 
   /**
