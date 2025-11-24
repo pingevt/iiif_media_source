@@ -2,7 +2,7 @@ name: Tests
 on:
   push:
   pull_request:
-    branches: [ 0.0.x, 1.x ]
+    branches: [ '0.0.x', '1.x' ]
 env:
   SIMPLETEST_DB: "mysql://drupal:drupal@mariadb:3306/drupal"
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
@@ -17,7 +17,7 @@ jobs:
         drupal-core: ['10.4.x', '10.5.x', '11.0.x', '11.1.x']
         php-version: ['8.3']
         mariadb-version: ['10.6']
-        exclude:
+        exclude: []
           # -
           #   drupal-core: '11.0.x'
           #   php-version: '8.1'
