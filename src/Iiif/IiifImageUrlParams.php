@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_media_source\Iiif;
 
 /**
@@ -537,7 +539,6 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       // section. If the resulting dimensions are greater than the pixel width
       // and height of the extracted region, the extracted region is upscaled.
       case '^max':
-        // Only applies to IIIF v3.
         if ($image->getApiVersion() == "3") {
           $maxWidth = $image->getMaxWidth();
           $maxHeight = $image->getMaxHeight();
@@ -565,21 +566,11 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $dimensions['height'] = (int) round($dimensions['height'] * $scale);
 
           // After upscaling, if we exceed any max, clamp down.
-          if ($maxWidth !== NULL && $dimensions['width'] > $maxWidth) {
-            $ratio = $maxWidth / $dimensions['width'];
-            $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
-            $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
-          }
-          if ($maxHeight !== NULL && $dimensions['height'] > $maxHeight) {
-            $ratio = $maxHeight / $dimensions['height'];
-            $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
-            $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
-          }
-          if ($maxArea !== NULL && ($dimensions['width'] * $dimensions['height']) > $maxArea) {
-            $ratio = sqrt($maxArea / ($dimensions['width'] * $dimensions['height']));
-            $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
-            $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
-          }
+          list($dimensions['width'], $dimensions['height']) = $this->applyMaxConstraints(
+            $dimensions['width'],
+            $dimensions['height'],
+            $image
+          );
         }
         break;
 
@@ -599,26 +590,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = $target_width;
           $new_height = (int) round($dimensions['height'] * $scale);
 
-          // Apply max constraints.
-          $maxWidth = $image->getMaxWidth();
-          $maxHeight = $image->getMaxHeight();
-          $maxArea = $image->getMaxArea();
-
-          if ($maxWidth !== NULL && $new_width > $maxWidth) {
-            $ratio = $maxWidth / $new_width;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxHeight !== NULL && $new_height > $maxHeight) {
-            $ratio = $maxHeight / $new_height;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
-            $ratio = sqrt($maxArea / ($new_width * $new_height));
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
+          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -639,26 +611,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_height = $target_height;
           $new_width = (int) round($dimensions['width'] * $scale);
 
-          // Apply max constraints.
-          $maxWidth = $image->getMaxWidth();
-          $maxHeight = $image->getMaxHeight();
-          $maxArea = $image->getMaxArea();
-
-          if ($maxWidth !== NULL && $new_width > $maxWidth) {
-            $ratio = $maxWidth / $new_width;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxHeight !== NULL && $new_height > $maxHeight) {
-            $ratio = $maxHeight / $new_height;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
-            $ratio = sqrt($maxArea / ($new_width * $new_height));
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
+          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -678,26 +631,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = (int) round($dimensions['width'] * $scale);
           $new_height = (int) round($dimensions['height'] * $scale);
 
-          // Apply max constraints.
-          $maxWidth = $image->getMaxWidth();
-          $maxHeight = $image->getMaxHeight();
-          $maxArea = $image->getMaxArea();
-
-          if ($maxWidth !== NULL && $new_width > $maxWidth) {
-            $ratio = $maxWidth / $new_width;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxHeight !== NULL && $new_height > $maxHeight) {
-            $ratio = $maxHeight / $new_height;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
-            $ratio = sqrt($maxArea / ($new_width * $new_height));
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
+          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -716,26 +650,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = (int) round($settings['size_w']);
           $new_height = (int) round($settings['size_h']);
 
-          // Apply max constraints.
-          $maxWidth = $image->getMaxWidth();
-          $maxHeight = $image->getMaxHeight();
-          $maxArea = $image->getMaxArea();
-
-          if ($maxWidth !== NULL && $new_width > $maxWidth) {
-            $ratio = $maxWidth / $new_width;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxHeight !== NULL && $new_height > $maxHeight) {
-            $ratio = $maxHeight / $new_height;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
-            $ratio = sqrt($maxArea / ($new_width * $new_height));
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
+          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -771,26 +686,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = (int) round($dimensions['width'] * $scale);
           $new_height = (int) round($dimensions['height'] * $scale);
 
-          // Apply max constraints.
-          $maxWidth = $image->getMaxWidth();
-          $maxHeight = $image->getMaxHeight();
-          $maxArea = $image->getMaxArea();
-
-          if ($maxWidth !== NULL && $new_width > $maxWidth) {
-            $ratio = $maxWidth / $new_width;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxHeight !== NULL && $new_height > $maxHeight) {
-            $ratio = $maxHeight / $new_height;
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
-          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
-            $ratio = sqrt($maxArea / ($new_width * $new_height));
-            $new_width = (int) round($new_width * $ratio);
-            $new_height = (int) round($new_height * $ratio);
-          }
+          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -832,6 +728,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         $dimensions['height'] = (int) ceil($h1 + $h2);
       }
     }
+
+    list($dimensions['width'], $dimensions['height']) =
+      $this->applyRotationToDimensions($dimensions['width'], $dimensions['height'], $settings['rotation']);
 
     $dimensions = $this->transformWithinMax($dimensions, $image);
 
@@ -937,6 +836,137 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    */
   public function validateParamsAgainstImage(IiifImage $image): bool {
     return TRUE;
+  }
+
+  /**
+   * Applies maxWidth, maxHeight, and maxArea constraints to the given dimensions.
+   *
+   * If any of the constraints are set on the image, this method will scale down
+   * the width and height proportionally so that neither dimension nor the area
+   * exceeds the allowed maximums.
+   *
+   * @param int $width
+   *   The proposed width.
+   * @param int $height
+   *   The proposed height.
+   * @param \Drupal\iiif_media_source\Iiif\IiifImage $image
+   *   The IIIF image object, which may define maxWidth, maxHeight, and maxArea.
+   *
+   * @return array
+   *   An array with two elements: [width, height], after applying constraints.
+   */
+  private function applyMaxConstraints($width, $height, $image) {
+    $maxWidth = $image->getMaxWidth();
+    $maxHeight = $image->getMaxHeight();
+    $maxArea = $image->getMaxArea();
+
+    if ($maxWidth !== NULL && $width > $maxWidth) {
+      $ratio = $maxWidth / $width;
+      $width = (int) round($width * $ratio);
+      $height = (int) round($height * $ratio);
+    }
+    if ($maxHeight !== NULL && $height > $maxHeight) {
+      $ratio = $maxHeight / $height;
+      $width = (int) round($width * $ratio);
+      $height = (int) round($height * $ratio);
+    }
+    if ($maxArea !== NULL && ($width * $height) > $maxArea) {
+      $ratio = sqrt($maxArea / ($width * $height));
+      $width = (int) round($width * $ratio);
+      $height = (int) round($height * $ratio);
+    }
+    return [$width, $height];
+  }
+
+  /**
+   * Validates the settings array for required numeric and option values.
+   *
+   * Ensures that numeric parameters are non-negative, that percentage values
+   * are greater than zero, and that the size option is valid for the IIIF version.
+   * Throws InvalidArgumentException if any validation fails.
+   *
+   * @param array $settings
+   *   The settings array to validate (by reference).
+   *
+   * @throws \InvalidArgumentException
+   *   If a parameter is invalid.
+   */
+  private function validateSettings(array &$settings): void {
+    $numeric_keys = ['size_w', 'size_h', 'size_n', 'region_x', 'region_y', 'region_w', 'region_h', 'rotation'];
+    foreach ($numeric_keys as $key) {
+      if (isset($settings[$key]) && $settings[$key] !== '') {
+        if (!is_numeric($settings[$key]) || $settings[$key] < 0) {
+          throw new \InvalidArgumentException("Parameter $key must be a non-negative number.");
+        }
+      }
+    }
+    if (isset($settings['size_n']) && $settings['size_n'] <= 0) {
+      throw new \InvalidArgumentException("Parameter size_n (percentage) must be greater than 0.");
+    }
+    if (!in_array($settings['size'], array_keys(self::getSizeOptions($this->version)))) {
+      throw new \InvalidArgumentException("Invalid size option: " . $settings['size']);
+    }
+
+    // Check required parameters for each size mode
+    if (isset($settings['size'])) {
+      switch ($settings['size']) {
+        case '^w,':
+          if (!isset($settings['size_w']) || $settings['size_w'] === '') {
+            throw new \InvalidArgumentException("Parameter size_w is required for ^w, size mode.");
+          }
+          break;
+        case '^,h':
+          if (!isset($settings['size_h']) || $settings['size_h'] === '') {
+            throw new \InvalidArgumentException("Parameter size_h is required for ^,h size mode.");
+          }
+          break;
+        case '^w,h':
+        case '^!w,h':
+          if (!isset($settings['size_w']) || $settings['size_w'] === '') {
+            throw new \InvalidArgumentException("Parameter size_w is required for {$settings['size']} size mode.");
+          }
+          if (!isset($settings['size_h']) || $settings['size_h'] === '') {
+            throw new \InvalidArgumentException("Parameter size_h is required for {$settings['size']} size mode.");
+          }
+          break;
+        case '^pct:n':
+          if (!isset($settings['size_n']) || $settings['size_n'] === '') {
+            throw new \InvalidArgumentException("Parameter size_n is required for ^pct:n size mode.");
+          }
+          break;
+      }
+    }
+  }
+
+  /**
+   * Applies rotation to the given dimensions.
+   *
+   * Handles 90/180/270 and arbitrary angles, returning the new width and height.
+   *
+   * @param int $width
+   *   The original width.
+   * @param int $height
+   *   The original height.
+   * @param float|int $rotation
+   *   The rotation angle in degrees.
+   *
+   * @return array
+   *   An array with two elements: [width, height] after rotation.
+   */
+  private function applyRotationToDimensions(int $width, int $height, $rotation): array {
+    $rotation = $rotation % 360;
+    if ($rotation === 90 || $rotation === 270) {
+      return [$height, $width];
+    }
+    if ($rotation === 0 || $rotation === 180 || $rotation === 360) {
+      return [$width, $height];
+    }
+
+    // For arbitrary angles, calculate bounding box.
+    $radians = deg2rad($rotation);
+    $new_width = (int) ceil(abs($width * cos($radians)) + abs($height * sin($radians)));
+    $new_height = (int) ceil(abs($width * sin($radians)) + abs($height * cos($radians)));
+    return [$new_width, $new_height];
   }
 
 }
