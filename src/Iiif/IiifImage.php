@@ -167,10 +167,27 @@ class IiifImage extends IiifBase {
 
   /**
    * Get the default extension.
+   *
+   * @return string
+   *   The default image format extension (e.g., "jpg", "png").
    */
   public function getDefaultExtension(): string {
-    // Assumption here that the first element is the default Extension.
-    return isset($this->info->profile[1]->formats) ? current($this->info->profile[1]->formats) : "jpg";
+    // IIIF v3: preferredFormats is a top-level array.
+    if (isset($this->info->preferredFormats) && is_array($this->info->preferredFormats) && count($this->info->preferredFormats) > 0) {
+      return current($this->info->preferredFormats);
+    }
+    // IIIF v3: extraFormats is a top-level array.
+    if (isset($this->info->extraFormats) && is_array($this->info->extraFormats) && count($this->info->extraFormats) > 0) {
+      return current($this->info->extraFormats);
+    }
+
+    // IIIF v2: formats may be in profile[1]->formats.
+    if (isset($this->info->profile[1]->formats) && is_array($this->info->profile[1]->formats) && count($this->info->profile[1]->formats) > 0) {
+      return current($this->info->profile[1]->formats);
+    }
+
+    // Fallback.
+    return "jpg";
   }
 
   /**
