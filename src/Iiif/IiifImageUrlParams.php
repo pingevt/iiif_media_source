@@ -673,7 +673,35 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^pct:n':
-        // @todo add this.
+        if ($image->getApiVersion() == "3") {
+          $scale = $settings['size_n'] / 100;
+          $new_width = (int) round($dimensions['width'] * $scale);
+          $new_height = (int) round($dimensions['height'] * $scale);
+
+          // Apply max constraints.
+          $maxWidth = $image->getMaxWidth();
+          $maxHeight = $image->getMaxHeight();
+          $maxArea = $image->getMaxArea();
+
+          if ($maxWidth !== NULL && $new_width > $maxWidth) {
+            $ratio = $maxWidth / $new_width;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxHeight !== NULL && $new_height > $maxHeight) {
+            $ratio = $maxHeight / $new_height;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
+            $ratio = sqrt($maxArea / ($new_width * $new_height));
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+
+          $dimensions['width'] = $new_width;
+          $dimensions['height'] = $new_height;
+        }
         break;
 
       case 'w,h':
@@ -684,7 +712,34 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^w,h':
-        // @todo add this.
+        if ($image->getApiVersion() == "3") {
+          $new_width = (int) round($settings['size_w']);
+          $new_height = (int) round($settings['size_h']);
+
+          // Apply max constraints.
+          $maxWidth = $image->getMaxWidth();
+          $maxHeight = $image->getMaxHeight();
+          $maxArea = $image->getMaxArea();
+
+          if ($maxWidth !== NULL && $new_width > $maxWidth) {
+            $ratio = $maxWidth / $new_width;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxHeight !== NULL && $new_height > $maxHeight) {
+            $ratio = $maxHeight / $new_height;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
+            $ratio = sqrt($maxArea / ($new_width * $new_height));
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+
+          $dimensions['width'] = $new_width;
+          $dimensions['height'] = $new_height;
+        }
         break;
 
       case '!w,h':
@@ -704,7 +759,42 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^!w,h':
-        // @todo add this.
+        if ($image->getApiVersion() == "3") {
+          $target_width = (int) $settings['size_w'];
+          $target_height = (int) $settings['size_h'];
+
+          // Calculate scale to best fit inside target box (preserve aspect ratio, up or down).
+          $width_ratio = $target_width / $dimensions['width'];
+          $height_ratio = $target_height / $dimensions['height'];
+          $scale = min($width_ratio, $height_ratio);
+
+          $new_width = (int) round($dimensions['width'] * $scale);
+          $new_height = (int) round($dimensions['height'] * $scale);
+
+          // Apply max constraints.
+          $maxWidth = $image->getMaxWidth();
+          $maxHeight = $image->getMaxHeight();
+          $maxArea = $image->getMaxArea();
+
+          if ($maxWidth !== NULL && $new_width > $maxWidth) {
+            $ratio = $maxWidth / $new_width;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxHeight !== NULL && $new_height > $maxHeight) {
+            $ratio = $maxHeight / $new_height;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
+            $ratio = sqrt($maxArea / ($new_width * $new_height));
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+
+          $dimensions['width'] = $new_width;
+          $dimensions['height'] = $new_height;
+        }
         break;
 
     }
