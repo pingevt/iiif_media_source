@@ -1,138 +1,118 @@
-# IIIF Media source
+# IIIF Media Source
 
-todo: write description
-implementing the Image API 3.0
+A Drupal module for integrating [IIIF Image API](https://iiif.io/) image sources into Drupal media entities.
+Supports IIIF v2 and v3, region/size/rotation/quality/format parameterization, and robust validation.
 
-Crop (Not Crop API entity): Primarily used for redefining the source image.
-Focal Point: Used primarily for "Art Direction" when automatically sizing images so we don't loose focus
+---
 
-## Table of contents
+## Features
 
-- Requirements
-- ~~Recommended modules~~
-- Installation
-- Configuration
-- Troubleshooting
-- FAQ
-- Maintainers
-- Changelog
+- Fetch and parse IIIF image manifests (`info.json`)
+- Generate IIIF-compliant image URLs with region, size, rotation, quality, and format options
+- Support for IIIF Image API v2 and v3
+- Thumbnail and full image URL generation
+- Handles maxWidth, maxHeight, and maxArea constraints
+- Extensible and testable architecture
+
+---
 
 ## Requirements
 
-todo: add reqs.
+- Drupal 9 or 10
+- PHP 8.1+
+- [media](https://www.drupal.org/project/media) module enabled
+
+---
 
 ## Installation
 
-Install as you would normally install a contributed Drupal module.
+1. Place this module in your `modules/contrib` or `modules/custom` directory.
+2. Enable the module via the Drupal admin UI or with Drush:
+   ```sh
+   drush en iiif_media_source
+   ```
+
+---
 
 ## Configuration
 
-todo: write configuration.
+- No configuration is required by default.
+- Thumbnail dimensions and other settings can be customized in the code or via configuration (future feature).
+- To use with media entities, add a media type and select "IIIF Image" as the source plugin.
 
-## Troubleshooting
+---
 
-todo:
+## Usage
 
-## FAQ
+- When creating or editing a media entity, provide a IIIF manifest URL or image ID.
+- The module will fetch the manifest and make image derivatives available.
+- Use the provided image formatters to display IIIF images in your site.
 
-**Q:** What kind of questions are being asked?
+---
 
-**A:** i dunno...
+## API
+
+### Main Classes
+
+- `IiifImage`: Represents a IIIF image and provides methods for manifest parsing and URL generation.
+- `IiifImageUrlParams`: Handles IIIF URL parameter construction and validation.
+- `IiifBase`: Abstract base for IIIF-related classes.
+
+### Example: Generate a IIIF Image URL
+
+```php
+use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
+
+$image = new IiifImage($server, $prefix, $id, $info);
+$params = IiifImageUrlParams::fromSettingsArray([
+  'region' => 'full',
+  'size' => 'max',
+  'rotation' => 0,
+  'quality' => 'default',
+  'format' => 'jpg',
+], '3.0');
+$url = $image->getBuiltImageUrl($params);
+```
+
+---
+
+## Testing
+
+- PHPUnit and Kernel tests are provided for all core logic.
+- To run tests:
+  ```sh
+  phpunit --testsuite iiif_media_source
+  ```
+- See `/tests/src/Unit` and `/tests/src/Kernel` for test coverage.
+
+---
+
+## Roadmap
+
+- UI for configuring default thumbnail sizes and other options
+- Support for additional IIIF features (auth, presentation, etc.)
+- Improved error handling and logging
+- More flexible integration with Drupal media and image styles
+
+---
 
 ## Maintainers
 
-- Pete Inge - [pingevt](https://www.drupal.org/u/pingevt)
+- [Pete Inge](https://www.drupal.org/u/pingevt)
+- [Contributors welcome!](https://www.drupal.org/project/issues/iiif_media_source)
 
-## Changelog
+<!--
+---
 
-## TODOs
+## License
 
-Field:
-- [x] Field - should just be a copy of a text field
-  - [x] Field has settings for server/prefix
-  - [x] (LC) re-work Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId:getImg() so it doesn't require the values param.
-  - [ ] Could add in some validation? but not sure what that would be... https://iiif.io/api/image/3.0/#2-uri-syntax
-  - [x] (LC) getLocalThumbnailUri() still has hardcoded URLs.
-- [x] Default Widget should just be plain text, i think.
-- [x] Default Formatter should just display ID.
-  - [ ] (LC) need to verify and have fallbacks for each section.
-  - [ ] ~~Add in loading attribute (lazy, eager) to basic formatter.~~
-- [x] Secondary (basic image) Widget includes image thumbnail.
-- [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
-  - [x] (LC) Add in loading attribute (lazy, eager) to basic formatter.
-- [ ] ~~(LC) Do we need the base Iiif class?~~
-  - [ ] ~~If so, needs to be a service?~~
-  - [ ] ~~Inject it into the field class?~~
-- [ ] (LC) Add in options for Image API v3
+GPL-2.0-or-later
+-->
 
-Media Source
-- [ ] Source just provides data for fields, if wanted on the media item.
-- [ ] (LC) Provides:
-  - [ ] version
-  - [ ] width
-  - [ ] height
-  - [ ] sizes
-  - [ ] tiles???
-  - [ ] formats
-  - [ ] qualities
-  - [ ] maxArea
-  - [ ] maxHeight
-  - [ ] maxWidth
-  - [ ] supports
+---
 
-Submodule: Image styles
-Image Styles / Responsive Images
-- [x] Image Style entity
-- [x] Responsive Image style entity
-- [x] IIIF Image style formatter
-- [x] IIIF Responsive Image style formatter
-- [x] We're going to need plugins... Imagestyle with plugins for the transformers.
-- [x] Add in some default IIIF Image Styles
-- [ ] Admin library w/ CSS.
-- [ ] (LC) Add in preview on Image Styles.
-- [ ] (LC) Document plugin so others can create plugins.
-- [ ] (LC) Documentation and helper text for forms.
-- [ ] (LC) Fix errors when using "original image" for responsive images
+## See Also
 
-Submodule: Image Handling
-- [x] Class to handle form elements for adding to widgets.
-  - [x] Need logic for 1 or other handlers.
-- [ ] Class to handle form elements for own widgets.
-- [ ] Need a common (CSS) library.
-
-Submodule: Focalpoint
-- [x] Add in widget to define a focal point of the image.
-- [x] Third party settings or something so we can combine everything into 1 form element.
-- [x] Add third party settings for thumbnail size
-- [ ] Allow for Contextual Media field
-- [ ] Make sure settings are correct for Widget and 3rd party settings. (Add Test)
-
-Submodule: Crop
-- [x] Add in widget to define a crop for the image.
-- [x] Third party settings or something so we can combine everything into 1 form element.
-- [x] Add third party settings for thumbnail size
-- [x] "Drupalize" js file.
-- [x] Need JS solution to hide field (copy from FP)
-- [ ] Settings Page to variabalize settings for the cropper.js plugin.
-- [ ] Allow for Contextual Media field
-- [ ] Make sure settings are correct for Widget and 3rd party settings. (Add Test)
-
-General:
-- [ ] (LC) Check and confirm Config inspector
-- [ ] Process js/css files
-
-Tests:
-- Prep
-  - [ ] (LC) Need IIIF sources to test against.
-- Unit Tests
-  - [ ] (LC) Need to test and finish Dimension in `IiifImageUrlParams`
-- Functional Tests
-  - [ ]
-- Browser Tests
-  - [ ] (LC) Check each image style effect and combination. We should be able to set it and check the end of any image url string.
-  - [ ] Check responsive images
-  - [ ] Check "fallbacks" for responsive images
-  - [ ] (LC) lazy and eager loading attr
-    - [ ] Default IIIF Image Formatter
-    - [ ] Crop Image Formatter
-    - [ ] Focal Point Image formatter
+- [IIIF Image API Specification](https://iiif.io/api/image/)
+- [Drupal Media Module](https://www.drupal.org/project/media)
