@@ -633,7 +633,36 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
         break;
 
       case '^,h':
-        // @todo add this.
+        if ($image->getApiVersion() == "3") {
+          $target_height = (int) $settings['size_h'];
+          $scale = $target_height / $dimensions['height'];
+          $new_height = $target_height;
+          $new_width = (int) round($dimensions['width'] * $scale);
+
+          // Apply max constraints.
+          $maxWidth = $image->getMaxWidth();
+          $maxHeight = $image->getMaxHeight();
+          $maxArea = $image->getMaxArea();
+
+          if ($maxWidth !== NULL && $new_width > $maxWidth) {
+            $ratio = $maxWidth / $new_width;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxHeight !== NULL && $new_height > $maxHeight) {
+            $ratio = $maxHeight / $new_height;
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+          if ($maxArea !== NULL && ($new_width * $new_height) > $maxArea) {
+            $ratio = sqrt($maxArea / ($new_width * $new_height));
+            $new_width = (int) round($new_width * $ratio);
+            $new_height = (int) round($new_height * $ratio);
+          }
+
+          $dimensions['width'] = $new_width;
+          $dimensions['height'] = $new_height;
+        }
         break;
 
       case 'pct:n':
