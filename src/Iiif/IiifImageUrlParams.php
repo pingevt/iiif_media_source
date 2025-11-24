@@ -476,7 +476,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   public function transformDimensions(IiifImage $image): array {
     $settings = $this->params;
 
-    // If for some reason we don't image data yet, just return a 1x1.
+    // If for some reason we don't have image data yet, just return a 1x1.
     if ($image->getWidth() === NULL && $image->getHeight() === NULL) {
       return [
         'width' => 1,
@@ -602,17 +602,18 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
 
     }
 
-    // Resize for rotation. sines an cosines!
+    // Resize for rotation. sines and cosines!
     if ($settings['rotation'] === 90 || $settings['rotation'] === 270) {
       $w = $dimensions['width'];
       $h = $dimensions['height'];
       $dimensions['width'] = $h;
       $dimensions['height'] = $w;
     }
-    elseif ($settings['rotation'] !== 0) {
-
+    elseif ($settings['rotation'] !== 0 && $settings['rotation'] !== 180 && $settings['rotation'] !== 360) {
+      // Normalize rotation to 0-360.
       $settings['rotation'] = ($settings['rotation'] % 360);
 
+      // Calculate the new width and height.
       if (($settings['rotation'] > 0 && $settings['rotation'] < 90) || ($settings['rotation'] > 180 && $settings['rotation'] < 270)) {
         $w1 = sin(deg2rad($settings['rotation'] % 90)) * $dimensions['height'];
         $w2 = cos(deg2rad($settings['rotation'] % 90)) * $dimensions['width'];
@@ -635,10 +636,44 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       }
     }
 
+    $dimensions = $this->transformWithinMax($dimensions, $image);
+
     // Force int values.
     $dimensions = array_map('intval', $dimensions);
 
     // Validate maxWidth/maxHeight/MaxArea.
+    return $dimensions;
+  }
+
+  public function transformWithinMax(array $dimensions, IiifImage $image): array {
+
+    if ($image->getApiVersion() == "3") {
+      $maxWidth = $image->getMaxWidth();
+      $maxHeight = $image->getMaxHeight();
+      $maxArea = $image->getMaxArea();
+
+      // print_r([$maxWidth, $maxHeight, $maxArea, $dimensions]);
+
+      if ($maxWidth !== NULL && $dimensions['width'] > $maxWidth) {
+        $ratio = $maxWidth / $dimensions['width'];
+        $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
+        $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
+        // print_r($dimensions);
+      }
+
+      if ($maxHeight !== NULL && $dimensions['height'] > $maxHeight) {
+        $ratio = $maxHeight / $dimensions['height'];
+        $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
+        $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
+      }
+
+      if ($maxArea !== NULL && ($dimensions['width'] * $dimensions['height']) > $maxArea) {
+        $ratio = sqrt($maxArea / ($dimensions['width'] * $dimensions['height']));
+        $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
+        $dimensions['height'] = (int) round($dimensions['height'] * $ratio);
+      }
+    }
+
     return $dimensions;
   }
 

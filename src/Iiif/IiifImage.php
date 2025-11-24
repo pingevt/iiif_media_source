@@ -49,11 +49,36 @@ class IiifImage extends IiifBase {
   /**
    * Get the image dimensions.
    */
-  public function getDimensions():?array {
+  public function getDimensions(): ?array {
     return [
       "w" => $this->getWidth(),
       "h" => $this->getHeight(),
     ];
+  }
+
+  public function getMaxHeight(): ?int {
+
+    if ($this->getApiVersion() == "3") {
+      return $this->info->maxHeight ?? NULL;
+    }
+
+    return $this->info->profile->maxHeight ?? NULL;
+  }
+
+  public function getMaxWidth(): ?int {
+
+    if ($this->getApiVersion() == "3") {
+      return $this->info->maxWidth ?? NULL;
+    }
+    return $this->info->profile->maxWidth ?? NULL;
+  }
+
+  public function getMaxArea(): ?int {
+
+    if ($this->getApiVersion() == "3") {
+      return $this->info->maxArea ?? NULL;
+    }
+    return $this->info->profile->maxArea ?? NULL;
   }
 
   /**
@@ -109,18 +134,32 @@ class IiifImage extends IiifBase {
 
   /**
    * Get the scaled URL.
+   *
+   * @param int $width
+   *   The width, in pixels.
+   * @param int $height
+   *   The height, in pixels.
    */
-  public function getScaledUrl($width, $height): string {
+  public function getScaledUrl(int $width, int $height): string {
 
     // @todo create settings obj, so proper validation happens.
+    $params = IiifImageUrlParams::fromSettingsArray([
+      'region' => "full",
+      'size' => "!w,h", //"!" . $width . "," . $height,
+      'size_w' => $width,
+      'size_h' => $height,
+      'rotation' => 0,
+      'quality' => "default",
+      'format' => $this->getDefaultExtension(),
+      'version' => $this->getApiVersion(),
+    ], $this->getApiVersion());
+
+
     $url = implode(DIRECTORY_SEPARATOR, [
       $this->server,
       $this->prefix,
       $this->iiifId,
-      "full",
-      "!" . $width . "," . $height,
-      0,
-      "default." . $this->getDefaultExtension(),
+      $params->buildUrlString(),
     ]);
 
     return $url;
@@ -137,15 +176,15 @@ class IiifImage extends IiifBase {
   /**
    * Get the API version.
    */
-  public function getApiVersion() {
+  public function getApiVersion(): string {
     if (isset($this->info->{'@context'}) && $this->info->{'@context'} == "http://iiif.io/api/image/2/context.json") {
-      return 2.1;
+      return "2.1";
     }
     if (isset($this->info->{'@context'}) && $this->info->{'@context'} == "http://iiif.io/api/image/3/context.json") {
-      return 3;
+      return "3";
     }
 
-    return 2.0;
+    return "2";
   }
 
   /**

@@ -82,6 +82,27 @@ abstract class IiifBase {
   }
 
   /**
+   * Get the server.
+   */
+  public function getServer() {
+    return $this->server;
+  }
+
+  /**
+   * Get the prefix.
+   */
+  public function getPrefix() {
+    return $this->prefix;
+  }
+
+  /**
+   * Get the iiif id.
+   */
+  public function getIiifId() {
+    return $this->iiifId;
+  }
+
+  /**
    * Retrieve the iiif image manifest.
    */
   protected function retrieveManifest(): void {
@@ -144,7 +165,11 @@ abstract class IiifBase {
       $response = $this->httpClient->get($url, $headers);
     }
     catch (\Exception $e) {
-      // @todo log or something.
+      // Log the error.
+      $this->logger->error('HTTP request failed: @message. URL: @url', [
+        '@message' => $e->getMessage(),
+        '@url' => $url,
+      ]);
     }
 
     return $response;

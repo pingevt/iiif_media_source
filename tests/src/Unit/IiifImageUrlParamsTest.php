@@ -3,6 +3,7 @@
 namespace Drupal\Tests\iiif_media_source\Unit;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**

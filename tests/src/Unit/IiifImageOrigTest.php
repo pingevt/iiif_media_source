@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @group iiif_media_source
  */
-class IiifImageTest extends UnitTestCase {
+class IiifImageOrigTest extends UnitTestCase {
 
   /**
    * Json string of an image source.
