@@ -45,16 +45,24 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   ];
 
   /**
-   * {@inheritdoc}
+   * Constructs a new IIIF Image URL Params object.
+   *
+   * @param string $version
+   *   The IIIF Image API version (e.g., "2", "2.1", "3").
    */
-  public function __construct($version) {
+  public function __construct(string $version) {
     $this->setVersion($version);
   }
 
   /**
-   * {@inheritdoc}
+   * Sets a parameter value.
+   *
+   * @param string $key
+   *   The parameter key.
+   * @param mixed $value
+   *   The value to set.
    */
-  public function __set($key, $value) {
+  public function __set(string $key, $value): void {
     // @todo any other validation.
     if (isset($this->params[$key])) {
       $this->params[$key] = $value;
@@ -87,9 +95,17 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Creates an instance from a settings array.
+   *
+   * @param array $settings
+   *   The settings array.
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return static
+   *   A new instance of the implementing class.
    */
-  public static function fromSettingsArray(array $settings, $version = "2.0"): static {
+  public static function fromSettingsArray(array $settings, string $version = "2.0"): static {
     $obj = new static($version);
     $obj->buildFromArray($settings);
 
@@ -143,7 +159,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the default settings for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The default settings.
    */
   public static function getDefaultSettings(string $version = "2"): array {
 
@@ -163,7 +185,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the available region options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available region options.
    */
   public static function getRegionOptions(string $version = "2"): array {
     $options = [];
@@ -192,7 +220,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the available size options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available size options.
    */
   public static function getSizeOptions(string $version = "2"): array {
     $options = [];
@@ -232,7 +266,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the available quality options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available quality options.
    */
   public static function getQualityOptions(string $version = "2"): array {
     $options = [];
@@ -262,7 +302,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the available format options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available format options.
    */
   public static function getFormatOptions(string $version = "2"): array {
     $options = [];
@@ -317,14 +363,23 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets a specific setting value.
+   *
+   * @param string $setting_name
+   *   The name of the setting.
+   *
+   * @return string|null
+   *   The setting value, or NULL if not set.
    */
   public function getSetting(string $setting_name): ?string {
     return $this->params[$setting_name] ?? NULL;
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the region settings as an array.
+   *
+   * @return array
+   *   The region settings.
    */
   public function getRegionSettings(): array {
     $data = [];
@@ -346,7 +401,10 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the region string for the IIIF URL.
+   *
+   * @return string
+   *   The region string.
    */
   public function getRegion(): string {
 
@@ -356,7 +414,10 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Applies region settings from an array.
+   *
+   * @param array $settings
+   *   The region settings to apply.
    */
   public function applyRegionSettings(array $settings): void {
     $keys = [
@@ -377,7 +438,10 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the size settings as an array.
+   *
+   * @return array
+   *   The size settings.
    */
   public function getSizeSettings(): array {
     $data = [];
@@ -398,7 +462,10 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the size string for the IIIF URL.
+   *
+   * @return string
+   *   The size string.
    */
   public function getSize(): string {
 
@@ -408,7 +475,10 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Applies size settings from an array.
+   *
+   * @param array $settings
+   *   The size settings to apply.
    */
   public function applySizeSettings(array $settings): void {
     $keys = [
@@ -428,35 +498,50 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the rotation value for the IIIF URL.
+   *
+   * @return string
+   *   The rotation value.
    */
   public function getRotation(): string {
     return $this->params['rotation'];
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the quality value for the IIIF URL.
+   *
+   * @return string
+   *   The quality value.
    */
   public function getQuality(): string {
     return $this->params['quality'];
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the format value for the IIIF URL.
+   *
+   * @return string
+   *   The format value.
    */
   public function getFormat(): string {
     return $this->params['format'];
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the IIIF Image API version.
+   *
+   * @return string
+   *   The IIIF Image API version.
    */
   public function getVersion(): string {
     return $this->version;
   }
 
   /**
-   * {@inheritdoc}
+   * Builds the IIIF image URL string from the parameters.
+   *
+   * @return string
+   *   The IIIF image URL string.
    */
   public function buildUrlString(): string {
     $this->expandSettings();
@@ -473,7 +558,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Transforms the image dimensions based on the parameters.
+   *
+   * @param IiifImage $image
+   *   The IIIF image object.
+   *
+   * @return array
+   *   The transformed dimensions as [width, height].
    */
   public function transformDimensions(IiifImage $image): array {
     $settings = $this->params;
@@ -741,6 +832,19 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     return $dimensions;
   }
 
+  /**
+   * Validates the parameters against the given IIIF image.
+   *
+   * @param IiifImage $image
+   *   The IIIF image object.
+   *
+   * @return bool
+   *   TRUE if the parameters are valid, FALSE otherwise.
+   */
+  public function validateParamsAgainstImage(IiifImage $image): bool {
+    return TRUE;
+  }
+
   public function transformWithinMax(array $dimensions, IiifImage $image): array {
 
     if ($image->getApiVersion() == "3") {
@@ -829,13 +933,6 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     $position = array_map('intval', $position);
 
     return $position;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateParamsAgainstImage(IiifImage $image): bool {
-    return TRUE;
   }
 
   /**

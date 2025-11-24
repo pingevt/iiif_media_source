@@ -8,127 +8,207 @@ namespace Drupal\iiif_media_source\Iiif;
 interface IiifImageUrlParamsInterface {
 
   /**
-   * Constructor.
+   * Constructs a new IIIF Image URL Params object.
+   *
+   * @param string $version
+   *   The IIIF Image API version (e.g., "2", "2.1", "3").
    */
-  public function __construct($version);
+  public function __construct(string $version);
 
   /**
-   * Setter.
+   * Sets a parameter value.
+   *
+   * @param string $key
+   *   The parameter key.
+   * @param mixed $value
+   *   The value to set.
    */
-  public function __set($key, $value);
+  public function __set(string $key, $value): void;
 
   /**
-   * Array of settings to be used in the form.
+   * Creates an instance from a settings array.
+   *
+   * @param array $settings
+   *   The settings array.
+   *
+   * @return static
+   *   A new instance of the implementing class.
    */
   public static function fromSettingsArray(array $settings): static;
 
   /**
-   * Get the default settings.
+   * Gets the default settings for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The default settings.
    */
   public static function getDefaultSettings(string $version = "2"): array;
 
   /**
-   * Get the region options.
+   * Gets the available region options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available region options.
    */
   public static function getRegionOptions(string $version = "2"): array;
 
   /**
-   * Get the size options.
+   * Gets the available size options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available size options.
    */
   public static function getSizeOptions(string $version = "2"): array;
 
   /**
-   * Get the quality options.
+   * Gets the available quality options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available quality options.
    */
   public static function getQualityOptions(string $version = "2"): array;
 
   /**
-   * Get the format options.
+   * Gets the available format options for a given IIIF version.
+   *
+   * @param string $version
+   *   The IIIF Image API version.
+   *
+   * @return array
+   *   The available format options.
    */
   public static function getFormatOptions(string $version = "2"): array;
 
   /**
-   * Get the settings.
+   * Gets a specific setting value.
+   *
+   * @param string $setting_name
+   *   The name of the setting.
+   *
+   * @return string|null
+   *   The setting value, or NULL if not set.
    */
   public function getSetting(string $setting_name): ?string;
 
   /**
-   * Get the region settings.
+   * Gets the region settings as an array.
+   *
+   * @return array
+   *   The region settings.
    */
   public function getRegionSettings(): array;
 
   /**
-   * Get the region of the image.
+   * Gets the region string for the IIIF URL.
+   *
+   * @return string
+   *   The region string.
    */
   public function getRegion(): string;
 
   /**
-   * Apply the region settings to the image.
+   * Applies region settings from an array.
+   *
+   * @param array $settings
+   *   The region settings to apply.
    */
   public function applyRegionSettings(array $settings): void;
 
   /**
-   * Get the size settings.
+   * Gets the size settings as an array.
+   *
+   * @return array
+   *   The size settings.
    */
   public function getSizeSettings(): array;
 
   /**
-   * Get the size of the image.
+   * Gets the size string for the IIIF URL.
+   *
+   * @return string
+   *   The size string.
    */
   public function getSize(): string;
 
   /**
-   * Apply the size settings to the image.
+   * Applies size settings from an array.
+   *
+   * @param array $settings
+   *   The size settings to apply.
    */
   public function applySizeSettings(array $settings): void;
 
   /**
-   * Get the rotation of the image.
+   * Gets the rotation value for the IIIF URL.
+   *
+   * @return string
+   *   The rotation value.
    */
   public function getRotation(): string;
 
   /**
-   * Get the quality of the image.
+   * Gets the quality value for the IIIF URL.
+   *
+   * @return string
+   *   The quality value.
    */
   public function getQuality(): string;
 
   /**
-   * Get the format of the image.
+   * Gets the format value for the IIIF URL.
+   *
+   * @return string
+   *   The format value.
    */
   public function getFormat(): string;
 
   /**
-   * Get the version of the IIIF Image API.
+   * Gets the IIIF Image API version.
    *
    * @return string
-   *   The version of the IIIF Image API.
+   *   The IIIF Image API version.
    */
   public function getVersion(): string;
 
   /**
-   * Build the URL string for the IIIF image.
+   * Builds the IIIF image URL string from the parameters.
+   *
+   * @return string
+   *   The IIIF image URL string.
    */
   public function buildUrlString(): string;
 
   /**
-   * Transform the dimensions of the image based on the parameters.
+   * Transforms the image dimensions based on the parameters.
    *
    * @param IiifImage $image
-   *   The image to transform.
+   *   The IIIF image object.
    *
    * @return array
-   *   The transformed dimensions.
+   *   The transformed dimensions as [width, height].
    */
   public function transformDimensions(IiifImage $image): array;
 
   /**
-   * Validate the parameters against the image.
+   * Validates the parameters against the given IIIF image.
    *
    * @param IiifImage $image
-   *   The image to validate against.
+   *   The IIIF image object.
    *
    * @return bool
-   *   Whether the parameters are valid.
+   *   TRUE if the parameters are valid, FALSE otherwise.
    */
   public function validateParamsAgainstImage(IiifImage $image): bool;
 
