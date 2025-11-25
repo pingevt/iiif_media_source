@@ -25,14 +25,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class IiifImageFormatter extends StringFormatter {
 
-  // Protected $sizingOptions = [
-  //   'full' => 'Full',
-  //   'scale_and_crop' => "Scale and Crop",
-  //   'resize' => "Resize",
-  //   'scale' => "Scale",
-  //   'crop' => "Crop",
-  // ];.
-
   /**
    * The event Dispatcher.
    *

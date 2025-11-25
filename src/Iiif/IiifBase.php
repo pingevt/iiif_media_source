@@ -145,8 +145,13 @@ abstract class IiifBase {
   /**
    * Get the info.
    */
-  public function getInfo() {
+  public function getInfo(): \stdClass {
+
+    if (is_object($this->info)) {
     return $this->info;
+    }
+
+    return new \stdClass();
   }
 
   /**

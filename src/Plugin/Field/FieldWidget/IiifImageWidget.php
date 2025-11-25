@@ -73,7 +73,7 @@ class IiifImageWidget extends WidgetBase implements ContainerFactoryPluginInterf
     ];
 
     if ($items[$delta]->value) {
-      $img = $items[$delta]->getImg($items[$delta]->getValue());
+      $img = $items[$delta]->getIiifImageObj($items[$delta]->getValue());
       $url = $img->getThumbnailUrl();
 
       $element['thumbnail'] = [
@@ -81,7 +81,7 @@ class IiifImageWidget extends WidgetBase implements ContainerFactoryPluginInterf
         '#uri' => $url,
         '#weight' => -1,
         '#attributes' => [
-          'style' => "margin: 0 1rem 3rem 0",
+          'style' => "margin: 0 1rem 1rem 0",
         ],
         '#weight' => $element['value']['#weight'] - 0.1,
       ];

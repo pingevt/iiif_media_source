@@ -7,41 +7,83 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
 
 /**
- * Event to allow altering of a IiifImage Url.
+ * Event to allow altering of a IiifImage object created from a field.
+ *
+ * This event is dispatched when a IIIF image object is created from a field item,
+ * allowing subscribers to alter the image object or related data.
  */
 class IiifGetImageFromFieldEvent extends Event {
 
-  // This makes it easier for subscribers to reliably use our event name.
+  /**
+   * The event name for subscribers.
+   */
   const EVENT_NAME = 'iiif_image_from_field';
 
   /**
-   * The field the image belongs to.
+   * The field item the image belongs to.
    *
    * @var \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId
    */
-  public $field;
+  protected $field;
 
   /**
-   * The IIIF Image class.
+   * The IIIF Image object.
    *
    * @var \Drupal\iiif_media_source\Iiif\IiifImage
    */
-  public $image;
+  protected $iiifImage;
 
   /**
-   * The given values of the field.
+   * The values of the field item.
    *
    * @var array
    */
-  public $values;
+  protected $values;
 
   /**
-   * Constructs the object.
+   * Constructs a new IiifGetImageFromFieldEvent object.
+   *
+   * @param \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId $field
+   *   The field item instance.
+   * @param \Drupal\iiif_media_source\Iiif\IiifImage $image
+   *   The IIIF image object.
+   * @param array $values
+   *   The field item values.
    */
   public function __construct(IiifId $field, IiifImage $image, array $values) {
     $this->field = $field;
-    $this->image = $image;
+    $this->iiifImage = $image;
     $this->values = $values;
+  }
+
+  /**
+   * Gets the field item instance.
+   *
+   * @return \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId
+   *   The field item.
+   */
+  public function getFieldItem() {
+    return $this->field;
+  }
+
+  /**
+   * Gets the IIIF image object.
+   *
+   * @return \Drupal\iiif_media_source\Iiif\IiifImage
+   *   The IIIF image object.
+   */
+  public function getIiifImage() {
+    return $this->iiifImage;
+  }
+
+  /**
+   * Gets the field item values.
+   *
+   * @return array
+   *   The field item values.
+   */
+  public function getValues() {
+    return $this->values;
   }
 
 }

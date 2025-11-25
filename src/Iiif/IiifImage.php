@@ -93,7 +93,8 @@ class IiifImage extends IiifBase {
       "full",
       "!" . $this->thumbWidth . "," . $this->thumbHeight,
       0,
-      "default." . $this->getDefaultExtension(),
+      // "default." . $this->getDefaultExtension(),
+      "default.jpg",
     ]);
 
     return $url;

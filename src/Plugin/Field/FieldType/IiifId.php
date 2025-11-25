@@ -51,7 +51,7 @@ class IiifId extends StringItem {
 
     $settings['server'] = "";
     $settings['prefix'] = "";
-    $settings['img_api_version'] = "2";
+    $settings['img_api_version'] = "3";
 
     return $settings;
   }
@@ -177,8 +177,12 @@ class IiifId extends StringItem {
     $values = $this->getValue();
 
     $info = new \stdClass();
-    if (!empty($values['info']) && json_decode($values['info'])) {
-      $info = json_decode($values['info']);
+    if (!empty($values['info'])) {
+      $decoded = json_decode($values['info']);
+      if (is_object($decoded) || is_array($decoded)) {
+        $info = $decoded;
+      }
+      // If it's invalid JSON or null, $info stays as an empty object.
     }
 
     $image = new IiifImage($this->getSetting('server'), $this->getSetting('prefix'), $values['value'], $info);
