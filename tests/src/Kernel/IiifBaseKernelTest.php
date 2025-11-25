@@ -5,6 +5,9 @@ namespace Drupal\Tests\iiif_media_source\Kernel;
 use Drupal\iiif_media_source\Iiif\IiifBase;
 use Drupal\KernelTests\KernelTestBase;
 
+/**
+ * @group iiif_media_source
+ */
 class IiifBaseKernelTest extends KernelTestBase {
   /**
    * Required modules for this kernel test.

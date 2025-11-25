@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent
+ *
+ * @group iiif_media_source
  */
 class IiifGetImageFromFieldEventTest extends TestCase {
 
