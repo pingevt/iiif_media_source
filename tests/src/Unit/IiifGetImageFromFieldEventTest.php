@@ -13,11 +13,14 @@ use PHPUnit\Framework\TestCase;
 class IiifGetImageFromFieldEventTest extends TestCase {
 
   /**
-   * Tests the constructor and properties.
+   * Tests the constructor and getter methods.
    *
    * @covers ::__construct
+   * @covers ::getFieldItem
+   * @covers ::getIiifImage
+   * @covers ::getValues
    */
-  public function testConstructor() {
+  public function testConstructorAndGetters() {
     // Mock the IiifId and IiifImage dependencies.
     $mockField = $this->createMock(IiifId::class);
     $mockImage = $this->createMock(IiifImage::class);
@@ -26,10 +29,10 @@ class IiifGetImageFromFieldEventTest extends TestCase {
     // Create the event object.
     $event = new IiifGetImageFromFieldEvent($mockField, $mockImage, $values);
 
-    // Assert that the properties are set correctly.
-    $this->assertSame($mockField, $event->field);
-    $this->assertSame($mockImage, $event->image);
-    $this->assertSame($values, $event->values);
+    // Assert that the getters return the correct values.
+    $this->assertSame($mockField, $event->getFieldItem());
+    $this->assertSame($mockImage, $event->getIiifImage());
+    $this->assertSame($values, $event->getValues());
   }
 
   /**
