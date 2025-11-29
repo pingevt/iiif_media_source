@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\iiif_image_handling\Event;
+declare(strict_types = 1);
 
-// phpcs:disable Drupal.Commenting.VariableComment.MissingVar
+namespace Drupal\iiif_image_handling\Event;
 
 use Drupal\Component\EventDispatcher\Event;
 
@@ -16,32 +16,81 @@ class IiifEffectFindCropEvent extends Event {
 
   /**
    * The crop.
+   *
+   * @var mixed
    */
-  public $crop;
+  private $crop;
 
   /**
    * The image.
+   *
+   * @var mixed
    */
-  public $image;
+  private $image;
 
   /**
    * The crop type.
+   *
+   * @var mixed
    */
-  public $cropType;
+  private $cropType;
 
   /**
    * The context.
+   *
+   * @var mixed
    */
-  public $context;
+  private $context;
 
   /**
    * Constructs the object.
+   *
+   * @param mixed $crop
+   * @param mixed $image
+   * @param mixed $crop_type
+   * @param mixed $context
    */
   public function __construct($crop, $image, $crop_type, $context) {
     $this->crop = $crop;
     $this->image = $image;
     $this->cropType = $crop_type;
     $this->context = $context;
+  }
+
+  /**
+   * Gets the crop.
+   *
+   * @return mixed
+   */
+  public function getCrop() {
+    return $this->crop;
+  }
+
+  /**
+   * Gets the image.
+   *
+   * @return mixed
+   */
+  public function getImage() {
+    return $this->image;
+  }
+
+  /**
+   * Gets the crop type.
+   *
+   * @return mixed
+   */
+  public function getCropType() {
+    return $this->cropType;
+  }
+
+  /**
+   * Gets the context.
+   *
+   * @return mixed
+   */
+  public function getContext() {
+    return $this->context;
   }
 
 }

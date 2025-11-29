@@ -7,5 +7,7 @@ package: Media
 
 dependencies:
   - crop:crop
+  - iiif_media_source:iiif_image_style
+  - iiif_media_source:iiif_media_source
 
 configure: null

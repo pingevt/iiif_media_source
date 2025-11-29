@@ -255,7 +255,7 @@ class IiifImageHandlingProcessor {
    *   The preview link form element.
    */
   private static function createCropField($field_name, array $element_selectors, $default_crop_value) {
-    // ksm($field_name, $element_selectors, $default_crop_value);.
+
     $field = [
       '#type' => 'textfield',
       '#title' => new TranslatableMarkup('Crop'),

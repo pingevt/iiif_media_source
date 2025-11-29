@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * @file
  * iiif_image_handling.module
  */
-
-use Drupal\media_library_media_modify\Form\FileEditForm;
 
 /**
  * Implements hook_theme().
@@ -18,7 +18,9 @@ function iiif_image_handling_theme($existing, $type, $theme, $path) {
  * Implements hook_media_source_info_alter().
  */
 function iiif_image_handling_media_source_info_alter(array &$sources): void {
-  if (empty($sources['iiif_image']['forms']['media_library_media_modify_edit'])) {
-    $sources['iiif_image']['forms']['media_library_media_modify_edit'] = FileEditForm::class;
+  if (\Drupal::moduleHandler()->moduleExists('media_library_media_modify')) {
+    if (empty($sources['iiif_image']['forms']['media_library_media_modify_edit'])) {
+      $sources['iiif_image']['forms']['media_library_media_modify_edit'] = \Drupal\media_library_media_modify\Form\FileEditForm::class;
+    }
   }
 }

@@ -8,6 +8,7 @@ use Drupal\iiif_image_style\IiifConfigurableImageEffectBase;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a base class for configurable image effects.
@@ -19,12 +20,12 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $dispatcher;
+  protected EventDispatcherInterface $dispatcher;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, $event_dispatcher) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $logger);
     $this->dispatcher = $event_dispatcher;
   }
@@ -43,7 +44,17 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
   }
 
   /**
-   * Get the crop for the image.
+   * Gets the crop for the image, allowing event subscribers to alter it.
+   *
+   * @param \Drupal\iiif_image_style\IiifImage $image
+   *   The IIIF image object.
+   * @param string $crop_type
+   *   The crop type.
+   * @param mixed $context
+   *   Additional context for the crop event.
+   *
+   * @return \Drupal\crop\Entity\Crop|null
+   *   The crop entity, or NULL if none found.
    */
   protected function getCrop($image, $crop_type, $context): ?Crop {
     $crop = Crop::findCrop($image->getFullUrl(), $crop_type);
@@ -51,9 +62,7 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
     // Dispatch Event.
     $event = new IiifEffectFindCropEvent($crop, $image, $crop_type, $context);
     $this->dispatcher->dispatch($event, IiifEffectFindCropEvent::EVENT_NAME);
-    $crop = $event->crop;
-
-    return $crop;
+    return $event->getCrop();
   }
 
 }
