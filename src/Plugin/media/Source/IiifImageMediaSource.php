@@ -199,17 +199,35 @@ class IiifImageMediaSource extends MediaSourceBase {
       return parent::getMetadata($media, $attribute_name);
     }
 
-    switch ($attribute_name) {
-      // Sets the name of the media entity if the data is blank.
-      case 'default_name':
-        $data_value = $remote_field->getValue();
-        return $data_value[0]['value'];
+    // Get the IIIF info JSON from the field.
+    $field_value = $remote_field->getValue();
+    $info_json = isset($field_value[0]['info']) ? json_decode($field_value[0]['info'], TRUE) : [];
 
-      // This is used to generate the thumbnail field.
+    // Handle special cases.
+    switch ($attribute_name) {
+      case 'default_name':
+        return $field_value[0]['value'] ?? NULL;
+
       case 'thumbnail_uri':
         return $this->getLocalThumbnailUri($media);
-
     }
+
+    // IIIF v2 uses '@id', v3 uses 'id'.
+    if ($attribute_name === '@id' && isset($info_json['@id'])) {
+      return $info_json['@id'];
+    }
+    if ($attribute_name === 'id' && isset($info_json['id'])) {
+      return $info_json['id'];
+    }
+
+    // Handle common attributes (width, height, formats, qualities, supports, etc.)
+    if (isset($info_json[$attribute_name])) {
+      return $info_json[$attribute_name];
+    }
+
+    // Optionally, handle profile, tiles, etc. as needed.
+
+    return NULL;
   }
 
   /**
@@ -267,7 +285,7 @@ class IiifImageMediaSource extends MediaSourceBase {
    *   The local thumbnail URI, or NULL if it could not be downloaded, or if the
    *   resource has no thumbnail at all.
    */
-  protected function getLocalThumbnailUri(MediaInterface $media) {
+  public function getLocalThumbnailUri(MediaInterface $media) {
     $remote_field = $media->get($this->configuration['source_field']);
     $remote_field_definition = $remote_field->getFieldDefinition();
     $path = $remote_field_definition->getSettings()['server'];
@@ -291,9 +309,11 @@ class IiifImageMediaSource extends MediaSourceBase {
     // ensure that the destination directory is writable, and if it's not,
     // log an error and bail out.
     if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-      $this->logger->warning('Could not prepare thumbnail destination directory @dir for oEmbed media.', [
+      $this->logger->error('Could not prepare thumbnail destination directory @dir for IIIF media (media ID: @mid). Check permissions and path.', [
         '@dir' => $directory,
+        '@mid' => $media->id(),
       ]);
+      $this->messenger->addError($this->t('Could not prepare thumbnail directory for IIIF media.'));
       return NULL;
     }
 
@@ -309,21 +329,51 @@ class IiifImageMediaSource extends MediaSourceBase {
 
     // The local thumbnail doesn't exist yet, so we need to download it.
     try {
-      $response = $this->httpClient->request('GET', $remote_thumbnail_url);
-      if ($response->getStatusCode() === 200) {
-        $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url, $response);
-        $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileExists::Replace);
-        return $local_thumbnail_uri;
+      $response = $this->httpClient->request('GET', $remote_thumbnail_url, ['timeout' => 15]);
+      if ($response->getStatusCode() !== 200) {
+        $this->logger->warning('Unexpected HTTP status @code when downloading thumbnail for IIIF media (media ID: @mid, URL: @url).', [
+          '@code' => $response->getStatusCode(),
+          '@mid' => $media->id(),
+          '@url' => $remote_thumbnail_url,
+        ]);
+        return NULL;
       }
+      $body = (string) $response->getBody();
+      if (empty($body)) {
+        $this->logger->warning('Downloaded thumbnail for IIIF media (media ID: @mid) was empty.', [
+          '@mid' => $media->id(),
+        ]);
+        return NULL;
+      }
+      $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url, $response);
+      $this->fileSystem->saveData($body, $local_thumbnail_uri, FileExists::Replace);
+      if (!$this->fileSystem->realpath($local_thumbnail_uri)) {
+        $this->logger->error('Failed to save thumbnail to @uri for IIIF media (media ID: @mid).', [
+          '@uri' => $local_thumbnail_uri,
+          '@mid' => $media->id(),
+        ]);
+        return NULL;
+      }
+      return $local_thumbnail_uri;
     }
     catch (TransferException $e) {
       $this->logger->warning('Failed to download remote thumbnail file due to "%error".', [
         '%error' => $e->getMessage(),
+        '@mid' => $media->id(),
+        '@url' => $remote_thumbnail_url,
       ]);
     }
     catch (FileException $e) {
-      $this->logger->warning('Could not download remote thumbnail from {url}.', [
+      $this->logger->warning('Could not save remote thumbnail from {url}.', [
         'url' => $remote_thumbnail_url,
+        '@mid' => $media->id(),
+        'error' => $e->getMessage(),
+      ]);
+    }
+    catch (\Exception $e) {
+      $this->logger->error('Unexpected error downloading thumbnail for IIIF media (media ID: @mid): @message', [
+        '@mid' => $media->id(),
+        '@message' => $e->getMessage(),
       ]);
     }
     return NULL;

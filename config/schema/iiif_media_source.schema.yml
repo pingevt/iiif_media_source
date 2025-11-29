@@ -1,3 +1,52 @@
+media.type.*:
+  type: config_entity
+  label: 'Media type'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Description'
+    source:
+      type: string
+      label: 'Source plugin'
+    source_configuration:
+      type: media.source.plugin.[%parent.source]
+      label: 'Source configuration'
+    new_revision:
+      type: boolean
+      label: 'Create new revision'
+    queue_thumbnail_downloads:
+      type: boolean
+      label: 'Queue thumbnail downloads'
+    field_map:
+      type: sequence
+      label: 'Field map'
+      sequence:
+        - type: mapping
+          mapping:
+            source:
+              type: string
+              label: 'Source'
+            target:
+              type: string
+              label: 'Target'
+
+media.source.plugin.iiif_image:
+  type: mapping
+  label: 'IIIF Image media source settings'
+  mapping:
+    source_field:
+      type: string
+      label: 'Source field'
+    thumbnails_directory:
+      type: string
+      label: 'Thumbnails directory'
+
 field.field_settings.iiif_id:
   type: mapping
   label: 'IIIF Field settings'
@@ -10,7 +59,7 @@ field.field_settings.iiif_id:
       label: Prefix
     img_api_version:
       type: string
-      label: API Version
+      label: 'API Version'
 
 field.storage_settings.iiif_id:
   type: mapping
