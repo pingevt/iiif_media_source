@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -22,9 +24,9 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
   /**
    * The weight of the image effect.
    *
-   * @var int|string
+   * @var ?int
    */
-  protected $weight = '';
+  protected $weight = NULL;
 
   /**
    * A logger instance.
@@ -51,7 +53,7 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('logger.factory')->get('image')
+      $container->get('logger.factory')->get('iiif_image_style')
     );
   }
 
@@ -77,7 +79,7 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     return [
       '#markup' => '',
       '#effect' => [
@@ -91,21 +93,21 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
   /**
    * {@inheritdoc}
    */
-  public function label() {
+  public function label(): string {
     return $this->pluginDefinition['label'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getUuid() {
+  public function getUuid(): string {
     return $this->uuid;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setWeight($weight) {
+  public function setWeight(int $weight): static {
     $this->weight = $weight;
     return $this;
   }
@@ -113,14 +115,14 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
   /**
    * {@inheritdoc}
    */
-  public function getWeight() {
+  public function getWeight(): ?int {
     return $this->weight;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfiguration() {
+  public function getConfiguration(): array {
     return [
       'uuid' => $this->getUuid(),
       'id' => $this->getPluginId(),
@@ -132,11 +134,11 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
   /**
    * {@inheritdoc}
    */
-  public function setConfiguration(array $configuration) {
+  public function setConfiguration(array $configuration): static {
     $configuration += [
       'data' => [],
       'uuid' => '',
-      'weight' => '',
+      'weight' => NULL,
     ];
     $this->configuration = $configuration['data'] + $this->defaultConfiguration();
     $this->uuid = $configuration['uuid'];
@@ -147,15 +149,22 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
+   *
+   * Calculates dependencies and stores them in the dependency property.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface
+   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
    */
-  public function calculateDependencies() {
-    return [];
+  public function calculateDependencies(): static {
+    return $this;
   }
 
 }

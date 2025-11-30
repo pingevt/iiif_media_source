@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\IiifImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +24,7 @@ class IiifFormatEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL): bool {
     $params->format = $this->configuration['format'];
 
     return TRUE;
@@ -31,7 +33,7 @@ class IiifFormatEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     $summary = [
       '#theme' => 'iiif_image_format_summary',
       '#data' => $this->configuration,
@@ -44,7 +46,7 @@ class IiifFormatEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'format' => 'jpg',
     ];
@@ -53,7 +55,7 @@ class IiifFormatEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
 
     // Format.
     $form['format'] = [
@@ -72,7 +74,7 @@ class IiifFormatEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['format'] = $form_state->getValue('format');

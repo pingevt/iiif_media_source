@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\IiifImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +24,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL): bool {
     $params->size = "w,h";
     $params->size_w = $this->configuration["size_w"];
     $params->size_h = $this->configuration["size_h"];
@@ -33,7 +35,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     $summary = [
       '#theme' => 'iiif_image_resize_summary',
       '#data' => $this->configuration,
@@ -46,7 +48,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'size_w' => NULL,
       'size_h' => NULL,
@@ -56,7 +58,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $params = $this->configuration;
 
     $form['size_w'] = [
@@ -114,7 +116,7 @@ class IiifResizeEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['size_w'] = $form_state->getValue('size_w');

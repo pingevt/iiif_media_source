@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -12,7 +14,7 @@ use Drupal\iiif_image_style\Attribute\IiifImageEffect;
  *
  * @see plugin_api
  */
-final class IiifImageEffectManager extends DefaultPluginManager {
+final class IiifImageEffectManager extends DefaultPluginManager implements IiifImageEffectPluginManagerInterface {
 
   /**
    * Constructs a new ImageEffectManager.
@@ -22,6 +24,8 @@ final class IiifImageEffectManager extends DefaultPluginManager {
 
     $this->alterInfo('iiif_image_effect_info');
     $this->setCacheBackend($cache_backend, 'iiif_image_effect_plugins');
+
+    // todo: eventually deprecate the annotation loader.
   }
 
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\iiif_image_style\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\iiif_image_style\BreakpointManagerTrait;
 use Drupal\iiif_image_style\IiifResponsiveImageStyleInterface;
 
 /**
@@ -52,6 +54,9 @@ use Drupal\iiif_image_style\IiifResponsiveImageStyleInterface;
  */
 final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifResponsiveImageStyleInterface {
 
+  use BreakpointManagerTrait;
+  use LoggerChannelTrait;
+
   /**
    * The example ID.
    */
@@ -84,9 +89,9 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * The keyed image style mappings.
    *
-   * @var array
+   * @var ?array
    */
-  protected $keyedImageStyleMappings;
+  protected $keyedImageStyleMappings = NULL;
 
   /**
    * The responsive image breakpoint group.
@@ -105,7 +110,14 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function addImageStyleMapping($breakpoint_id, $multiplier, array $image_style_mapping) {
+  public function addImageStyleMapping(string $breakpoint_id, string $multiplier, array $image_style_mapping): static {
+    if (empty($image_style_mapping['image_mapping_type']) || empty($image_style_mapping['image_mapping'])) {
+      $this->getLogger('iiif_image_style')->error('Invalid image style mapping provided for breakpoint "@breakpoint" and multiplier "@multiplier".', [
+        '@breakpoint' => $breakpoint_id,
+        '@multiplier' => $multiplier,
+      ]);
+      return $this;
+    }
     // If there is an existing mapping, overwrite it.
     foreach ($this->image_style_mappings as &$mapping) {
       if ($mapping['breakpoint_id'] === $breakpoint_id && $mapping['multiplier'] === $multiplier) {
@@ -130,26 +142,34 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
    */
   protected function sortMappings(): void {
     $this->keyedImageStyleMappings = NULL;
-    $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($this->getBreakpointGroup());
+    $breakpoints = $this->getBreakpointManager()->getBreakpointsByGroup($this->getBreakpointGroup());
     if (empty($breakpoints)) {
+      $this->getLogger('iiif_image_style')->notice('No breakpoints found for group "@group".', [
+        '@group' => $this->getBreakpointGroup(),
+      ]);
       return;
     }
-    usort($this->image_style_mappings, static function (array $a, array $b) use ($breakpoints): int {
+    usort($this->image_style_mappings, function (array $a, array $b) use ($breakpoints): int {
       $breakpoint_a = $breakpoints[$a['breakpoint_id']] ?? NULL;
       $breakpoint_b = $breakpoints[$b['breakpoint_id']] ?? NULL;
+      if (!$breakpoint_a || !$breakpoint_b) {
+        // Log missing breakpoints.
+        $this->getLogger('iiif_image_style')->warning('Breakpoint not found: @a or @b', [
+          '@a' => $a['breakpoint_id'],
+          '@b' => $b['breakpoint_id'],
+        ]);
+        return 0;
+      }
       $first = ((float) mb_substr($a['multiplier'], 0, -1)) * 100;
       $second = ((float) mb_substr($b['multiplier'], 0, -1)) * 100;
-      return [
-        $breakpoint_b ? $breakpoint_b->getWeight() : 0,
-        $first,
-      ] <=> [$breakpoint_a ? $breakpoint_a->getWeight() : 0, $second];
+      return [$breakpoint_b->getWeight(), $first] <=> [$breakpoint_a->getWeight(), $second];
     });
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasImageStyleMappings() {
+  public function hasImageStyleMappings(): bool {
     $mappings = $this->getKeyedImageStyleMappings();
     return !empty($mappings);
   }
@@ -157,7 +177,7 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function getKeyedImageStyleMappings() {
+  public function getKeyedImageStyleMappings(): array {
     if (!$this->keyedImageStyleMappings) {
       $this->keyedImageStyleMappings = [];
       foreach ($this->image_style_mappings as $mapping) {
@@ -172,14 +192,14 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function getImageStyleMappings() {
+  public function getImageStyleMappings(): array {
     return $this->image_style_mappings;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setBreakpointGroup($breakpoint_group) {
+  public function setBreakpointGroup(string $breakpoint_group): static {
     // If the breakpoint group is changed then the image style mappings are
     // invalid.
     if ($breakpoint_group !== $this->breakpoint_group) {
@@ -192,14 +212,14 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function getBreakpointGroup() {
+  public function getBreakpointGroup(): string {
     return $this->breakpoint_group;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setFallbackImageStyle($fallback_image_style) {
+  public function setFallbackImageStyle(string $fallback_image_style): static {
     $this->fallback_image_style = $fallback_image_style;
     return $this;
   }
@@ -207,14 +227,14 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function getFallbackImageStyle() {
+  public function getFallbackImageStyle(): string {
     return $this->fallback_image_style;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function removeImageStyleMappings() {
+  public function removeImageStyleMappings(): static {
     $this->image_style_mappings = [];
     $this->keyedImageStyleMappings = NULL;
     return $this;
@@ -223,15 +243,20 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
+  public function calculateDependencies(): static {
     parent::calculateDependencies();
-    $providers = \Drupal::service('breakpoint.manager')->getGroupProviders($this->breakpoint_group);
+
+    $providers = $this->getBreakpointManager()->getGroupProviders($this->breakpoint_group);
     foreach ($providers as $provider => $type) {
       $this->addDependency($type, $provider);
     }
     // Extract all the styles from the image style mappings.
     $styles = IiifImageStyle::loadMultiple($this->getImageStyleIds());
     array_walk($styles, function ($style) {
+      if (!$style) {
+        $this->getLogger('iiif_image_style')->warning('Referenced IIIF image style could not be loaded during dependency calculation.');
+        return;
+      }
       $this->addDependency('config', $style->getConfigDependencyName());
     });
     return $this;
@@ -240,7 +265,7 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public static function isEmptyImageStyleMapping(array $image_style_mapping) {
+  public static function isEmptyImageStyleMapping(array $image_style_mapping): bool {
     if (!empty($image_style_mapping)) {
       switch ($image_style_mapping['image_mapping_type']) {
         case 'sizes':
@@ -265,17 +290,22 @@ final class IiifResponsiveImageStyle extends ConfigEntityBase implements IiifRes
   /**
    * {@inheritdoc}
    */
-  public function getImageStyleMapping($breakpoint_id, $multiplier) {
+  public function getImageStyleMapping(string $breakpoint_id, string $multiplier): ?array {
     $map = $this->getKeyedImageStyleMappings();
-    if (isset($map[$breakpoint_id][$multiplier])) {
-      return $map[$breakpoint_id][$multiplier];
+    if (!isset($map[$breakpoint_id][$multiplier])) {
+      $this->getLogger('iiif_image_style')->debug('No image style mapping found for breakpoint "@breakpoint" and multiplier "@multiplier".', [
+        '@breakpoint' => $breakpoint_id,
+        '@multiplier' => $multiplier,
+      ]);
+      return NULL;
     }
+    return $map[$breakpoint_id][$multiplier];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getImageStyleIds() {
+  public function getImageStyleIds(): array {
     $image_styles = [$this->getFallbackImageStyle()];
     foreach ($this->getImageStyleMappings() as $image_style_mapping) {
       // Only image styles of non-empty mappings should be loaded.

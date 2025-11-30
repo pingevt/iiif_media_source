@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
@@ -22,7 +24,7 @@ class IiifImageStyleFormatter extends StringFormatter {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     return [
       'image_style' => '',
       'image_loading' => [
@@ -34,7 +36,7 @@ class IiifImageStyleFormatter extends StringFormatter {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $element = parent::settingsForm($form, $form_state);
 
     $image_styles = iiif_image_style_options(FALSE);
@@ -76,13 +78,13 @@ class IiifImageStyleFormatter extends StringFormatter {
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
-    // $summary = parent::settingsSummary();
+  public function settingsSummary(): array {
+    $summary = [];
     $image_styles = iiif_image_style_options(FALSE);
     // Unset possible 'No defined styles' option.
     unset($image_styles['']);
 
-    $image_style_setting = $this->getSetting('image_style');
+    $image_style_setting = $this->getSetting('image_style') ?? '';
     if (isset($image_styles[$image_style_setting])) {
       $summary[] = $this->t('Image style: @style', ['@style' => $image_styles[$image_style_setting]]);
     }
@@ -95,7 +97,7 @@ class IiifImageStyleFormatter extends StringFormatter {
       'file' => $this->t('Linked to file'),
     ];
     // Display this setting only if image is linked.
-    $image_link_setting = $this->getSetting('image_link');
+    $image_link_setting = $this->getSetting('image_link') ?? '';
     if (isset($link_types[$image_link_setting])) {
       $summary[] = $link_types[$image_link_setting];
     }
@@ -110,15 +112,22 @@ class IiifImageStyleFormatter extends StringFormatter {
 
   /**
    * {@inheritdoc}
+   *
+   * Builds the render array for the IIIF image field items.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The field items to render.
+   * @param string|null $langcode
+   *   The language code to use for rendering, or NULL for default.
+   *
+   * @return array
+   *   A render array for the field items.
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
-
     $elements = [];
-
     $image_loading = $this->getSetting('image_loading');
 
     foreach ($items as $delta => $item) {
-
       $view_value = [
         '#theme' => 'iiif_image_style',
         '#item' => $item,

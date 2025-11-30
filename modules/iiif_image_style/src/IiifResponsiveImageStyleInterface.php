@@ -27,7 +27,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    * @return bool
    *   Whether the entity has any image style mappings.
    */
-  public function hasImageStyleMappings();
+  public function hasImageStyleMappings(): bool;
 
   /**
    * Returns the mappings of breakpoint ID and multiplier to image style.
@@ -68,7 +68,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setBreakpointGroup($breakpoint_group);
+  public function setBreakpointGroup(string $breakpoint_group): static;
 
   /**
    * Returns the breakpoint group for the responsive image style.
@@ -86,7 +86,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setFallbackImageStyle($fallback_image_style);
+  public function setFallbackImageStyle(string $fallback_image_style): static;
 
   /**
    * Returns the fallback image style ID for the responsive image style.
@@ -94,7 +94,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    * @return string
    *   The fallback image style ID.
    */
-  public function getFallbackImageStyle();
+  public function getFallbackImageStyle(): string;
 
   /**
    * Gets the image style mapping for a breakpoint ID and multiplier.
@@ -117,7 +117,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    *     - breakpoint_id: The breakpoint ID for this image style mapping.
    *     - multiplier: The multiplier for this image style mapping.
    */
-  public function getImageStyleMapping($breakpoint_id, $multiplier);
+  public function getImageStyleMapping(string $breakpoint_id, string $multiplier): ?array;
 
   /**
    * Checks if there is at least one image style mapping defined.
@@ -128,7 +128,7 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    * @return bool
    *   Whether the image style mapping is empty.
    */
-  public static function isEmptyImageStyleMapping(array $image_style_mapping);
+  public static function isEmptyImageStyleMapping(array $image_style_mapping): bool;
 
   /**
    * Adds an image style mapping to the responsive image configuration entity.
@@ -142,14 +142,14 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function addImageStyleMapping($breakpoint_id, $multiplier, array $image_style_mapping);
+  public function addImageStyleMapping(string $breakpoint_id, string $multiplier, array $image_style_mapping): static;
 
   /**
    * Removes all image style mappings from the responsive image style.
    *
    * @return $this
    */
-  public function removeImageStyleMappings();
+  public function removeImageStyleMappings(): static;
 
   /**
    * Gets all the image styles IDs involved in the responsive image mapping.
@@ -157,6 +157,6 @@ interface IiifResponsiveImageStyleInterface extends ConfigEntityInterface {
    * @return string[]
    *   An array of strings that are the image style ids.
    */
-  public function getImageStyleIds();
+  public function getImageStyleIds(): array;
 
 }

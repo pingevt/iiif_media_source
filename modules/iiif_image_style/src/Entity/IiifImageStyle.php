@@ -6,15 +6,20 @@ namespace Drupal\iiif_image_style\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\iiif_image_style\EventsTrait;
 use Drupal\iiif_image_style\IiifImageEffectInterface;
 use Drupal\iiif_image_style\IiifImageEffectPluginCollection;
 use Drupal\iiif_image_style\IiifImageStyleInterface;
+use Drupal\iiif_image_style\ImageEffectPluginManagerTrait;
 use Drupal\iiif_media_source\Iiif\IiifImage;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
- * Defines the iiif image style entity type.
+ * Defines the IIIF Image Style config entity.
+ *
+ * IIIF Image Styles are collections of IIIF image effects that can be applied
+ * to IIIF images to generate styled image URLs.
  *
  * @ConfigEntityType(
  *   id = "iiif_image_style",
@@ -57,28 +62,34 @@ use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInterface, EntityWithPluginCollectionInterface {
 
   use EventsTrait;
+  use LoggerChannelTrait;
+  use ImageEffectPluginManagerTrait;
 
   /**
-   * The example name.
+   * The unique machine name of the IIIF image style.
+   *
+   * @var string
    */
   protected string $name;
 
   /**
-   * The example label.
+   * The human-readable label for the IIIF image style.
+   *
+   * @var string
    */
   protected string $label;
 
   /**
-   * The array of effects for the image.
+   * The array of effect plugin configurations for this image style.
    *
    * @var array
    */
   protected $effects = [];
 
   /**
-   * {@inheritdoc}
+   * Returns the machine name of the image style.
    */
-  public function id() {
+  public function id(): ?string {
     return $this->name ?? NULL;
   }
 
@@ -87,10 +98,16 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
    *
    * @var \Drupal\iiif_image_style\IiifImageEffectPluginCollection
    */
-  protected $effectsCollection;
+  protected ?IiifImageEffectPluginCollection $effectsCollection = NULL;
 
   /**
-   * {@inheritdoc}
+   * Adds an image effect to the style and returns its UUID.
+   *
+   * @param array $configuration
+   *   The effect plugin configuration array.
+   *
+   * @return string
+   *   The UUID of the added effect.
    */
   public function addImageEffect(array $configuration) {
     $configuration['uuid'] = $this->uuidGenerator()->generate();
@@ -99,7 +116,12 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   }
 
   /**
-   * {@inheritdoc}
+   * Removes an image effect from the style.
+   *
+   * @param \Drupal\iiif_image_style\IiifImageEffectInterface $effect
+   *   The effect plugin instance to remove.
+   *
+   * @return $this
    */
   public function deleteImageEffect(IiifImageEffectInterface $effect) {
     $this->getEffects()->removeInstanceId($effect->getUuid());
@@ -108,38 +130,40 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   }
 
   /**
-   * {@inheritdoc}
+   * Gets a specific image effect by UUID or plugin ID.
+   *
+   * @param string $effect
+   *   The UUID or plugin ID of the effect.
+   *
+   * @return \Drupal\iiif_image_style\IiifImageEffectInterface|null
+   *   The effect plugin instance, or NULL if not found.
    */
-  public function getEffect($effect) {
+  public function getEffect($effect): ?IiifImageEffectInterface {
     return $this->getEffects()->get($effect);
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the plugin collection of effects for this style.
+   *
+   * @return \Drupal\iiif_image_style\IiifImageEffectPluginCollection
+   *   The plugin collection of effects.
    */
-  public function getEffects() {
+  public function getEffects(): IiifImageEffectPluginCollection {
     if (!$this->effectsCollection) {
-      $this->effectsCollection = new IiifImageEffectPluginCollection($this->getImageEffectPluginManager(), $this->effects);
+      $this->effectsCollection = new IiifImageEffectPluginCollection($this->getIiifImageEffectPluginManager(), $this->effects);
       $this->effectsCollection->sort();
     }
     return $this->effectsCollection;
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getPluginCollections() {
-    return ['effects' => $this->getEffects()];
-  }
-
-  /**
-   * Returns the image effect plugin manager.
+   * Returns all plugin collections for this entity.
    *
-   * @return \Drupal\Component\Plugin\PluginManagerInterface
-   *   The image effect plugin manager.
+   * @return array
+   *   An array of plugin collections keyed by collection name.
    */
-  protected function getImageEffectPluginManager() {
-    return \Drupal::service('plugin.manager.iiif_image_effect');
+  public function getPluginCollections(): array {
+    return ['effects' => $this->getEffects()];
   }
 
   /**
@@ -148,17 +172,79 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   public function buildUrl(IiifImage $image): string {
     $img_url = "";
 
-    // Grab the base params.
+    // Get the base IIIF URL parameters for the image.
     $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
-    // Apply all effects.
+
+    // Apply all effects in order.
     foreach ($this->getEffects() as $effect) {
-      $effect->applyEffect($image, $params, []);
+      try {
+        $effect->applyEffect($image, $params, []);
+      }
+      catch (\Exception $e) {
+        $this->getLogger('iiif_image_style')->error('Error applying effect "@effect": @message', [
+          '@effect' => $effect->getPluginId(),
+          '@message' => $e->getMessage(),
+        ]);
+        continue;
+      }
     }
 
-    // Build full URL.
+    // Build the final IIIF image URL.
     $img_url = $image->getBuiltImageUrl($params);
 
     return $img_url;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies(): static {
+    parent::calculateDependencies();
+
+    // Add this module as a dependency.
+    // $dependencies['module'][] = 'iiif_image_style';
+
+    // Add dependencies for each effect plugin.
+    // foreach ($this->effects as $effect_config) {
+    //   // Get the plugin definition.
+    //   $plugin_id = $effect_config['id'] ?? NULL;
+    //   $plugin_manager = $this->getIiifImageEffectPluginManager();
+    //   $definition = $plugin_manager->getDefinition($plugin_id, FALSE);
+    //   if (!$definition) {
+    //     $this->getLogger('iiif_image_style')->error('Image effect plugin with ID "@id" not found.', ['@id' => $plugin_id]);
+    //     continue;
+    //   }
+    //   if (!empty($definition['provider'])) {
+    //     $dependencies['module'][] = $definition['provider'];
+    //   }
+    //   try {
+    //     $plugin = $plugin_manager->createInstance($plugin_id, $effect_config);
+    //     if (method_exists($plugin, 'calculateDependencies')) {
+    //       $plugin_deps = $plugin->calculateDependencies();
+    //       if (is_array($plugin_deps)) {
+    //         foreach ($plugin_deps as $type => $deps) {
+    //           foreach ($deps as $dep) {
+    //             $dependencies[$type][] = $dep;
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   catch (\Exception $e) {
+    //     $this->getLogger('iiif_image_style')->error('Failed to instantiate image effect plugin "@id": @message', [
+    //       '@id' => $plugin_id,
+    //       '@message' => $e->getMessage(),
+    //     ]);
+    //     continue;
+    //   }
+    // }
+
+    // // Remove duplicate dependencies for all types.
+    // foreach ($dependencies as $type => &$deps) {
+    //   $deps = array_unique($deps);
+    // }
+
+    return $this;
   }
 
 }

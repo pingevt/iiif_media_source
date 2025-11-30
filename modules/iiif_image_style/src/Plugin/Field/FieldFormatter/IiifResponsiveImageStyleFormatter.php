@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
@@ -7,7 +9,7 @@ use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * IIIF Image formatter.
+ * IIIF Responsive Image formatter.
  *
  * @FieldFormatter(
  *   id = "iiif_responsive_image_style_formatter",
@@ -22,7 +24,7 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     return [
       'responsive_image_style' => '',
       'image_loading' => [
@@ -33,8 +35,19 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
 
   /**
    * {@inheritdoc}
+   *
+   * Builds the settings form for the formatter, including responsive image style
+   * and image loading options.
+   *
+   * @param array $form
+   *   The form structure.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   The settings form elements.
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $element = parent::settingsForm($form, $form_state);
 
     $responsive_image_styles = iiif_responsive_image_style_options(FALSE);
@@ -76,11 +89,15 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
 
   /**
    * {@inheritdoc}
+   *
+   * Provides a summary of the formatter settings.
+   *
+   * @return array
+   *   An array of summary strings.
    */
-  public function settingsSummary() {
-    // $summary = parent::settingsSummary();
+  public function settingsSummary(): array {
+    $summary = [];
     $responsive_image_styles = iiif_responsive_image_style_options(FALSE);
-    // Unset possible 'No defined styles' option.
     unset($responsive_image_styles['']);
 
     $responsive_image_style_setting = $this->getSetting('responsive_image_style');
@@ -95,7 +112,6 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
       'content' => $this->t('Linked to content'),
       'file' => $this->t('Linked to file'),
     ];
-    // Display this setting only if image is linked.
     $image_link_setting = $this->getSetting('image_link');
     if (isset($link_types[$image_link_setting])) {
       $summary[] = $link_types[$image_link_setting];
@@ -111,22 +127,30 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
 
   /**
    * {@inheritdoc}
+   *
+   * Builds the render array for the IIIF responsive image field items.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The field items to render.
+   * @param string|null $langcode
+   *   The language code to use for rendering, or NULL for default.
+   *
+   * @return array
+   *   A render array for the field items.
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
-
     $elements = [];
-
     $image_loading = $this->getSetting('image_loading');
+    $attribute = $image_loading['attribute'] ?? 'lazy';
 
     foreach ($items as $delta => $item) {
-
       $view_value = [
         '#theme' => 'iiif_responsive_image_style',
         '#item' => $item,
         '#image' => $item->getImg($item->getValue()),
         '#iiif_responsive_image_style' => $this->getSetting('responsive_image_style'),
         '#attributes' => [
-          'loading' => $image_loading['attribute'],
+          'loading' => $attribute,
         ],
       ];
       $elements[$delta] = $view_value;

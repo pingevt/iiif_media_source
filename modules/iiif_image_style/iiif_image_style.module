@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @file
  * Code here is based heavily on core image and responsive_image modules.
@@ -74,20 +76,21 @@ function template_preprocess_iiif_image_style(&$variables) {
 
   if ($variables['iiif_image_style']) {
     $image_style = IiifImageStyle::load($variables['iiif_image_style']);
+    if (!$image_style) {
+      \Drupal::logger('iiif_image_style')->error('Could not load IIIF image style: @id', ['@id' => $variables['iiif_image_style']]);
+      $variables['content'] = [];
+      return;
+    }
     $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
     foreach ($image_style->getEffects() as $effectId => $effect) {
       $effect->applyEffect($image, $params, $context);
     }
-
     $img_url = $image->getBuiltImageUrl($params);
   }
-  // Original image.
   else {
     $img_url = $image->getFullUrl();
   }
 
-  // Grab final url components from the image style, and pass directly to an
-  // image formatter.
   $variables['content'] = [
     'image' => [
       '#theme' => 'image',
@@ -201,21 +204,17 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
  * Get the URL for an image style.
  */
 function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $image, $context) {
-
   $iiif_image_style = IiifImageStyle::load($iiif_image_style_id);
+  if (!$iiif_image_style) {
+    \Drupal::logger('iiif_image_style')->error('Could not load IIIF image style: @id', ['@id' => $iiif_image_style_id]);
+    return '';
+  }
 
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
   foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
     $effect->applyEffect($image, $params, $context);
   }
-
-  // $style_settings = $iiif_image_style->getParams();
-  // ksm($iiif_image_style, $style_settings);
-  // IiifImage::expandSettings($style_settings);
-  // $params = IiifImageUrlParams::fromSettingsArray($style_settings);
-  $img_url = $image->getBuiltImageUrl($params);
-
-  return $img_url;
+  return $image->getBuiltImageUrl($params);
 }
 
 /**
@@ -239,20 +238,16 @@ function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $im
 function _iiif_responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers) {
 
   $image = $variables['image'];
-
   $context = [];
   if (!empty($variables['item'])) {
     $context['field'] = $variables['item'];
   }
 
-  // $width = $image->getWidth();
-  // $height = $image->getHeight();
-  // $extension = $image->getDefaultExtension();
   $sizes = [];
   $srcset = [];
   $derivative_mime_types = [];
+  $dimensions = [];
 
-  // ksm($multipliers);
   // Traverse the multipliers in reverse so the largest image is processed last.
   // The last image's dimensions are used for img.srcset height and width.
   foreach (array_reverse($multipliers) as $multiplier => $image_style_mapping) {
@@ -262,6 +257,10 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         // Loop through the image styles for this breakpoint and multiplier.
         foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
           $iiif_image_style = IiifImageStyle::load($image_style_name);
+          if (!$iiif_image_style) {
+            \Drupal::logger('iiif_image_style')->error('Could not load IIIF image style: @id', ['@id' => $image_style_name]);
+            continue;
+          }
           $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
           foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
             $effect->applyEffect($image, $params, $context);
@@ -297,6 +296,10 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
 
       case 'image_style':
         $iiif_image_style = IiifImageStyle::load($image_style_mapping['image_mapping']);
+        if (!$iiif_image_style) {
+          \Drupal::logger('iiif_image_style')->error('Could not load IIIF image style: @id', ['@id' => $image_style_mapping['image_mapping']]);
+          continue;
+        }
         $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
         foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
           $effect->applyEffect($image, $params, $context);
@@ -322,9 +325,8 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         break;
     }
   }
-  // ksm($srcset);
+
   // Sort the srcset from small to large image width or multiplier.
-  // ksort($srcset);
   $source_attributes = new Attribute([
     'srcset' => implode(', ', array_unique($srcset)),
   ]);
@@ -365,7 +367,7 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
  * @return string[]
  *   Array of image styles both key and value are set to style name.
  */
-function iiif_image_style_options($include_empty = TRUE) {
+function iiif_image_style_options(bool $include_empty = TRUE): array {
   $styles = IiifImageStyle::loadMultiple();
   $options = [];
   if ($include_empty && !empty($styles)) {
@@ -390,7 +392,7 @@ function iiif_image_style_options($include_empty = TRUE) {
  * @return string[]
  *   Array of image styles both key and value are set to style name.
  */
-function iiif_responsive_image_style_options($include_empty = TRUE) {
+function iiif_responsive_image_style_options(bool $include_empty = TRUE): array {
   $styles = IiifResponsiveImageStyle::loadMultiple();
   $options = [];
   if ($include_empty && !empty($styles)) {
@@ -409,7 +411,7 @@ function iiif_responsive_image_style_options($include_empty = TRUE) {
 /**
  * Guess the mimetype.
  */
-function iiif_image_style_mime_type_guesser($ext) {
+function iiif_image_style_mime_type_guesser(string $ext): string {
 
   $fake_path = "example." . $ext;
   return \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($fake_path);

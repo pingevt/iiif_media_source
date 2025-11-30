@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -12,13 +14,15 @@ abstract class IiifConfigurableImageEffectBase extends IiifImageEffectBase imple
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    // No validation by default.
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    // No submission handling by default.
   }
 
 }

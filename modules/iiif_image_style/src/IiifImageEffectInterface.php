@@ -22,13 +22,13 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    *   An image file object.
    * @param \Drupal\iiif_media_source\Iiif\IiifImageUrlParams $params
    *   The current Url Params.
-   * @param array $context
+   * @param ?array $context
    *   The context, typically for grabbing the saved Crop from CropAPI.
    *
    * @return bool
    *   TRUE on success. FALSE if unable to perform image effect on the image.
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL);
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL): bool;
 
   /**
    * Returns a render array summarizing the configuration of the image effect.
@@ -36,7 +36,7 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    * @return array
    *   A render array.
    */
-  public function getSummary();
+  public function getSummary(): array;
 
   /**
    * Returns the image effect label.
@@ -44,7 +44,7 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    * @return string
    *   The image effect label.
    */
-  public function label();
+  public function label(): string;
 
   /**
    * Returns the unique ID representing the image effect.
@@ -52,15 +52,15 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    * @return string
    *   The image effect ID.
    */
-  public function getUuid();
+  public function getUuid(): string;
 
   /**
    * Returns the weight of the image effect.
    *
-   * @return int|string
-   *   Either the integer weight of the image effect, or an empty string.
+   * @return ?int
+   *   Either the integer weight of the image effect, or NULL if unset.
    */
-  public function getWeight();
+  public function getWeight(): ?int;
 
   /**
    * Sets the weight for this image effect.
@@ -70,6 +70,6 @@ interface IiifImageEffectInterface extends PluginInspectionInterface, Configurab
    *
    * @return $this
    */
-  public function setWeight($weight);
+  public function setWeight(int $weight): static;
 
 }

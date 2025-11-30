@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\IiifImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +24,7 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL): bool {
 
     $params->size = 'pct:n';
     $params->size_n = $this->configuration['size_n'];
@@ -33,7 +35,7 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     $summary = [
       '#theme' => 'iiif_image_scale_summary',
       '#data' => $this->configuration,
@@ -46,7 +48,7 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'size_n' => NULL,
     ];
@@ -55,7 +57,7 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $params = $this->configuration;
 
     $form['size_n'] = [
@@ -85,7 +87,7 @@ class IiifScaleEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['size_n'] = $form_state->getValue('size_n');

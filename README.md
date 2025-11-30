@@ -88,6 +88,17 @@ $url = $image->getBuiltImageUrl($params);
 
 ---
 
+## Submodules
+
+This project includes the following submodules:
+
+- [IIIF Image Style](web/modules/synced/Modules/iiif_image_style/README.md):
+  Provides IIIF image styles, effects, and responsive image integration for IIIF images in Drupal.
+
+<!-- Add more submodules here as needed -->
+
+---
+
 ## Roadmap
 
 - UI for configuring default thumbnail sizes and other options

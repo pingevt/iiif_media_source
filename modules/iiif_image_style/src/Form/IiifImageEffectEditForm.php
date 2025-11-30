@@ -15,7 +15,7 @@ class IiifImageEffectEditForm extends IiifImageEffectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL): array {
     $form = parent::buildForm($form, $form_state, $iiif_image_style, $image_effect);
 
     $form['#title'] = $this->t('Edit %label effect on style %style', [
@@ -30,7 +30,7 @@ class IiifImageEffectEditForm extends IiifImageEffectFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareImageEffect($image_effect) {
+  protected function prepareImageEffect($image_effect): IiifImageEffectInterface {
     return $this->imageStyle->getEffect($image_effect);
   }
 

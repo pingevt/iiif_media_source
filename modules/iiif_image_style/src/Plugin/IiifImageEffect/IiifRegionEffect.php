@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\IiifImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +24,7 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL): bool {
     $params->region = $this->configuration['region'];
     $params->region_x = $this->configuration['region_x'];
     $params->region_y = $this->configuration['region_y'];
@@ -35,7 +37,7 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     $summary = [
       '#theme' => 'iiif_image_region_summary',
       '#data' => $this->configuration,
@@ -48,7 +50,7 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'region' => 'full',
       'region_x' => '',
@@ -61,7 +63,7 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
 
     // Region.
     $form['region'] = [
@@ -144,7 +146,7 @@ class IiifRegionEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['region'] = $form_state->getValue('region');

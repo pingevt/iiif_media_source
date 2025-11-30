@@ -18,14 +18,14 @@ class IiifImageStyleFormBase extends EntityForm {
    *
    * @var \Drupal\iiif_image_style\Entity\IiifImageStyle
    */
-  protected $entity;
+  protected IiifImageStyle $entity;
 
   /**
    * The image style entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $imageStyleStorage;
+  protected EntityStorageInterface $imageStyleStorage;
 
   /**
    * Constructs a base class for image style add and edit forms.
@@ -49,7 +49,7 @@ class IiifImageStyleFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public function form(array $form, FormStateInterface $form_state): array {
 
     $form['label'] = [
       '#type' => 'textfield',
@@ -72,7 +72,7 @@ class IiifImageStyleFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
+  public function save(array $form, FormStateInterface $form_state): bool {
     parent::save($form, $form_state);
     $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
 

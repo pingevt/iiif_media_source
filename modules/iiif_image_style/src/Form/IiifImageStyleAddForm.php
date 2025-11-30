@@ -14,7 +14,7 @@ class IiifImageStyleAddForm extends IiifImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     parent::submitForm($form, $form_state);
     $this->messenger()->addStatus($this->t('Style %name was created.', ['%name' => $this->entity->label()]));
   }
@@ -22,7 +22,7 @@ class IiifImageStyleAddForm extends IiifImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  public function actions(array $form, FormStateInterface $form_state) {
+  public function actions(array $form, FormStateInterface $form_state): array {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Create new style');
 

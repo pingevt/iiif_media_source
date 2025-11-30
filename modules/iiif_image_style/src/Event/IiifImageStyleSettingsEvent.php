@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Event;
 
 use Drupal\Component\EventDispatcher\Event;
@@ -10,29 +12,71 @@ use Drupal\iiif_image_style\Entity\IiifImageStyle;
  */
 class IiifImageStyleSettingsEvent extends Event {
 
-  // This makes it easier for subscribers to reliably use our event name.
-  const EVENT_NAME = 'iiif_image_style_settings';
+  /**
+   * Event name for subscribers.
+   */
+  public const EVENT_NAME = 'iiif_image_style_settings';
 
   /**
    * The Image Style Entity.
    *
    * @var \Drupal\iiif_image_style\Entity\IiifImageStyle
    */
-  public $imageStyle;
+  private IiifImageStyle $imageStyle;
 
   /**
    * Array of settings to alter.
    *
    * @var array
    */
-  public $settings;
+  private array $settings;
 
   /**
-   * Constructs the object.
+   * Constructs the event object.
+   *
+   * @param \Drupal\iiif_image_style\Entity\IiifImageStyle $image_style
+   *   The IIIF image style entity.
+   * @param array $settings
+   *   The settings array to alter.
    */
-  public function __construct(IiifImageStyle $image_style, &$settings = []) {
+  public function __construct(IiifImageStyle $image_style, array $settings = []) {
     $this->imageStyle = $image_style;
     $this->settings = $settings;
+  }
+
+  /**
+   * Gets the IIIF image style entity.
+   *
+   * @return \Drupal\iiif_image_style\Entity\IiifImageStyle
+   *   The IIIF image style entity.
+   */
+  public function getImageStyle(): IiifImageStyle {
+    return $this->imageStyle;
+  }
+
+  /**
+   * Gets the settings array.
+   *
+   * @return array
+   *   The settings array.
+   */
+  public function getSettings(): array {
+    return $this->settings;
+  }
+
+  /**
+   * Sets the settings array.
+   *
+   * @param array $settings
+   *   The new settings array.
+   *
+   * @return $this
+   */
+  public function setSettings(array $settings): static {
+    $this->settings = $settings;
+
+    // todo: Add in some validation in here.
+    return $this;
   }
 
 }

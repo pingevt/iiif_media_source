@@ -20,19 +20,19 @@ abstract class IiifImageEffectFormBase extends FormBase {
    *
    * @var \Drupal\iiif_image_style\IiifImageStyleInterface
    */
-  protected $imageStyle;
+  protected IiifImageStyleInterface $imageStyle;
 
   /**
    * The image effect.
    *
    * @var \Drupal\iiif_image_style\IiifImageEffectInterface|\Drupal\iiif_image_style\IiifConfigurableImageEffectInterface
    */
-  protected $imageEffect;
+  protected IiifConfigurableImageEffectInterface $imageEffect;
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'iiif_image_effect_form';
   }
 
@@ -53,7 +53,7 @@ abstract class IiifImageEffectFormBase extends FormBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL): array {
     $this->imageStyle = $iiif_image_style;
 
     try {
@@ -106,7 +106,7 @@ abstract class IiifImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for validation.
     $this->imageEffect->validateConfigurationForm($form['data'], SubformState::createForSubform($form['data'], $form, $form_state));
@@ -115,7 +115,7 @@ abstract class IiifImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $form_state->cleanValues();
 
     // The image effect configuration is stored in the 'data' key in the form,
@@ -141,6 +141,6 @@ abstract class IiifImageEffectFormBase extends FormBase {
    * @return \Drupal\iiif_image_style\IiifImageEffectInterface
    *   The image effect object.
    */
-  abstract protected function prepareImageEffect($image_effect);
+  abstract protected function prepareImageEffect($image_effect): IiifImageEffectInterface;
 
 }

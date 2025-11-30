@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\iiif_image_style\Plugin\IiifImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +24,7 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL) {
+  public function applyEffect(IiifImage $image, IiifImageUrlParams $params, ?array $context = NULL): bool {
     $params->quality = $this->configuration['quality'];
 
     return TRUE;
@@ -31,7 +33,7 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     $summary = [
       '#theme' => 'iiif_image_quality_summary',
       '#data' => $this->configuration,
@@ -44,7 +46,7 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'quality' => 'default',
     ];
@@ -53,7 +55,7 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
 
     // Quality.
     $form['quality'] = [
@@ -72,7 +74,7 @@ class IiifQualityEffect extends IiifConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['quality'] = $form_state->getValue('quality');

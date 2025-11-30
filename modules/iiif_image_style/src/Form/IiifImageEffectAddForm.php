@@ -43,7 +43,7 @@ class IiifImageEffectAddForm extends IiifImageEffectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?IiifImageStyleInterface $iiif_image_style = NULL, $image_effect = NULL): array {
     $form = parent::buildForm($form, $form_state, $iiif_image_style, $image_effect);
 
     $form['#title'] = $this->t('Add %label effect to style %style', [
@@ -58,7 +58,7 @@ class IiifImageEffectAddForm extends IiifImageEffectFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareImageEffect($image_effect) {
+  protected function prepareImageEffect($image_effect): IiifImageEffectInterface {
     $image_effect = $this->effectManager->createInstance($image_effect);
     // Set the initial weight so this effect comes last.
     $image_effect->setWeight(count($this->imageStyle->getEffects()));

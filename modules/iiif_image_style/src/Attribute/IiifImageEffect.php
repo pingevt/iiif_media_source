@@ -8,7 +8,16 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * The Block attribute.
+ * Attribute for IIIF Image Effect plugins.
+ *
+ * Use this attribute to mark a class as a IIIF Image Effect plugin.
+ *
+ * Example:
+ * #[IiifImageEffect(
+ *   id: "crop",
+ *   label: new TranslatableMarkup("Crop"),
+ *   description: new TranslatableMarkup("Crops the IIIF image.")
+ * )]
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class IiifImageEffect extends Plugin {
