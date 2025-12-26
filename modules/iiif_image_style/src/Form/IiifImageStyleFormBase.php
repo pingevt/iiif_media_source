@@ -18,7 +18,7 @@ class IiifImageStyleFormBase extends EntityForm {
    *
    * @var \Drupal\iiif_image_style\Entity\IiifImageStyle
    */
-  protected IiifImageStyle $entity;
+  protected $entity;
 
   /**
    * The image style entity storage.

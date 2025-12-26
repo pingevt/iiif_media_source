@@ -94,7 +94,7 @@ abstract class IiifImageEffectBase extends PluginBase implements IiifImageEffect
    * {@inheritdoc}
    */
   public function label(): string {
-    return $this->pluginDefinition['label'];
+    return (string) $this->pluginDefinition['label'];
   }
 
   /**
