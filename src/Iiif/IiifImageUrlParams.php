@@ -129,6 +129,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
    * Validation and options will run off of this value.
    *
    * @param string $version
+   *   The IIIF Image API version.
    */
   private function setVersion(string $version): void {
 
@@ -657,7 +658,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $dimensions['height'] = (int) round($dimensions['height'] * $scale);
 
           // After upscaling, if we exceed any max, clamp down.
-          list($dimensions['width'], $dimensions['height']) = $this->applyMaxConstraints(
+          [$dimensions['width'], $dimensions['height']] = $this->applyMaxConstraints(
             $dimensions['width'],
             $dimensions['height'],
             $image
@@ -681,7 +682,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = $target_width;
           $new_height = (int) round($dimensions['height'] * $scale);
 
-          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
+          [$new_width, $new_height] = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -702,7 +703,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_height = $target_height;
           $new_width = (int) round($dimensions['width'] * $scale);
 
-          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
+          [$new_width, $new_height] = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -722,7 +723,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = (int) round($dimensions['width'] * $scale);
           $new_height = (int) round($dimensions['height'] * $scale);
 
-          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
+          [$new_width, $new_height] = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -741,7 +742,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = (int) round($settings['size_w']);
           $new_height = (int) round($settings['size_h']);
 
-          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
+          [$new_width, $new_height] = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -777,7 +778,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
           $new_width = (int) round($dimensions['width'] * $scale);
           $new_height = (int) round($dimensions['height'] * $scale);
 
-          list($new_width, $new_height) = $this->applyMaxConstraints($new_width, $new_height, $image);
+          [$new_width, $new_height] = $this->applyMaxConstraints($new_width, $new_height, $image);
 
           $dimensions['width'] = $new_width;
           $dimensions['height'] = $new_height;
@@ -787,7 +788,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     }
 
     // Apply rotation to dimensions.
-    list($dimensions['width'], $dimensions['height']) =
+    [$dimensions['width'], $dimensions['height']] =
       $this->applyRotationToDimensions($dimensions['width'], $dimensions['height'], $settings['rotation']);
 
     $dimensions = $this->transformWithinMax($dimensions, $image);
@@ -812,6 +813,9 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
     return TRUE;
   }
 
+  /**
+   * Transforms dimensions within the allowed maximums if present.
+   */
   public function transformWithinMax(array $dimensions, IiifImage $image): array {
 
     if ($image->getApiVersion() == "3") {
@@ -819,8 +823,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       $maxHeight = $image->getMaxHeight();
       $maxArea = $image->getMaxArea();
 
-      // print_r([$maxWidth, $maxHeight, $maxArea, $dimensions]);
-
+      // print_r([$maxWidth, $maxHeight, $maxArea, $dimensions]);.
       if ($maxWidth !== NULL && $dimensions['width'] > $maxWidth) {
         $ratio = $maxWidth / $dimensions['width'];
         $dimensions['width'] = (int) round($dimensions['width'] * $ratio);
@@ -979,7 +982,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
       throw new \InvalidArgumentException("Invalid size option: " . $settings['size']);
     }
 
-    // Check required parameters for each size mode
+    // Check required parameters for each size mode.
     if (isset($settings['size'])) {
       switch ($settings['size']) {
         case '^w,':
@@ -987,11 +990,13 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
             throw new \InvalidArgumentException("Parameter size_w is required for ^w, size mode.");
           }
           break;
+
         case '^,h':
           if (!isset($settings['size_h']) || $settings['size_h'] === '') {
             throw new \InvalidArgumentException("Parameter size_h is required for ^,h size mode.");
           }
           break;
+
         case '^w,h':
         case '^!w,h':
           if (!isset($settings['size_w']) || $settings['size_w'] === '') {
@@ -1001,6 +1006,7 @@ final class IiifImageUrlParams implements IiifImageUrlParamsInterface {
             throw new \InvalidArgumentException("Parameter size_h is required for {$settings['size']} size mode.");
           }
           break;
+
         case '^pct:n':
           if (!isset($settings['size_n']) || $settings['size_n'] === '') {
             throw new \InvalidArgumentException("Parameter size_n is required for ^pct:n size mode.");

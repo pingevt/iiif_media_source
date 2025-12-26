@@ -61,47 +61,36 @@ class IiifImageMediaSourceFunctionalTest extends BrowserTestBase {
    */
   // public function __testMediaSourceConfigForm() {
   //   // Log in as admin.
-  //   $this->drupalLogin($this->rootUser);
-
-  //   // Go to the media type creation form.
+  //   $this->drupalLogin($this->rootUser);.
+  // // Go to the media type creation form.
   //   $this->drupalGet('admin/structure/media/add');
   //   $this->assertSession()->statusCodeEquals(200);
-
-  //   // Fill in the form to create a new IIIF Image media type.
+  // // Fill in the form to create a new IIIF Image media type.
   //   $label = 'IIIF Image';
   //   $machine_name = 'iiif_image';
   //   $this->assertSession()->fieldExists('label')->setValue($label);
   //   $this->assertSession()->fieldExists('id')->setValue($machine_name);
   //   $this->assertSession()->selectExists('source')->selectOption('IIIF External Image'); // Use the label of your plugin.
-
-  //   // Save and manage fields.
+  // // Save and manage fields.
   //   $this->assertSession()->buttonExists('Save and manage fields')->press();
   //   $this->assertSession()->statusCodeEquals(200);
-
-  //   $this->assertSession()->buttonExists('Save and manage fields')->press();
+  // $this->assertSession()->buttonExists('Save and manage fields')->press();
   //   $this->assertSession()->statusCodeEquals(200);
   //   $this->assertSession()->addressEquals("admin/structure/media/manage/$machine_name/fields");
-
-  //   $this->assertInstanceOf(MediaType::class, MediaType::load($machine_name));
-
-  //   $this->drupalGet('admin/structure/media');
-
-  //   // Now go to the edit form for the media type.
+  // $this->assertInstanceOf(MediaType::class, MediaType::load($machine_name));
+  // $this->drupalGet('admin/structure/media');
+  // // Now go to the edit form for the media type.
   //   $this->drupalGet("admin/structure/media/manage/$machine_name");
   //   $this->assertSession()->statusCodeEquals(200);
-
-  //   // Assert the thumbnails directory field is present.
+  // // Assert the thumbnails directory field is present.
   //   $this->assertSession()->fieldExists('source_configuration[thumbnails_directory]');
-
-  //   // Submit an invalid value and check for validation error.
+  // // Submit an invalid value and check for validation error.
   //   $edit = ['source_configuration[thumbnails_directory]' => 'invalid://bad*path'];
-
-  //   $this->assertSession()->fieldExists('source_configuration[thumbnails_directory]')->setValue('invalid://bad*path');
+  // $this->assertSession()->fieldExists('source_configuration[thumbnails_directory]')->setValue('invalid://bad*path');
   //   $this->assertSession()->buttonExists('Save')->press();
   //   $this->assertSession()->statusCodeEquals(200);
   //   $this->assertSession()->pageTextContains('is not a valid path.');
-
-  // }
+  // }.
 
   /**
    * Tests creating a IIIF Image media entity via the UI.
@@ -165,7 +154,8 @@ class IiifImageMediaSourceFunctionalTest extends BrowserTestBase {
     // Fill in the form to create a new IIIF Image media type.
     $this->assertSession()->fieldExists('label')->setValue($label);
     $this->assertSession()->fieldExists('id')->setValue($machine_name);
-    $this->assertSession()->selectExists('source')->selectOption('IIIF External Image'); // Use your plugin label.
+    // Use your plugin label.
+    $this->assertSession()->selectExists('source')->selectOption('IIIF External Image');
 
     // Save and manage fields.
     $this->assertSession()->buttonExists('Save and manage fields')->press();
@@ -190,7 +180,6 @@ class IiifImageMediaSourceFunctionalTest extends BrowserTestBase {
    */
   private function updateIiifIdFieldSettings($machine_name = 'iiif_image', $server = 'https://iiif-10-5.ddev.site:8182', $prefix = 'iiif/3') {
     // Go to the field settings form for the source field.
-
     $this->drupalGet("admin/structure/media/manage/$machine_name/fields");
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet("admin/structure/media/manage/$machine_name/fields/media.$machine_name.field_media_iiif_id");

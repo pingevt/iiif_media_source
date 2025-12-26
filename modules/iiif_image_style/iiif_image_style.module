@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @file
  * Code here is based heavily on core image and responsive_image modules.
  */
+
+declare(strict_types=1);
 
 // phpcs:disable Drupal.NamingConventions.ValidFunctionName.InvalidPrefix
 
@@ -82,7 +82,7 @@ function template_preprocess_iiif_image_style(&$variables) {
       return;
     }
     $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
-    foreach ($image_style->getEffects() as $effectId => $effect) {
+    foreach ($image_style->getEffects() as $effect) {
       $effect->applyEffect($image, $params, $context);
     }
     $img_url = $image->getBuiltImageUrl($params);
@@ -177,7 +177,7 @@ function template_preprocess_iiif_responsive_image_style(&$variables) {
    */
   $iiif_image_style = IiifImageStyle::load($responsive_image_style->getFallbackImageStyle());
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
-  foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
+  foreach ($iiif_image_style->getEffects() as $effect) {
     $effect->applyEffect($image, $params, $context);
   }
 
@@ -211,7 +211,7 @@ function _iiif_responsive_image_image_style_url(string $iiif_image_style_id, $im
   }
 
   $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
-  foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
+  foreach ($iiif_image_style->getEffects() as $effect) {
     $effect->applyEffect($image, $params, $context);
   }
   return $image->getBuiltImageUrl($params);
@@ -262,7 +262,7 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
             continue;
           }
           $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
-          foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
+          foreach ($iiif_image_style->getEffects() as $effect) {
             $effect->applyEffect($image, $params, $context);
           }
 
@@ -298,10 +298,10 @@ function _iiif_responsive_image_build_source_attributes(array $variables, Breakp
         $iiif_image_style = IiifImageStyle::load($image_style_mapping['image_mapping']);
         if (!$iiif_image_style) {
           \Drupal::logger('iiif_image_style')->error('Could not load IIIF image style: @id', ['@id' => $image_style_mapping['image_mapping']]);
-          continue;
+          break;
         }
         $params = IiifImageUrlParams::fullImageParams($image->getApiVersion());
-        foreach ($iiif_image_style->getEffects() as $effectId => $effect) {
+        foreach ($iiif_image_style->getEffects() as $effect) {
           $effect->applyEffect($image, $params, $context);
         }
 

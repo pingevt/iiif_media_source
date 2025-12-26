@@ -28,7 +28,7 @@ class IiifImageStyleSubscriber implements EventSubscriberInterface {
    *   The event object containing the image style and settings.
    */
   public function imgStyleSettingsAlter(IiifImageStyleSettingsEvent $event) {
-    // @todo: Implement settings alteration logic.
+    // @todo Implement settings alteration logic.
   }
 
 }

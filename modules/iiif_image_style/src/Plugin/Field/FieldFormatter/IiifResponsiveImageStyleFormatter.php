@@ -36,8 +36,8 @@ class IiifResponsiveImageStyleFormatter extends StringFormatter {
   /**
    * {@inheritdoc}
    *
-   * Builds the settings form for the formatter, including responsive image style
-   * and image loading options.
+   * Builds the settings form for the formatter, including responsive image
+   * style and image loading options.
    *
    * @param array $form
    *   The form structure.

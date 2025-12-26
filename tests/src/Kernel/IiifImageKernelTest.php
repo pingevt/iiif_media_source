@@ -76,6 +76,9 @@ class IiifImageKernelTest extends KernelTestBase {
     $this->assertEquals(800, $iiifImage->getHeight());
   }
 
+  /**
+   * Tests the thumbnail URL generation.
+   */
   public function testGetThumbnailUrl() {
     $server = 'http://example.com';
     $prefix = 'prefix';
@@ -91,6 +94,9 @@ class IiifImageKernelTest extends KernelTestBase {
     $this->assertEquals($expectedUrl, $url);
   }
 
+  /**
+   * Tests the thumbnail URL generation.
+   */
   public function testGetScaledUrl() {
     $server = 'http://example.com';
     $prefix = 'prefix';
@@ -149,13 +155,16 @@ class IiifImageKernelTest extends KernelTestBase {
       "@context" => "http://iiif.io/api/image/3/context.json",
       'width' => 1000,
       'height' => 800,
-      'extraFormats' => [ 'jpg', 'png', 'webp', 'gif' ],
+      'extraFormats' => ['jpg', 'png', 'webp', 'gif'],
       'preferredFormats' => ['webp', 'png'],
     ]);
     $this->assertEquals('webp', $withFormatsV3wPreffered->getDefaultExtension());
 
   }
 
+  /**
+   * Tests the getApiVersion method.
+   */
   public function testGetApiVersion() {
     $v2 = new IiifImage('http://example.com', 'prefix', 'id', (object) [
       '@context' => "http://iiif.io/api/image/2/context.json",
@@ -177,4 +186,5 @@ class IiifImageKernelTest extends KernelTestBase {
     ]);
     $this->assertEquals("2", $unknown->getApiVersion());
   }
+
 }

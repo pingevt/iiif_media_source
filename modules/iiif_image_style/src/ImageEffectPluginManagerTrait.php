@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\iiif_image_style;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\iiif_image_style\IiifImageEffectPluginManagerInterface;
-
+/**
+ * Trait to provide access to the IIIF image effect plugin manager.
+ */
 trait ImageEffectPluginManagerTrait {
 
   /**

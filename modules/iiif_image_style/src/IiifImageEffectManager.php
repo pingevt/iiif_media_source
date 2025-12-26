@@ -25,7 +25,7 @@ final class IiifImageEffectManager extends DefaultPluginManager implements IiifI
     $this->alterInfo('iiif_image_effect_info');
     $this->setCacheBackend($cache_backend, 'iiif_image_effect_plugins');
 
-    // todo: eventually deprecate the annotation loader.
+    // @todo eventually deprecate the annotation loader.
   }
 
 }

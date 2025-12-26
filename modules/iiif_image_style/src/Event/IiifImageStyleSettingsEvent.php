@@ -75,7 +75,7 @@ class IiifImageStyleSettingsEvent extends Event {
   public function setSettings(array $settings): static {
     $this->settings = $settings;
 
-    // todo: Add in some validation in here.
+    // @todo Add in some validation in here.
     return $this;
   }
 

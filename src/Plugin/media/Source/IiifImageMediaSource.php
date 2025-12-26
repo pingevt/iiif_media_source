@@ -220,13 +220,13 @@ class IiifImageMediaSource extends MediaSourceBase {
       return $info_json['id'];
     }
 
-    // Handle common attributes (width, height, formats, qualities, supports, etc.)
+    // Handle common attributes
+    // (width, height, formats, qualities, supports, etc.)
     if (isset($info_json[$attribute_name])) {
       return $info_json[$attribute_name];
     }
 
     // Optionally, handle profile, tiles, etc. as needed.
-
     return NULL;
   }
 

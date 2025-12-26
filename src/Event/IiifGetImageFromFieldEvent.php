@@ -9,8 +9,8 @@ use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
 /**
  * Event to allow altering of a IiifImage object created from a field.
  *
- * This event is dispatched when a IIIF image object is created from a field item,
- * allowing subscribers to alter the image object or related data.
+ * This event is dispatched when a IIIF image object is created from a field
+ * item, allowing subscribers to alter the image object or related data.
  */
 class IiifGetImageFromFieldEvent extends Event {
 

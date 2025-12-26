@@ -47,13 +47,13 @@ class IiifBaseKernelTest extends KernelTestBase {
     $mock = $this->getMockIiifBase($info);
     $reflection = new \ReflectionClass($mock);
     $serverProp = $reflection->getProperty('server');
-    $serverProp->setAccessible(true);
+    $serverProp->setAccessible(TRUE);
     $prefixProp = $reflection->getProperty('prefix');
-    $prefixProp->setAccessible(true);
+    $prefixProp->setAccessible(TRUE);
     $iiifIdProp = $reflection->getProperty('iiifId');
-    $iiifIdProp->setAccessible(true);
+    $iiifIdProp->setAccessible(TRUE);
     $infoProp = $reflection->getProperty('info');
-    $infoProp->setAccessible(true);
+    $infoProp->setAccessible(TRUE);
 
     $this->assertEquals('http://example.org/iiif', $serverProp->getValue($mock));
     $this->assertEquals('prefix', $prefixProp->getValue($mock));
@@ -112,10 +112,10 @@ class IiifBaseKernelTest extends KernelTestBase {
    */
   public function testGetInfoEncodedWithEmptyInfo() {
     $mock = $this->getMockIiifBase();
-    // Set info to empty stdClass
+    // Set info to empty stdClass.
     $reflection = new \ReflectionClass($mock);
     $infoProp = $reflection->getProperty('info');
-    $infoProp->setAccessible(true);
+    $infoProp->setAccessible(TRUE);
     $infoProp->setValue($mock, new \stdClass());
     $this->assertEquals('{}', $mock->getInfoEncoded());
   }
@@ -125,18 +125,31 @@ class IiifBaseKernelTest extends KernelTestBase {
    */
   public function testRetrieveManifestHandlesHttpError() {
     $mock = $this->getMockIiifBase();
-    // Inject a mock HTTP client that throws an exception
+    // Inject a mock HTTP client that throws an exception.
     $reflection = new \ReflectionClass($mock);
     $httpClientProp = $reflection->getProperty('httpClient');
-    $httpClientProp->setAccessible(true);
+    $httpClientProp->setAccessible(TRUE);
     $httpClientProp->setValue($mock, new class {
-        public function get() { throw new \Exception('HTTP error'); }
-        public function request() { throw new \Exception('HTTP error'); }
+
+      /**
+       *
+       */
+      public function get() {
+        throw new \Exception('HTTP error');
+      }
+
+      /**
+       *
+       */
+      public function request() {
+        throw new \Exception('HTTP error');
+      }
+
     });
 
-    // Use reflection to access the protected method
+    // Use reflection to access the protected method.
     $method = $reflection->getMethod('retrieveManifest');
-    $method->setAccessible(true);
+    $method->setAccessible(TRUE);
     $result = $method->invoke($mock);
 
     $this->assertNull($result);

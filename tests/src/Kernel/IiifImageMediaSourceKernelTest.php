@@ -2,16 +2,15 @@
 
 namespace Drupal\Tests\iiif_media_source\Kernel;
 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Response;
+use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\Media;
-use Drupal\iiif_media_source\Plugin\media\Source\IiifImageMediaSource;
-use Drupal\media\MediaTypeInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\media\Entity\MediaType;
-use Drupal\user\Entity\User;
 use Drupal\Core\File\FileSystemInterface;
-use GuzzleHttp\Psr7\Response;
 
 /**
  * Kernel tests for the IIIF Image Media Source plugin.
@@ -41,6 +40,9 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
    */
   protected $mediaSource;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -91,7 +93,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
   public function testConfigurationFormValidation() {
 
     $form = [];
-    $form_state = new \Drupal\Core\Form\FormState();
+    $form_state = new FormState();
     $form_state->setValues([
       'thumbnails_directory' => 'invalid://path/with?bad*chars',
     ]);
@@ -122,8 +124,8 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     $media->save();
 
     // Mock the HTTP client to return a fake image.
-    $mock_response = new \GuzzleHttp\Psr7\Response(200, [], 'FAKE_IMAGE_DATA');
-    $mock_client = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)
+    $mock_response = new Response(200, [], 'FAKE_IMAGE_DATA');
+    $mock_client = $this->getMockBuilder(ClientInterface::class)
       ->onlyMethods(['request'])
       ->getMockForAbstractClass();
     $mock_client->expects($this->once())
@@ -138,7 +140,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     // Inject the mock HTTP client into the media source.
     $reflection = new \ReflectionClass($this->mediaSource);
     $property = $reflection->getProperty('httpClient');
-    $property->setAccessible(true);
+    $property->setAccessible(TRUE);
     $property->setValue($this->mediaSource, $mock_client);
 
     // Call the method under test.
@@ -163,8 +165,8 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     $media->save();
 
     // Mock the HTTP client to return a 404 response.
-    $mock_response = new \GuzzleHttp\Psr7\Response(404, [], '');
-    $mock_client = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)
+    $mock_response = new Response(404, [], '');
+    $mock_client = $this->getMockBuilder(ClientInterface::class)
       ->onlyMethods(['request'])
       ->getMockForAbstractClass();
     $mock_client->expects($this->once())
@@ -179,7 +181,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     // Inject the mock HTTP client.
     $reflection = new \ReflectionClass($this->mediaSource);
     $property = $reflection->getProperty('httpClient');
-    $property->setAccessible(true);
+    $property->setAccessible(TRUE);
     $property->setValue($this->mediaSource, $mock_client);
 
     // Call the method under test.
@@ -209,7 +211,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
 
     $reflection = new \ReflectionClass($this->mediaSource);
     $property = $reflection->getProperty('fileSystem');
-    $property->setAccessible(true);
+    $property->setAccessible(TRUE);
     $property->setValue($this->mediaSource, $mock_fs);
 
     $uri = $this->mediaSource->getLocalThumbnailUri($media);
@@ -244,8 +246,8 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     ]);
     $media->save();
 
-    $mock_response = new \GuzzleHttp\Psr7\Response(200, [], '');
-    $mock_client = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)
+    $mock_response = new Response(200, [], '');
+    $mock_client = $this->getMockBuilder(ClientInterface::class)
       ->onlyMethods(['request'])
       ->getMockForAbstractClass();
     $mock_client->expects($this->once())
@@ -258,7 +260,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     ]);
     $reflection = new \ReflectionClass($this->mediaSource);
     $property = $reflection->getProperty('httpClient');
-    $property->setAccessible(true);
+    $property->setAccessible(TRUE);
     $property->setValue($this->mediaSource, $mock_client);
 
     $uri = $this->mediaSource->getLocalThumbnailUri($media);
@@ -269,7 +271,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
    * Tests metadata extraction for IIIF v2 and v3 info JSON.
    */
   public function testMetadataExtractionForIiifV2AndV3() {
-    // IIIF v2 example info.json
+    // IIIF v2 example info.json.
     $info_v2 = [
       '@context' => 'http://iiif.io/api/image/2/context.json',
       '@id' => 'https://example.org/iiif/2/image-id',
@@ -277,10 +279,10 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
       'height' => 800,
       'profile' => ['http://iiif.io/api/image/2/level2.json'],
       'protocol' => 'http://iiif.io/api/image',
-      'tiles' => [['width' => 256, 'scaleFactors' => [1,2,4,8]]],
+      'tiles' => [['width' => 256, 'scaleFactors' => [1, 2, 4, 8]]],
     ];
 
-    // IIIF v3 example info.json
+    // IIIF v3 example info.json.
     $info_v3 = [
       '@context' => 'http://iiif.io/api/image/3/context.json',
       'id' => 'https://example.org/iiif/3/image-id',
@@ -288,7 +290,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
       'height' => 1600,
       'profile' => ['level2'],
       'protocol' => 'http://iiif.io/api/image',
-      'tiles' => [['width' => 512, 'scaleFactors' => [1,2,4,8,16]]],
+      'tiles' => [['width' => 512, 'scaleFactors' => [1, 2, 4, 8, 16]]],
     ];
 
     // Create media entities for v2 and v3.
@@ -313,14 +315,12 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     // Get metadata attributes and values for v2.
     $attributes = $this->mediaSource->getMetadataAttributes();
     // $metadata_v2 = $this->mediaSource->getMetadata($media_v2);
-
     $this->assertEquals(1000, $this->mediaSource->getMetadata($media_v2, 'width'), 'IIIF v2 width extracted.');
     $this->assertEquals(800, $this->mediaSource->getMetadata($media_v2, 'height'), 'IIIF v2 height extracted.');
     $this->assertEquals('https://example.org/iiif/2/image-id', $this->mediaSource->getMetadata($media_v2, '@id'), 'IIIF v2 @id extracted.');
 
     // Get metadata attributes and values for v3.
-    // $metadata_v3 = $this->mediaSource->getMetadata($media_v3);
-
+    // $metadata_v3 = $this->mediaSource->getMetadata($media_v3);.
     $this->assertEquals(2000, $this->mediaSource->getMetadata($media_v3, 'width'), 'IIIF v3 width extracted.');
     $this->assertEquals(1600, $this->mediaSource->getMetadata($media_v3, 'height'), 'IIIF v3 height extracted.');
     $this->assertEquals('https://example.org/iiif/3/image-id', $this->mediaSource->getMetadata($media_v3, 'id'), 'IIIF v3 id extracted.');

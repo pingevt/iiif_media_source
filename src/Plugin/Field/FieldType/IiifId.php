@@ -36,10 +36,10 @@ class IiifId extends StringItem {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ComplexDataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(ComplexDataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
 
-    // todo: use dependency injection.
+    // @todo use dependency injection.
     $this->dispatcher = \Drupal::service('event_dispatcher');
   }
 
@@ -82,12 +82,12 @@ class IiifId extends StringItem {
       '#type' => 'select',
       '#title' => $this->t('IIIF Image API version'),
       '#default_value' => $this->getSetting('img_api_version'),
-      '#description' => $this->t(''),
+      '#description' => "",
       '#required' => TRUE,
       '#options' => [
-        "2" => "v2.0",
-        "2.1" => "v2.1",
-        "3" => "v3.0",
+        "2" => $this->t("v2.0"),
+        "2.1" => $this->t("v2.1"),
+        "3" => $this->t("v3.0"),
       ],
     ];
 
@@ -127,23 +127,25 @@ class IiifId extends StringItem {
   public function setValue($values, $notify = TRUE) {
 
     // @todo Double check if we need this or not. Is it correct?
-    // if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
-    //   $img = $this->getImg();
-    //   $values['info'] = $img->getInfoEncoded();
-    // }
-
+    /*
+     * if (isset($values['value']) && !empty($values['value']) && !isset($this->_image)) {
+     *   $img = $this->getImg();
+     *   $values['info'] = $img->getInfoEncoded();
+     * }
+     */
     parent::setValue($values, $notify);
   }
 
   /**
    * Get an IiifImage object for this field value.
    *
-   * @deprecated in Drupal 10.4.0, will be removed before Drupal 11.5.0.
+   * @deprecated in drupal:10.4.0 and is removed from drupal:11.5.0.
    *   Use \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId::getIiifImageObj().
+   * @see getIiifImageObj()
    */
-  public function getImg(array $values = NULL) {
+  public function getImg(?array $values = NULL) {
 
-    trigger_error('getImg() is deprecated in Drupal 10.4.0 and will be removed before Drupal 11.5.0. Use \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId::getIiifImageObj() instead.', E_USER_DEPRECATED);
+    @trigger_error('getImg() is deprecated in Drupal 10.4.0 and is removed from Drupal 11.5.0, Use \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId::getIiifImageObj() instead.', E_USER_DEPRECATED);
 
     // If no values are passed, use the current value.
     if ($values === NULL) {
@@ -171,7 +173,7 @@ class IiifId extends StringItem {
    *   The IIIF Image object.
    *
    * @since 10.4.0
-   * @see getImg() which is deprecated.
+   * @see getImg()
    */
   public function getIiifImageObj(): IiifImage {
     $values = $this->getValue();

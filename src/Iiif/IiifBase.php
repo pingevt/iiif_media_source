@@ -137,9 +137,9 @@ abstract class IiifBase {
       // Log or handle the case where $data is null or invalid.
       $this->logger->warning('Failed to retrieve data from URL: @url', [
         '@url' => $url,
-      ]);    }
+      ]);
+    }
 
-    return;
   }
 
   /**
@@ -148,7 +148,7 @@ abstract class IiifBase {
   public function getInfo(): \stdClass {
 
     if (is_object($this->info)) {
-    return $this->info;
+      return $this->info;
     }
 
     return new \stdClass();

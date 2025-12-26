@@ -3,7 +3,6 @@
 namespace Drupal\iiif_image_focalpoint;
 
 use Drupal\crop\CropInterface;
-use Drupal\crop\Entity\Crop;
 use Drupal\focal_point\FocalPointManager;
 
 /**

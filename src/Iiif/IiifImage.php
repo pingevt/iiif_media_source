@@ -56,6 +56,9 @@ class IiifImage extends IiifBase {
     ];
   }
 
+  /**
+   * Get the max height.
+   */
   public function getMaxHeight(): ?int {
 
     if ($this->getApiVersion() == "3") {
@@ -65,6 +68,9 @@ class IiifImage extends IiifBase {
     return $this->info->profile->maxHeight ?? NULL;
   }
 
+  /**
+   * Get the max width.
+   */
   public function getMaxWidth(): ?int {
 
     if ($this->getApiVersion() == "3") {
@@ -73,6 +79,9 @@ class IiifImage extends IiifBase {
     return $this->info->profile->maxWidth ?? NULL;
   }
 
+  /**
+   * Get the max area.
+   */
   public function getMaxArea(): ?int {
 
     if ($this->getApiVersion() == "3") {
@@ -146,7 +155,8 @@ class IiifImage extends IiifBase {
     // @todo create settings obj, so proper validation happens.
     $params = IiifImageUrlParams::fromSettingsArray([
       'region' => "full",
-      'size' => "!w,h", //"!" . $width . "," . $height,
+    // "!" . $width . "," . $height,
+      'size' => "!w,h",
       'size_w' => $width,
       'size_h' => $height,
       'rotation' => 0,
@@ -154,7 +164,6 @@ class IiifImage extends IiifBase {
       'format' => $this->getDefaultExtension(),
       'version' => $this->getApiVersion(),
     ], $this->getApiVersion());
-
 
     $url = implode(DIRECTORY_SEPARATOR, [
       $this->server,

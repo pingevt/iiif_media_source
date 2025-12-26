@@ -59,11 +59,11 @@ class IiifImageFormatter extends StringFormatter {
 
     if (version_compare(\Drupal::VERSION, '11.0.0', '>=') && $event_dispatcher instanceof EventDispatcher) {
       // Code for Drupal 11 or higher.
-      // echo "Running Drupal 11 or higher: " . \Drupal::VERSION . "\n";
+      // echo "Running Drupal 11 or higher: " . \Drupal::VERSION . "\n";.
     }
     elseif (version_compare(\Drupal::VERSION, '10.0.0', '>=') && $event_dispatcher instanceof ContainerAwareEventDispatcher) {
       // Code for Drupal 10.
-      // echo "Running Drupal 10: " . \Drupal::VERSION . "\n";
+      // echo "Running Drupal 10: " . \Drupal::VERSION . "\n";.
     }
 
     $this->eventDispatcher = $event_dispatcher;
@@ -125,7 +125,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('x'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('region_x'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -140,7 +140,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('y'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('region_y'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -155,7 +155,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('w'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('region_w'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -170,7 +170,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('h'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('region_h'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#states' => [
         'visible' => [
           ':input[data-states="region"]' => [
@@ -196,7 +196,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('w'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('size_w'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#states' => [
         'invisible' => [
           ':input[data-states="size"]' => [
@@ -219,7 +219,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('h'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('size_h'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#states' => [
         'invisible' => [
           ':input[data-states="size"]' => [
@@ -242,7 +242,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('n'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('size_n'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#min' => 0,
       '#max' => 100,
       '#step' => 0.1,
@@ -262,7 +262,7 @@ class IiifImageFormatter extends StringFormatter {
       '#title' => $this->t('Rotation'),
       '#type' => 'number',
       '#default_value' => $this->getSetting('rotation'),
-      '#description' => $this->t(''),
+      '#description' => '',
       '#min' => 0,
       '#max' => 360,
       '#step' => 0.1,

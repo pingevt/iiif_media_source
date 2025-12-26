@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\iiif_media_source\Unit;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\Tests\UnitTestCase;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**
@@ -46,7 +46,8 @@ class IiifImageUrlParamsTest extends UnitTestCase {
     $this->expectWarning();
     $this->expectWarningMessage("Invalid version provided: 4");
     $params = new IiifImageUrlParams("4");
-    $this->assertEquals("2.1", $params->getVersion()); // Default version should remain unchanged.
+    // Default version should remain unchanged.
+    $this->assertEquals("2.1", $params->getVersion());
   }
 
   /**
@@ -103,6 +104,9 @@ class IiifImageUrlParamsTest extends UnitTestCase {
     $this->assertEquals($expected, $url);
   }
 
+  /**
+   * Data provider for testBuildUrlStringDataProvider.
+   */
   public function buildUrlStringProvider() {
     return [
       ['2', 'full/max/0/default.jpg'],
@@ -137,10 +141,10 @@ class IiifImageUrlParamsTest extends UnitTestCase {
   public function testGetRegionWithMissingParams() {
     $params = new IiifImageUrlParams("2.1");
     $params->__set('region', 'x,y,w,h');
-    // Only set some params
+    // Only set some params.
     $params->__set('region_x', '10');
     $params->__set('region_y', '20');
-    // region_w and region_h missing
+    // region_w and region_h missing.
     $region = $params->getRegion();
     $this->assertStringContainsString('10,20', $region);
   }
@@ -151,7 +155,7 @@ class IiifImageUrlParamsTest extends UnitTestCase {
   public function testGetRegionAllMissing() {
     $params = new IiifImageUrlParams("2.1");
     $params->__set('region', 'x,y,w,h');
-    // No region_x, region_y, region_w, region_h set
+    // No region_x, region_y, region_w, region_h set.
     $region = $params->getRegion();
     $this->assertEquals(',,,', $region);
   }
@@ -178,9 +182,10 @@ class IiifImageUrlParamsTest extends UnitTestCase {
   public function testGetSizeMissingParams() {
     $params = new IiifImageUrlParams("2.1");
     $params->__set('size', 'w,h');
-    // No size_w or size_h set
+    // No size_w or size_h set.
     $size = $params->getSize();
-    $this->assertEquals(',', $size); // Or your default/fallback
+    // Or your default/fallback.
+    $this->assertEquals(',', $size);
   }
 
   /**
@@ -211,51 +216,51 @@ class IiifImageUrlParamsTest extends UnitTestCase {
    * @covers ::applyMaxConstraints
    */
   public function testApplyMaxConstraints() {
-    $stub = $this->getMockBuilder(\Drupal\iiif_media_source\Iiif\IiifImage::class)
+    $stub = $this->getMockBuilder(IiifImage::class)
       ->disableOriginalConstructor()
       ->getMock();
 
     // No constraints.
-    $stub->method('getMaxWidth')->willReturn(null);
-    $stub->method('getMaxHeight')->willReturn(null);
-    $stub->method('getMaxArea')->willReturn(null);
+    $stub->method('getMaxWidth')->willReturn(NULL);
+    $stub->method('getMaxHeight')->willReturn(NULL);
+    $stub->method('getMaxArea')->willReturn(NULL);
 
     $params = new IiifImageUrlParams("3");
     $result = $this->invokeMethod($params, 'applyMaxConstraints', [1000, 800, $stub]);
     $this->assertEquals([1000, 800], $result);
 
     // maxWidth only.
-    $stub = $this->getMockBuilder(\Drupal\iiif_media_source\Iiif\IiifImage::class)
+    $stub = $this->getMockBuilder(IiifImage::class)
       ->disableOriginalConstructor()
       ->getMock();
     $stub->method('getMaxWidth')->willReturn(500);
-    $stub->method('getMaxHeight')->willReturn(null);
-    $stub->method('getMaxArea')->willReturn(null);
+    $stub->method('getMaxHeight')->willReturn(NULL);
+    $stub->method('getMaxArea')->willReturn(NULL);
     $result = $this->invokeMethod($params, 'applyMaxConstraints', [1000, 800, $stub]);
     $this->assertEquals([500, 400], $result);
 
     // maxHeight only.
-    $stub = $this->getMockBuilder(\Drupal\iiif_media_source\Iiif\IiifImage::class)
+    $stub = $this->getMockBuilder(IiifImage::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $stub->method('getMaxWidth')->willReturn(null);
+    $stub->method('getMaxWidth')->willReturn(NULL);
     $stub->method('getMaxHeight')->willReturn(400);
-    $stub->method('getMaxArea')->willReturn(null);
+    $stub->method('getMaxArea')->willReturn(NULL);
     $result = $this->invokeMethod($params, 'applyMaxConstraints', [1000, 800, $stub]);
     $this->assertEquals([500, 400], $result);
 
     // maxArea only.
-    $stub = $this->getMockBuilder(\Drupal\iiif_media_source\Iiif\IiifImage::class)
+    $stub = $this->getMockBuilder(IiifImage::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $stub->method('getMaxHeight')->willReturn(null);
+    $stub->method('getMaxHeight')->willReturn(NULL);
     $stub->method('getMaxArea')->willReturn(200000);
     $result = $this->invokeMethod($params, 'applyMaxConstraints', [1000, 800, $stub]);
-    // sqrt(200000 / 800000) = 0.5, so 500x400
+    // sqrt(200000 / 800000) = 0.5, so 500x400.
     $this->assertEquals([500, 400], $result);
 
     // All constraints (should clamp to most restrictive)
-    $stub = $this->getMockBuilder(\Drupal\iiif_media_source\Iiif\IiifImage::class)
+    $stub = $this->getMockBuilder(IiifImage::class)
       ->disableOriginalConstructor()
       ->getMock();
     $stub->method('getMaxWidth')->willReturn(400);
@@ -282,10 +287,10 @@ class IiifImageUrlParamsTest extends UnitTestCase {
       'region_h' => 100,
       'rotation' => 0,
     ];
-    // Should not throw
+    // Should not throw.
     $this->invokeMethod($params, 'validateSettings', [&$settings]);
 
-    // Negative value
+    // Negative value.
     $settings['size_w'] = -1;
     $this->expectException(\InvalidArgumentException::class);
     $this->invokeMethod($params, 'validateSettings', [&$settings]);
@@ -351,7 +356,7 @@ class IiifImageUrlParamsTest extends UnitTestCase {
   protected function invokeMethod(&$object, $methodName, array $parameters = []) {
     $reflection = new \ReflectionClass(get_class($object));
     $method = $reflection->getMethod($methodName);
-    $method->setAccessible(true);
+    $method->setAccessible(TRUE);
     return $method->invokeArgs($object, $parameters);
   }
 

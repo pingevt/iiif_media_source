@@ -201,9 +201,9 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
   public function calculateDependencies(): static {
     parent::calculateDependencies();
 
+    // phpcs:disable
     // Add this module as a dependency.
-    // $dependencies['module'][] = 'iiif_image_style';
-
+    // $dependencies['module'][] = 'iiif_image_style';.
     // Add dependencies for each effect plugin.
     // foreach ($this->effects as $effect_config) {
     //   // Get the plugin definition.
@@ -238,12 +238,11 @@ final class IiifImageStyle extends ConfigEntityBase implements IiifImageStyleInt
     //     continue;
     //   }
     // }
-
     // // Remove duplicate dependencies for all types.
     // foreach ($dependencies as $type => &$deps) {
     //   $deps = array_unique($deps);
     // }
-
+    // phpcs:enable
     return $this;
   }
 

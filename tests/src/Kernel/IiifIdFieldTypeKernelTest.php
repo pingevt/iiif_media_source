@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\iiif_media_source\Kernel;
 
-use Drupal\Core\Field\FieldItemDataDefinition;
+use Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\user\Entity\User;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -22,26 +22,25 @@ use Drupal\iiif_media_source\Iiif\IiifImage;
  */
 
 
-// Example Table
-//
-//  Field storage/retrieval	⬜
-//  Info property storage/retrieval	⬜
-//  Default field settings	⬜
-//  Field settings form	⬜
-//  Schema definition	⬜
-//  Property definitions	⬜
-//  setValue() logic	⬜
-//  getIiifImageObj() returns correct object	⬜
-//  getIiifImageObj() dispatches event	⬜
-// getImg() triggers deprecation and returns correct object	⬜
-// __get('width') and __get('height')	⬜
-// __get() fallback	⬜
-// Handles invalid/missing info JSON	⬜
-// Handles missing value	⬜
-// Event dispatching correctness	⬜
-
-
-
+/**
+ * Example Table.
+ *
+ * Field storage/retrieval    ⬜
+ * Info property storage/retrieval    ⬜
+ * Default field settings    ⬜
+ * Field settings form    ⬜
+ * Schema definition    ⬜
+ * Property definitions    ⬜
+ * setValue() logic    ⬜
+ * getIiifImageObj() returns correct object    ⬜
+ * getIiifImageObj() dispatches event    ⬜
+ * getImg() triggers deprecation and returns correct object    ⬜
+ * __get('width') and __get('height')    ⬜
+ * __get() fallback    ⬜
+ * Handles invalid/missing info JSON    ⬜
+ * Handles missing value    ⬜
+ * Event dispatching correctness    ⬜.
+ */
 class IiifIdFieldTypeKernelTest extends KernelTestBase {
 
   /**
@@ -298,7 +297,7 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
   public function testGetIiifImageObjDispatchesEvent() {
     // Replace the event dispatcher with a spy.
     $container = \Drupal::getContainer();
-    $dispatcher = $this->getMockBuilder(\Symfony\Component\EventDispatcher\EventDispatcherInterface::class)
+    $dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)
       ->onlyMethods([
         'dispatch',
         'addListener',
@@ -314,7 +313,7 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
     $dispatcher->expects($this->once())
       ->method('dispatch')
       ->with(
-        $this->isInstanceOf(\Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent::class),
+        $this->isInstanceOf(IiifGetImageFromFieldEvent::class),
         $this->anything()
       );
 
@@ -356,7 +355,7 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
     $entity->save();
     $field_item = $entity->get('field_iiif_id')->first();
     $iiif_image = $field_item->getIiifImageObj();
-    $this->assertInstanceOf(\Drupal\iiif_media_source\Iiif\IiifImage::class, $iiif_image);
+    $this->assertInstanceOf(IiifImage::class, $iiif_image);
     $this->assertIsObject($iiif_image->getInfo());
 
     // Case 2: Invalid JSON in info property.
@@ -370,7 +369,7 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
     $entity2->save();
     $field_item2 = $entity2->get('field_iiif_id')->first();
     $iiif_image2 = $field_item2->getIiifImageObj();
-    $this->assertInstanceOf(\Drupal\iiif_media_source\Iiif\IiifImage::class, $iiif_image2);
+    $this->assertInstanceOf(IiifImage::class, $iiif_image2);
     $this->assertIsObject($iiif_image2->getInfo());
   }
 
@@ -393,7 +392,6 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
     // $iiif_image = $field_item->getIiifImageObj();
     // $this->assertInstanceOf(\Drupal\iiif_media_source\Iiif\IiifImage::class, $iiif_image);
     // $this->assertNull($iiif_image->getIiifId());
-
     // Case 2: Field item is completely empty.
     $entity2 = EntityTest::create([
       'name' => 'Test entity 2',
@@ -404,7 +402,7 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
     $this->assertTrue($field_items->isEmpty());
   }
 
-    /**
+  /**
    * Tests that the event dispatched by getIiifImageObj() contains correct data.
    */
   public function testEventDispatchingCorrectness() {
@@ -413,7 +411,7 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
     $info = ['width' => 321, 'height' => 654];
 
     // Create a mock dispatcher that inspects the event.
-    $dispatcher = $this->getMockBuilder(\Symfony\Component\EventDispatcher\EventDispatcherInterface::class)
+    $dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)
       ->onlyMethods([
         'dispatch',
         'addListener',
@@ -431,8 +429,8 @@ class IiifIdFieldTypeKernelTest extends KernelTestBase {
       ->with(
         $this->callback(function ($event) use (&$field_item, $info) {
           // Check event type and contents.
-          return $event instanceof \Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent
-            && $event->getIiifImage()->getIiifId() === 'event-correctness'
+          return $event instanceof
+          IiifGetImageFromFieldEvent            && $event->getIiifImage()->getIiifId() === 'event-correctness'
             && $event->getIiifImage()->getInfo()->width === $info['width']
             && $event->getIiifImage()->getInfo()->height === $info['height'];
         }),

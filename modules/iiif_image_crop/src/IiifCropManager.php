@@ -4,7 +4,6 @@ namespace Drupal\iiif_image_crop;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\crop\CropInterface;
-use Drupal\crop\Entity\Crop;
 use Drupal\iiif_media_source\Iiif\IiifImageUrlParams;
 
 /**

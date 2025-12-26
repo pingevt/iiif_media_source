@@ -22,6 +22,7 @@ trait EventsTrait {
    * Gets the event Dispatcher.
    *
    * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   *   The event Dispatcher.
    */
   protected function eventDispatcher(): EventDispatcherInterface {
     if (!$this->eventDispatcher) {

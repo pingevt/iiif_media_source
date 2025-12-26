@@ -67,7 +67,6 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
     //   'bitonal',
     //   'default',
     // ];
-
     $results['full']['full']['0'] = [2000, 1000];
     $results['full']['max']['0'] = [2000, 1000];
     $results['full']['w,']['0'] = [100, 50];
@@ -115,8 +114,6 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
     $results['pct:x,y,w,h']['pct:n']['180'] = [400, 200];
     $results['pct:x,y,w,h']['w,h']['180'] = [100, 300];
     $results['pct:x,y,w,h']['!w,h']['180'] = [100, 50];
-
-
 
     $results['full']['full']['90'] = [1000, 2000];
     $results['full']['max']['90'] = [1000, 2000];
@@ -179,7 +176,6 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
           // $results[$region][$size][$rotation] = [$dimensions['width'], $dimensions['height']];
           // echo "Region: '$region_key', Size: '$size_key', Rotation: $rotation_key => Width: {$dimensions['width']}, Height: {$dimensions['height']}\n";
           // echo "=> Width: {$dimensions['width']}, Height: {$dimensions['height']}\n";
-
           $this->assertEquals($results[$region_key][$size_key][$rotation_key][0], $dimensions['width'], 'Error on Width. Region: ' . $region_key . ', Size: ' . $size_key . ', Rotation: ' . $rotation_key);
           $this->assertEquals($results[$region_key][$size_key][$rotation_key][1], $dimensions['height'], 'Error on Height. Region: ' . $region_key . ', Size: ' . $size_key . ', Rotation: ' . $rotation_key);
         }
@@ -195,9 +191,8 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
   //     '@context' => "http://iiif.io/api/image/3/context.json",
   //     'width' => 2000,
   //     'height' => 1000,
-  //   ]);
-
-  //   $region_options = [
+  //   ]);.
+  // $region_options = [
   //     'full' => ['region' => 'full'],
   //     'x,y,w,h' => ['region' => 'x,y,w,h', 'region_x' => 10, 'region_y' => 10, 'region_w' => 500, 'region_h' => 350],
   //     'pct:x,y,w,h' => ['region' => 'pct:x,y,w,h', 'region_x' => 10, 'region_y' => 10, 'region_w' => 80, 'region_h' => 80],
@@ -216,8 +211,7 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
   //     '!w,h' => ['size' => '!w,h', 'size_w' => 100, 'size_h' => 300],
   //     '^!w,h' => ['size' => '!w,h', 'size_w' => 100, 'size_h' => 300],
   //   ];
-
-  //   $rotation_options = [
+  // $rotation_options = [
   //     '0' => ['rotation' => 0],
   //     '90' => ['rotation' => 90],
   //     '180' => ['rotation' => 180],
@@ -227,15 +221,13 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
   //     // '225' => ['rotation' => 225],
   //     // '315' => ['rotation' => 315],
   //   ];
-
-  //   // $quality_options = [
+  // // $quality_options = [
   //   //   'color',
   //   //   'gray',
   //   //   'bitonal',
   //   //   'default',
   //   // ];
-
-  //   $results['full']['max']['0'] = [2000, 1000];
+  // $results['full']['max']['0'] = [2000, 1000];
   //   $results['full']['^max']['0'] = [2000, 1000];
   //   $results['full']['w,']['0'] = [100, 50];
   //   $results['full']['^w,']['0'] = [100, 50];
@@ -247,113 +239,99 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
   //   $results['full']['^w,h']['0'] = [100, 300];
   //   $results['full']['!w,h']['0'] = [100, 50];
   //   $results['full']['^!w,h']['0'] = [100, 50];
-
-  //   $results['x,y,w,h']['max']['0'] = [500, 350];
+  // $results['x,y,w,h']['max']['0'] = [500, 350];
   //   $results['x,y,w,h']['w,']['0'] = [100, 50];
   //   $results['x,y,w,h'][',h']['0'] = [200, 100];
   //   $results['x,y,w,h']['pct:n']['0'] = [125, 88];
   //   $results['x,y,w,h']['w,h']['0'] = [100, 300];
   //   $results['x,y,w,h']['!w,h']['0'] = [100, 70];
-
-  //   $results['pct:x,y,w,h']['max']['0'] = [1600, 800];
+  // $results['pct:x,y,w,h']['max']['0'] = [1600, 800];
   //   $results['pct:x,y,w,h']['w,']['0'] = [100, 50];
   //   $results['pct:x,y,w,h'][',h']['0'] = [200, 100];
   //   $results['pct:x,y,w,h']['pct:n']['0'] = [400, 200];
   //   $results['pct:x,y,w,h']['w,h']['0'] = [100, 300];
   //   $results['pct:x,y,w,h']['!w,h']['0'] = [100, 50];
-
-  //   $results['full']['full']['180'] = [2000, 1000];
+  // $results['full']['full']['180'] = [2000, 1000];
   //   $results['full']['max']['180'] = [2000, 1000];
   //   $results['full']['w,']['180'] = [100, 50];
   //   $results['full'][',h']['180'] = [200, 100];
   //   $results['full']['pct:n']['180'] = [500, 250];
   //   $results['full']['w,h']['180'] = [100, 300];
   //   $results['full']['!w,h']['180'] = [100, 50];
-
-  //   $results['x,y,w,h']['full']['180'] = [500, 350];
+  // $results['x,y,w,h']['full']['180'] = [500, 350];
   //   $results['x,y,w,h']['max']['180'] = [500, 350];
   //   $results['x,y,w,h']['w,']['180'] = [100, 50];
   //   $results['x,y,w,h'][',h']['180'] = [200, 100];
   //   $results['x,y,w,h']['pct:n']['180'] = [125, 88];
   //   $results['x,y,w,h']['w,h']['180'] = [100, 300];
   //   $results['x,y,w,h']['!w,h']['180'] = [100, 70];
-
-  //   $results['pct:x,y,w,h']['full']['180'] = [1600, 800];
+  // $results['pct:x,y,w,h']['full']['180'] = [1600, 800];
   //   $results['pct:x,y,w,h']['max']['180'] = [1600, 800];
   //   $results['pct:x,y,w,h']['w,']['180'] = [100, 50];
   //   $results['pct:x,y,w,h'][',h']['180'] = [200, 100];
   //   $results['pct:x,y,w,h']['pct:n']['180'] = [400, 200];
   //   $results['pct:x,y,w,h']['w,h']['180'] = [100, 300];
   //   $results['pct:x,y,w,h']['!w,h']['180'] = [100, 50];
-
-  //   $results['full']['full']['90'] = [1000, 2000];
+  // $results['full']['full']['90'] = [1000, 2000];
   //   $results['full']['max']['90'] = [1000, 2000];
   //   $results['full']['w,']['90'] = [50, 100];
   //   $results['full'][',h']['90'] = [100, 200];
   //   $results['full']['pct:n']['90'] = [250, 500];
   //   $results['full']['w,h']['90'] = [300, 100];
   //   $results['full']['!w,h']['90'] = [50, 100];
-
-  //   $results['x,y,w,h']['full']['90'] = [350, 500];
+  // $results['x,y,w,h']['full']['90'] = [350, 500];
   //   $results['x,y,w,h']['max']['90'] = [350, 500];
   //   $results['x,y,w,h']['w,']['90'] = [50, 100];
   //   $results['x,y,w,h'][',h']['90'] = [100, 200];
   //   $results['x,y,w,h']['pct:n']['90'] = [88, 125];
   //   $results['x,y,w,h']['w,h']['90'] = [300, 100];
   //   $results['x,y,w,h']['!w,h']['90'] = [70, 100];
-
-  //   $results['pct:x,y,w,h']['full']['90'] = [800, 1600];
+  // $results['pct:x,y,w,h']['full']['90'] = [800, 1600];
   //   $results['pct:x,y,w,h']['max']['90'] = [800, 1600];
   //   $results['pct:x,y,w,h']['w,']['90'] = [50, 100];
   //   $results['pct:x,y,w,h'][',h']['90'] = [100, 200];
   //   $results['pct:x,y,w,h']['pct:n']['90'] = [200, 400];
   //   $results['pct:x,y,w,h']['w,h']['90'] = [300, 100];
   //   $results['pct:x,y,w,h']['!w,h']['90'] = [50, 100];
-
-  //   $results['full']['full']['270'] = [1000, 2000];
+  // $results['full']['full']['270'] = [1000, 2000];
   //   $results['full']['max']['270'] = [1000, 2000];
   //   $results['full']['w,']['270'] = [50, 100];
   //   $results['full'][',h']['270'] = [100, 200];
   //   $results['full']['pct:n']['270'] = [250, 500];
   //   $results['full']['w,h']['270'] = [300, 100];
   //   $results['full']['!w,h']['270'] = [50, 100];
-
-  //   $results['x,y,w,h']['full']['270'] = [350, 500];
+  // $results['x,y,w,h']['full']['270'] = [350, 500];
   //   $results['x,y,w,h']['max']['270'] = [350, 500];
   //   $results['x,y,w,h']['w,']['270'] = [50, 100];
   //   $results['x,y,w,h'][',h']['270'] = [100, 200];
   //   $results['x,y,w,h']['pct:n']['270'] = [88, 125];
   //   $results['x,y,w,h']['w,h']['270'] = [300, 100];
   //   $results['x,y,w,h']['!w,h']['270'] = [70, 100];
-
-  //   $results['pct:x,y,w,h']['full']['270'] = [800, 1600];
+  // $results['pct:x,y,w,h']['full']['270'] = [800, 1600];
   //   $results['pct:x,y,w,h']['max']['270'] = [800, 1600];
   //   $results['pct:x,y,w,h']['w,']['270'] = [50, 100];
   //   $results['pct:x,y,w,h'][',h']['270'] = [100, 200];
   //   $results['pct:x,y,w,h']['pct:n']['270'] = [200, 400];
   //   $results['pct:x,y,w,h']['w,h']['270'] = [300, 100];
   //   $results['pct:x,y,w,h']['!w,h']['270'] = [50, 100];
-
-  //   foreach ($region_options as $region_key => $region) {
+  // foreach ($region_options as $region_key => $region) {
   //     foreach ($size_options as $size_key => $size) {
   //       foreach ($rotation_options as $rotation_key => $rotation) {
   //         $array_merge = array_merge($region, $size, $rotation, [
   //           'quality' => "default",
   //           'format' => "jpg",
   //         ]);
-  //         $params = IiifImageUrlParams::fromSettingsArray($array_merge, "3.0");
-
-  //         $dimensions = $params->transformDimensions($landscape_image);
+  //         $params = IiifImageUrlParams::fromSettingsArray($array_merge, "3.0");.
+  // $dimensions = $params->transformDimensions($landscape_image);
   //         // $results[$region][$size][$rotation] = [$dimensions['width'], $dimensions['height']];
   //         echo "Region: '$region_key', Size: '$size_key', Rotation: $rotation_key => Width: {$dimensions['width']}, Height: {$dimensions['height']}\n";
   //         echo "=> Width: {$dimensions['width']}, Height: {$dimensions['height']}\n";
-
-  //         $this->assertEquals($results[$region_key][$size_key][$rotation_key][0], $dimensions['width'], 'Error on Width. Region: ' . $region_key . ', Size: ' . $size_key . ', Rotation: ' . $rotation_key);
+  // $this->assertEquals($results[$region_key][$size_key][$rotation_key][0], $dimensions['width'], 'Error on Width. Region: ' . $region_key . ', Size: ' . $size_key . ', Rotation: ' . $rotation_key);
   //         $this->assertEquals($results[$region_key][$size_key][$rotation_key][1], $dimensions['height'], 'Error on Height. Region: ' . $region_key . ', Size: ' . $size_key . ', Rotation: ' . $rotation_key);
   //       }
   //     }
   //   }
-  // }
+  // }.
 
   /**
    * @dataProvider transformDimensionsV3Provider
@@ -366,110 +344,113 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
     $this->assertEquals($expectedHeight, $dimensions['height'], "Height: $message");
   }
 
+  /**
+   *
+   */
   public function transformDimensionsV3Provider() {
     // [imageInfo, params, expectedWidth, expectedHeight, message]
     return [
-      // Full region, max size, no rotation
+      // Full region, max size, no rotation.
       'full-max-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => 'max', 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        2000, 1000, 'full region, max size, 0° rotation'
+        2000, 1000, 'full region, max size, 0° rotation',
       ],
-      // Full region, max size, 90 rotation
+      // Full region, max size, 90 rotation.
       'full-max-90' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => 'max', 'rotation' => 90, 'quality' => "default", 'format' => "jpg"],
-        1000, 2000, 'full region, max size, 90° rotation'
+        1000, 2000, 'full region, max size, 90° rotation',
       ],
-      // Full region, w, size, no rotation
+      // Full region, w, size, no rotation.
       'full-w,-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => 'w,', 'size_w' => 100, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        100, 50, 'full region, w, size, 0° rotation'
+        100, 50, 'full region, w, size, 0° rotation',
       ],
-      // Full region, ,h size, no rotation
+      // Full region, ,h size, no rotation.
       'full-,h-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => ',h', 'size_h' => 100, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        200, 100, 'full region, ,h size, 0° rotation'
+        200, 100, 'full region, ,h size, 0° rotation',
       ],
-      // Full region, pct:n size, no rotation
+      // Full region, pct:n size, no rotation.
       'full-pct:n-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => 'pct:n', 'size_n' => 25, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        500, 250, 'full region, pct:n size, 0° rotation'
+        500, 250, 'full region, pct:n size, 0° rotation',
       ],
-      // Full region, w,h size, no rotation
+      // Full region, w,h size, no rotation.
       'full-w,h-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => 'w,h', 'size_w' => 100, 'size_h' => 300, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        100, 300, 'full region, w,h size, 0° rotation'
+        100, 300, 'full region, w,h size, 0° rotation',
       ],
-      // Full region, !w,h size, no rotation
+      // Full region, !w,h size, no rotation.
       'full-!w,h-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'full', 'size' => '!w,h', 'size_w' => 100, 'size_h' => 300, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        100, 50, 'full region, !w,h size, 0° rotation'
+        100, 50, 'full region, !w,h size, 0° rotation',
       ],
-      // x,y,w,h region, max size, 0 rotation
+      // x,y,w,h region, max size, 0 rotation.
       'xywh-max-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'x,y,w,h', 'region_x' => 10, 'region_y' => 10, 'region_w' => 500, 'region_h' => 350, 'size' => 'max', 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        500, 350, 'xywh region, max size, 0° rotation'
+        500, 350, 'xywh region, max size, 0° rotation',
       ],
-      // x,y,w,h region, max size, 90 rotation
+      // x,y,w,h region, max size, 90 rotation.
       'xywh-max-90' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'x,y,w,h', 'region_x' => 10, 'region_y' => 10, 'region_w' => 500, 'region_h' => 350, 'size' => 'max', 'rotation' => 90, 'quality' => "default", 'format' => "jpg"],
-        350, 500, 'xywh region, max size, 90° rotation'
+        350, 500, 'xywh region, max size, 90° rotation',
       ],
-      // pct:x,y,w,h region, max size, 0 rotation
+      // pct:x,y,w,h region, max size, 0 rotation.
       'pctxywh-max-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'pct:x,y,w,h', 'region_x' => 10, 'region_y' => 10, 'region_w' => 80, 'region_h' => 80, 'size' => 'max', 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        1600, 800, 'pct:x,y,w,h region, max size, 0° rotation'
+        1600, 800, 'pct:x,y,w,h region, max size, 0° rotation',
       ],
-      // pct:x,y,w,h region, max size, 90 rotation
+      // pct:x,y,w,h region, max size, 90 rotation.
       'pctxywh-max-90' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 2000, 'height' => 1000],
         ['region' => 'pct:x,y,w,h', 'region_x' => 10, 'region_y' => 10, 'region_w' => 80, 'region_h' => 80, 'size' => 'max', 'rotation' => 90, 'quality' => "default", 'format' => "jpg"],
-        800, 1600, 'pct:x,y,w,h region, max size, 90° rotation'
+        800, 1600, 'pct:x,y,w,h region, max size, 90° rotation',
       ],
       // Full region, ^max size, 0 rotation (upscale allowed)
       'full-^max-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 1000, 'height' => 800, 'maxWidth' => 2000, 'maxHeight' => 1600],
         ['region' => 'full', 'size' => '^max', 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        2000, 1600, 'full region, ^max size, 0° rotation, upscaling'
+        2000, 1600, 'full region, ^max size, 0° rotation, upscaling',
       ],
       // Full region, ^w, size, 0 rotation (upscale allowed)
       'full-^w,-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 1000, 'height' => 800, 'maxWidth' => 2000],
         ['region' => 'full', 'size' => '^w,', 'size_w' => 2000, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        2000, 1600, 'full region, ^w, size, 0° rotation, upscaling'
+        2000, 1600, 'full region, ^w, size, 0° rotation, upscaling',
       ],
       // Full region, ^,h size, 0 rotation (upscale allowed)
       'full-^,h-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 1000, 'height' => 800, 'maxHeight' => 1600],
         ['region' => 'full', 'size' => '^,h', 'size_h' => 1600, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        2000, 1600, 'full region, ^,h size, 0° rotation, upscaling'
+        2000, 1600, 'full region, ^,h size, 0° rotation, upscaling',
       ],
       // Full region, ^pct:n size, 0 rotation (upscale allowed)
       'full-^pct:n-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 1000, 'height' => 800, 'maxWidth' => 2000, 'maxHeight' => 1600],
         ['region' => 'full', 'size' => '^pct:n', 'size_n' => 200, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        2000, 1600, 'full region, ^pct:n size, 0° rotation, upscaling'
+        2000, 1600, 'full region, ^pct:n size, 0° rotation, upscaling',
       ],
       // Full region, ^w,h size, 0 rotation (upscale allowed)
       'full-^w,h-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 1000, 'height' => 800, 'maxWidth' => 2000, 'maxHeight' => 1600],
         ['region' => 'full', 'size' => '^w,h', 'size_w' => 2000, 'size_h' => 1600, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        2000, 1600, 'full region, ^w,h size, 0° rotation, upscaling'
+        2000, 1600, 'full region, ^w,h size, 0° rotation, upscaling',
       ],
       // Full region, ^!w,h size, 0 rotation (upscale allowed, best fit)
       'full-^!w,h-0' => [
         ['@context' => "http://iiif.io/api/image/3/context.json", 'width' => 1000, 'height' => 800, 'maxWidth' => 1500, 'maxHeight' => 1200, 'maxArea' => 1600000],
         ['region' => 'full', 'size' => '^!w,h', 'size_w' => 4000, 'size_h' => 3200, 'rotation' => 0, 'quality' => "default", 'format' => "jpg"],
-        1414, 1131, 'full region, ^!w,h size, 0° rotation, all max props'
+        1414, 1131, 'full region, ^!w,h size, 0° rotation, all max props',
       ],
       // Add more combinations as needed...
     ];
@@ -514,7 +495,8 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
       'height' => 2048,
       'maxWidth' => 1024,
       'maxHeight' => 1024,
-      'maxArea' => 1048576, // 1024*1024.
+    // 1024*1024.
+      'maxArea' => 1048576,
     ]);
 
     // Check v3, max without any max restrictions. Should be 2048x2048.
@@ -625,7 +607,7 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
       'format' => "jpg",
     ], "3.0");
     $dimensions = $params->transformDimensions($image);
-    // sqrt(6400000 / (1000*800)) = 2.828..., so width = 2828, height = 2263
+    // sqrt(6400000 / (1000*800)) = 2.828..., so width = 2828, height = 2263.
     $this->assertEquals(2828, $dimensions['width'], "maxArea only: width");
     $this->assertEquals(2263, $dimensions['height'], "maxArea only: height");
 
@@ -646,7 +628,7 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
       'format' => "jpg",
     ], "3.0");
     $dimensions = $params->transformDimensions($image);
-    // sqrt(1600000 / (1000*800)) = 1131..., so width = 1414, height = 1131
+    // sqrt(1600000 / (1000*800)) = 1131..., so width = 1414, height = 1131.
     $this->assertEquals(1414, $dimensions['width'], "all max props: width");
     $this->assertEquals(1131, $dimensions['height'], "all max props: height");
 
