@@ -3,7 +3,7 @@ type: module
 description: 'Creating a Image Focal point for IIIF data'
 core_version_requirement: ^10 | ^11
 
-package: Media
+package: "IIIF Media - (Experimental)"
 
 dependencies:
   - focal_point:focal_point

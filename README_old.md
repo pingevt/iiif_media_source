@@ -1,0 +1,184 @@
+# IIIF Media source
+
+todo: write description
+implementing the Image API 3.0
+
+Crop (Not Crop API entity): Primarily used for redefining the source image.
+Focal Point: Used primarily for "Art Direction" when automatically sizing images so we don't loose focus
+
+## Table of contents
+
+- Requirements
+- ~~Recommended modules~~
+- Installation
+- Configuration
+- Troubleshooting
+- FAQ
+- Maintainers
+- Changelog
+
+## Requirements
+
+todo: add reqs.
+
+## Installation
+
+Install as you would normally install a contributed Drupal module.
+
+## Configuration
+
+todo: write configuration.
+
+## Troubleshooting
+
+todo:
+
+## FAQ
+
+**Q:** What kind of questions are being asked?
+
+**A:** i dunno...
+
+## Maintainers
+
+- Pete Inge - [pingevt](https://www.drupal.org/u/pingevt)
+
+## Changelog
+
+## TODOs
+
+Field:
+- [x] Field - should just be a copy of a text field
+  - [x] Field has settings for server/prefix
+  - [x] (LC) re-work Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId:getImg() so it doesn't require the values param.
+  - [ ] Could add in some validation? but not sure what that would be... https://iiif.io/api/image/3.0/#2-uri-syntax
+  - [x] (LC) getLocalThumbnailUri() still has hardcoded URLs.
+- [x] Default Widget should just be plain text, i think.
+- [x] Default Formatter should just display ID.
+  - [ ] (LC) need to verify and have fallbacks for each section.
+  - [ ] ~~Add in loading attribute (lazy, eager) to basic formatter.~~
+- [x] Secondary (basic image) Widget includes image thumbnail.
+- [x] Secondary (basic image) Formatter, should implement and validate all the uri options.
+  - [x] (LC) Add in loading attribute (lazy, eager) to basic formatter.
+- [ ] ~~(LC) Do we need the base Iiif class?~~
+  - [ ] ~~If so, needs to be a service?~~
+  - [ ] ~~Inject it into the field class?~~
+- [x] (LC) Add in options for Image API v3
+
+Media Source
+- [ ] Source just provides data for fields, if wanted on the media item.
+- [ ] (LC) Provides:
+  - [ ] version
+  - [ ] width
+  - [ ] height
+  - [ ] sizes
+  - [ ] tiles???
+  - [ ] formats
+  - [ ] qualities
+  - [ ] maxArea
+  - [ ] maxHeight
+  - [ ] maxWidth
+  - [ ] supports
+
+Submodule: Image styles
+Image Styles / Responsive Images
+- [x] Image Style entity
+- [x] Responsive Image style entity
+- [x] IIIF Image style formatter
+- [x] IIIF Responsive Image style formatter
+- [x] We're going to need plugins... Imagestyle with plugins for the transformers.
+- [x] Add in some default IIIF Image Styles
+- [ ] Admin library w/ CSS.
+- [ ] (LC) Add in preview on Image Styles.
+- [ ] (LC) Document plugin so others can create plugins.
+- [ ] (LC) Documentation and helper text for forms.
+- [ ] (LC) Fix errors when using "original image" for responsive images
+
+Submodule: Image Handling
+- [x] Class to handle form elements for adding to widgets.
+  - [x] Need logic for 1 or other handlers.
+- [ ] Class to handle form elements for own widgets.
+- [ ] Need a common (CSS) library.
+
+Submodule: Focalpoint
+- [x] Add in widget to define a focal point of the image.
+- [x] Third party settings or something so we can combine everything into 1 form element.
+- [x] Add third party settings for thumbnail size
+- [ ] Allow for Contextual Media field
+- [ ] Make sure settings are correct for Widget and 3rd party settings. (Add Test)
+
+Submodule: Crop
+- [x] Add in widget to define a crop for the image.
+- [x] Third party settings or something so we can combine everything into 1 form element.
+- [x] Add third party settings for thumbnail size
+- [x] "Drupalize" js file.
+- [x] Need JS solution to hide field (copy from FP)
+- [ ] Settings Page to variabalize settings for the cropper.js plugin.
+- [ ] Allow for Contextual Media field
+- [ ] Make sure settings are correct for Widget and 3rd party settings. (Add Test)
+
+General:
+- [ ] (LC) Check and confirm Config inspector
+- [ ] Process js/css files
+- [ ] Transition templates to SDCs
+
+Tests:
+- Prep
+  - [ ] (LC) Need IIIF sources to test against.
+- Unit Tests
+  - [ ] (LC) Need to test and finish Dimension in `IiifImageUrlParams`
+- Functional Tests
+  - [ ]
+- Browser Tests
+  - [ ] (LC) Check each image style effect and combination. We should be able to set it and check the end of any image url string.
+  - [ ] Check responsive images
+  - [ ] Check "fallbacks" for responsive images
+  - [ ] (LC) lazy and eager loading attr
+    - [ ] Default IIIF Image Formatter
+    - [ ] Crop Image Formatter
+    - [ ] Focal Point Image formatter
+
+
+
+
+# IIIF Media Source Test Coverage Checklist
+
+## IiifBase Test Coverage
+
+| Test Case Description                                                      | Unit | Functional |
+|----------------------------------------------------------------------------|:----:|:----------:|
+| [ ] Constructor sets properties and calls retrieveManifest if needed        |  ⬜  |            |
+| [ ] getServer/getPrefix/getIiifId return correct values                     |  ⬜  |            |
+| [ ] getInfo/getInfoEncoded return info object and JSON                      |  ⬜  |            |
+| [ ] retrieveManifest caches manifest if not present                         |  ⬜  |     ⬜      |
+| [ ] retrieveManifest loads from cache if present                            |  ⬜  |     ⬜      |
+| [ ] retrieveManifest handles JSON decode errors                             |  ⬜  |     ⬜      |
+| [ ] retrieveManifest handles HTTP errors and logs them                      |  ⬜  |     ⬜      |
+| [ ] call returns response on success                                        |  ⬜  |            |
+| [ ] call returns null and logs on exception                                 |  ⬜  |            |
+
+---
+
+## IiifImage Test Coverage
+
+| Test Case Description                                                      | Unit | Functional |
+|----------------------------------------------------------------------------|:----:|:----------:|
+| [ ] getManifestUrl returns correct manifest URL                             |  ⬜  |            |
+| [ ] getWidth/getHeight return correct values, null if missing               |  ⬜  |            |
+| [ ] getDimensions returns correct array                                     |  ⬜  |            |
+| [ ] getMaxWidth/Height/Area return correct for v2/v3, null if missing       |  ⬜  |            |
+| [ ] getThumbnailUrl returns correct thumbnail URL                           |  ⬜  |     ⬜      |
+| [ ] getFullUrl returns correct full image URL                               |  ⬜  |     ⬜      |
+| [ ] getBuiltImageUrl returns correct URL with params                        |  ⬜  |     ⬜      |
+| [ ] getScaledUrl returns correct scaled URL                                 |  ⬜  |     ⬜      |
+| [ ] getDefaultExtension returns correct extension, fallback to jpg          |  ⬜  |            |
+| [ ] getApiVersion returns correct version string                            |  ⬜  |            |
+| [ ] downloadImage handles download, caching, and errors (if implemented)    |  ⬜  |     ⬜      |
+| [ ] Handles missing info gracefully                                         |  ⬜  |     ⬜      |
+| [ ] Handles missing formats gracefully                                      |  ⬜  |     ⬜      |
+
+---
+
+**Instructions:**
+- Mark `[x]` for completed tests, `[ ]` for pending.
+- Add or remove rows as your implementation evolves.

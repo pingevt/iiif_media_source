@@ -3,7 +3,7 @@ type: module
 description: 'Creating a Image Crop for IIIF data'
 core_version_requirement: ^10 | ^11
 
-package: Media
+package: "IIIF Media - (Experimental)"
 
 dependencies:
   - iiif_media_source:iiif_image_style

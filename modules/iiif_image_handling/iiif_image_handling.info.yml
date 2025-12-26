@@ -3,7 +3,7 @@ type: module
 description: 'Core and shared Elements for IIIF Image manipulation'
 core_version_requirement: ^10 | ^11
 
-package: Media
+package: "IIIF Media - (Experimental)"
 
 dependencies:
   - crop:crop

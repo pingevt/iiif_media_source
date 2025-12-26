@@ -111,15 +111,6 @@ This project includes the following submodules:
 ## Maintainers
 
 - [Pete Inge](https://www.drupal.org/u/pingevt)
-- [Contributors welcome!](https://www.drupal.org/project/issues/iiif_media_source)
-
-<!--
----
-
-## License
-
-GPL-2.0-or-later
--->
 
 ---
 
