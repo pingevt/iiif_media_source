@@ -39,8 +39,6 @@ class IiifGetImageFromFieldEventTest extends TestCase {
 
   /**
    * Tests the EVENT_NAME constant.
-   *
-   * @covers ::EVENT_NAME
    */
   public function testEventNameConstant() {
     $this->assertEquals('iiif_image_from_field', IiifGetImageFromFieldEvent::EVENT_NAME);

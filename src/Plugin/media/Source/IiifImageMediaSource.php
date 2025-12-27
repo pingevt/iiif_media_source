@@ -292,10 +292,11 @@ class IiifImageMediaSource extends MediaSourceBase {
     $prefix = $remote_field_definition->getSettings()['prefix'];
 
     // If there is no remote thumbnail, there's nothing for us to fetch here.
-    $remote_thumbnail_url = $path . '/' . $prefix . '/' . $remote_field->value . "/full/!300,300/0/default.jpg";
-    if (!$remote_thumbnail_url) {
-      return NULL;
+    $val = $remote_field->value;
+    if (empty($path) || empty($prefix) || empty($val)) {
+      return NULL;;
     }
+    $remote_thumbnail_url = $path . '/' . $prefix . '/' . $remote_field->value . "/full/!300,300/0/default.jpg";
 
     // Use the configured directory to store thumbnails. The directory can
     // contain basic (i.e., global) tokens. If any of the replaced tokens

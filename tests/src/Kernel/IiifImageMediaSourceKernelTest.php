@@ -7,10 +7,15 @@ use GuzzleHttp\Psr7\Response;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\Media;
+use Drupal\media\MediaInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\iiif_media_source\Plugin\media\Source\IiifImageMediaSource;
 use Drupal\media\Entity\MediaType;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Kernel tests for the IIIF Image Media Source plugin.
@@ -26,6 +31,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     'system',
     'user',
     'field',
+    'field_ui',
     'file',
     'image',
     'media',
@@ -75,6 +81,11 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
       'entity_type' => 'media',
       'bundle' => 'iiif_image',
       'label' => 'IIIF ID',
+      'settings' => [
+        'server' => 'http://example.com',
+        'prefix' => 'prefix',
+        'img_api_version' => '2',
+      ],
     ])->save();
 
     // Add this line:
@@ -85,6 +96,69 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
       'source_field' => 'field_iiif_id',
       'thumbnails_directory' => 'public://iiif_thumbnails/test',
     ]);
+  }
+
+  /**
+   * Tests the getSourceFieldName() method.
+   */
+  public function testGetSourceFieldName() {
+    // Create a mock plugin definition.
+    $plugin_definition = [
+      'id' => 'iiif_image',
+      'label' => 'IIIF Image',
+      'description' => 'Use remote IIIF Image Data.',
+      'allowed_field_types' => ['iiif_id'],
+    ];
+
+    // Create an instance of the IiifImageMediaSource plugin.
+    $plugin = new IiifImageMediaSource([], 'iiif_image', $plugin_definition, $this->container->get('entity_type.manager'), $this->container->get('entity_field.manager'), $this->container->get('config.factory'), $this->container->get('plugin.manager.field.field_type'), $this->container->get('logger.factory')->get('media'), $this->container->get('messenger'), $this->container->get('http_client'), $this->container->get('media.oembed.resource_fetcher'), $this->container->get('media.oembed.url_resolver'), $this->container->get('media.oembed.iframe_url_helper'), $this->container->get('file_system'), $this->container->get('token'), $this->container->get('stream_wrapper_manager'));
+
+    // Use reflection to access the protected method.
+    $reflection = new \ReflectionMethod($plugin, 'getSourceFieldName');
+    $reflection->setAccessible(TRUE);
+
+    // Call the getSourceFieldName() method.
+    $field_name = $reflection->invoke($plugin);
+
+    // Assert that the field name is generated correctly.
+    $this->assertStringStartsWith('field_media_iiif_id', $field_name, 'The generated field name starts with the expected prefix.');
+  }
+
+  /**
+   * Tests the getSourceFieldName() method with an existing field.
+   */
+  public function testGetSourceFieldNameWithExistingField() {
+    // Create a mock plugin definition.
+    $plugin_definition = [
+      'id' => 'iiif_image',
+      'label' => 'IIIF Image',
+      'description' => 'Use remote IIIF Image Data.',
+      'allowed_field_types' => ['iiif_id'],
+    ];
+
+    // Create an instance of the IiifImageMediaSource plugin.
+    $plugin = new IiifImageMediaSource([], 'iiif_image', $plugin_definition, $this->container->get('entity_type.manager'), $this->container->get('entity_field.manager'), $this->container->get('config.factory'), $this->container->get('plugin.manager.field.field_type'), $this->container->get('logger.factory')->get('media'), $this->container->get('messenger'), $this->container->get('http_client'), $this->container->get('media.oembed.resource_fetcher'), $this->container->get('media.oembed.url_resolver'), $this->container->get('media.oembed.iframe_url_helper'), $this->container->get('file_system'), $this->container->get('token'), $this->container->get('stream_wrapper_manager'));
+
+    // Simulate an existing field with the base ID.
+    $storage = $this->container->get('entity_type.manager')->getStorage('field_storage_config');
+    $existing_field = $storage->create([
+      'id' => 'media.field_media_iiif_id',
+      'field_name' => 'field_media_iiif_id',
+      'entity_type' => 'media',
+      'type' => 'string',
+    ]);
+    $existing_field->save();
+
+    // Use reflection to access the protected method.
+    $reflection = new \ReflectionMethod($plugin, 'getSourceFieldName');
+    $reflection->setAccessible(TRUE);
+
+    // Call the getSourceFieldName() method.
+    // This should now increment `$tries` and append a suffix to the field ID.
+    $field_name = $reflection->invoke($plugin);
+
+    // Assert that the field name includes the incremented suffix.
+    $this->assertEquals('field_media_iiif_id_1', $field_name, 'The generated field name includes the incremented suffix.');
   }
 
   /**
@@ -118,7 +192,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     $media = Media::create([
       'bundle' => 'iiif_image',
       'field_iiif_id' => [
-        'value' => 'https://example.org/iiif/image-id',
+        'value' => 'image-id',
       ],
     ]);
     $media->save();
@@ -159,7 +233,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     $media = Media::create([
       'bundle' => 'iiif_image',
       'field_iiif_id' => [
-        'value' => 'https://example.org/iiif/image-id',
+        'value' => 'image-id',
       ],
     ]);
     $media->save();
@@ -198,7 +272,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     $media = Media::create([
       'bundle' => 'iiif_image',
       'field_iiif_id' => [
-        'value' => 'https://example.org/iiif/image-id',
+        'value' => 'image-id',
       ],
     ]);
     $media->save();
@@ -241,7 +315,7 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     $media = Media::create([
       'bundle' => 'iiif_image',
       'field_iiif_id' => [
-        'value' => 'https://example.org/iiif/image-id',
+        'value' => 'image-id',
       ],
     ]);
     $media->save();
@@ -265,6 +339,83 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
 
     $uri = $this->mediaSource->getLocalThumbnailUri($media);
     $this->assertNull($uri, 'No URI returned when response body is empty.');
+  }
+
+  /**
+   * Tests getLocalThumbnailUri() with an existing file.
+   */
+  public function testGetLocalThumbnailUriWithExistingFile() {
+    // Create a mock media entity.
+    $media = $this->createMock(MediaInterface::class);
+
+    // Mock the field definition.
+    $field_definition = $this->createMock(FieldDefinitionInterface::class);
+    $field_definition->method('getSettings')->willReturn([
+      'server' => 'http://example.com',
+      'prefix' => 'prefix',
+    ]);
+
+    // Mock the source field configuration.
+    $source_field = $this->createMock(FieldItemListInterface::class);
+    $source_field->method('getFieldDefinition')->willReturn($field_definition);
+    $source_field->method('__get')->with('value')->willReturn('remote_id');
+    $media->method('get')->with('field_iiif_id')->willReturn($source_field);
+
+    // Simulate the remote thumbnail URL.
+    $remote_thumbnail_url = 'http://example.com/prefix/remote_id/full/!300,300/0/default.jpg';
+
+    // Calculate the hash for the remote thumbnail URL.
+    $hash = Crypt::hashBase64($remote_thumbnail_url);
+
+    // Mock the file system service to return a file with the hashed name.
+    $mock_file = (object) ['uri' => "public://iiif_thumbnails/{$hash}.jpg"];
+    $mock_file_system = $this->getMockBuilder(FileSystemInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $mock_file_system->method('scanDirectory')->with(
+      'public://iiif_thumbnails',
+      "/^$hash\..*/"
+    )->willReturn([$mock_file]);
+
+    $mock_file_system->method('prepareDirectory')->willReturn(TRUE);
+
+    // $files = $mock_file_system->scanDirectory(
+    //   'public://iiif_thumbnails',
+    //   "/^$hash\..*/"
+    // );
+    // var_dump($files);
+
+    // Create an instance of the IiifImageMediaSource plugin.
+    $plugin = new IiifImageMediaSource(
+      [
+        'source_field' => 'field_iiif_id',
+        'thumbnails_directory' => 'public://iiif_thumbnails',
+      ],
+      'iiif_image',
+      [
+        'source_field' => 'field_iiif_id',
+        'thumbnails_directory' => 'public://iiif_thumbnails',
+      ],
+      $this->container->get('entity_type.manager'),
+      $this->container->get('entity_field.manager'),
+      $this->container->get('config.factory'),
+      $this->container->get('plugin.manager.field.field_type'),
+      $this->container->get('logger.factory')->get('media'),
+      $this->container->get('messenger'),
+      $this->container->get('http_client'),
+      $this->container->get('media.oembed.resource_fetcher'),
+      $this->container->get('media.oembed.url_resolver'),
+      $this->container->get('media.oembed.iframe_url_helper'),
+      $mock_file_system,
+      $this->container->get('token'),
+      $this->container->get('stream_wrapper_manager')
+    );
+
+    // Call the getLocalThumbnailUri() method.
+    $thumbnail_uri = $plugin->getLocalThumbnailUri($media);
+
+    // Assert that the method returns the URI of the first file.
+    $this->assertEquals('public://iiif_thumbnails/' . $hash . '.jpg', $thumbnail_uri, 'The method returned the URI of the first file.');
   }
 
   /**

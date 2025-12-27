@@ -25,8 +25,6 @@ class IiifImageUrlParamsKernelTest extends KernelTestBase {
 
   /**
    * Tests the transformDimensions method for IIIF Image API v2.
-   *
-   * @covers ::transformDimensions
    */
   public function testTransformDimensionsV2() {
     $landscape_image = new IiifImage('http://example.com', 'prefix', 'id', (object) [
