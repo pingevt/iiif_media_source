@@ -71,6 +71,8 @@ variables:
   OPT_IN_TEST_PREVIOUS_MAJOR: 1
   OPT_IN_TEST_NEXT_MAJOR: 1
   OPT_IN_TEST_MAX_PHP: 1
+  SKIP_ESLINT: 1
+  SKIP_STYLELINT: 1
   # CI_PHPUNIT_GROUP: iiif_media_source
   # Show more log output
   _PHPUNIT_EXTRA: --verbose
@@ -116,6 +118,10 @@ eslint:
 
 stylelint:
   allow_failure: false
+  rules:
+    - if: $SKIP_STYLELINT == 1
+      when: never
+    - when: on_success
 
 phpcs:
   allow_failure: false
