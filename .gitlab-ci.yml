@@ -132,9 +132,6 @@ phpunit:
         - iiif_image_style
   before_script:
     - *show-variables
-    - echo "Running PHPUnit tests with the following parameters:"
-    - echo "Test groups: $_PHPUNIT_TESTGROUPS"
-    - echo "Extra PHPUnit options: $_PHPUNIT_EXTRA"
     - |
       printf "_MATRIX_VALUE               = %s\n" $_MATRIX_VALUE &&
       printf "_PHPUNIT_CONCURRENT         = %s\n" $_PHPUNIT_CONCURRENT &&
