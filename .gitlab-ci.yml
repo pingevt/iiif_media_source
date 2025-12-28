@@ -67,10 +67,10 @@ variables:
   # SKIP_CSPELL: 1
   # Broaden test coverage.
   OPT_IN_TEST_CURRENT: 1
-  # OPT_IN_TEST_PREVIOUS_MINOR: 1
-  # OPT_IN_TEST_PREVIOUS_MAJOR: 1
-  # OPT_IN_TEST_NEXT_MAJOR: 1
-  # OPT_IN_TEST_MAX_PHP: 1
+  OPT_IN_TEST_PREVIOUS_MINOR: 1
+  OPT_IN_TEST_PREVIOUS_MAJOR: 1
+  OPT_IN_TEST_NEXT_MAJOR: 1
+  OPT_IN_TEST_MAX_PHP: 1
   # CI_PHPUNIT_GROUP: iiif_media_source
   # Show more log output
   _PHPUNIT_EXTRA: --verbose
@@ -128,15 +128,13 @@ phpunit:
     matrix:
       # Run test groups in parallel. This also speeds up identification of failing tests.
       - _MATRIX_VALUE:
-        # - scheduler
-        # - scheduler_api
-        # - scheduler_drush
-        # - scheduler_js
-        # - scheduler_kernel
-        # - scheduler_rules_integration
         - iiif_media_source
+        - iiif_image_style
   before_script:
     - *show-variables
+    - echo "Running PHPUnit tests with the following parameters:"
+    - echo "Test groups: $_PHPUNIT_TESTGROUPS"
+    - echo "Extra PHPUnit options: $_PHPUNIT_EXTRA"
     - |
       printf "_MATRIX_VALUE               = %s\n" $_MATRIX_VALUE &&
       printf "_PHPUNIT_CONCURRENT         = %s\n" $_PHPUNIT_CONCURRENT &&
@@ -154,3 +152,10 @@ phpunit:
         export _PHPUNIT_CONCURRENT=1
       fi
     - echo "End of before_script _PHPUNIT_CONCURRENT=$_PHPUNIT_CONCURRENT _PHPUNIT_EXTRA=$_PHPUNIT_EXTRA"
+code_coverage:
+  script:
+    - ./vendor/bin/phpunit --coverage-html build/coverage
+  artifacts:
+    paths:
+      - build/coverage
+    expire_in: 1 week
