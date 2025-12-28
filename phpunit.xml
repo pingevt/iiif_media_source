@@ -35,13 +35,15 @@
   </testsuite>
 </testsuites>
 <listeners>
-  <listener class="\Drupal\Tests\Listeners\DrupalListener">
-  </listener>
+  <listener class="\Drupal\Tests\Listeners\DrupalListener"></listener>
 </listeners>
-<coverage cacheDirectory=".phpunit.cache/code-coverage" processUncoveredFiles="true">
+<coverage>
   <include>
-    <directory suffix=".php">./src</directory>
     <file>./*.module</file>
   </include>
+  <exclude>
+    <directory>./modules</directory>
+    <directory>./tests</directory>
+  </exclude>
 </coverage>
 </phpunit>
