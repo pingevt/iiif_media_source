@@ -294,7 +294,8 @@ class IiifImageMediaSource extends MediaSourceBase {
     // If there is no remote thumbnail, there's nothing for us to fetch here.
     $val = $remote_field->value;
     if (empty($path) || empty($prefix) || empty($val)) {
-      return NULL;;
+      return NULL;
+
     }
     $remote_thumbnail_url = $path . '/' . $prefix . '/' . $remote_field->value . "/full/!300,300/0/default.jpg";
 

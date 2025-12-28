@@ -84,7 +84,7 @@ class IiifImageStyleTest extends KernelTestBase {
     // Use reflection to set the `effects` property.
     $reflection = new \ReflectionClass($iiifImageStyle);
     $property = $reflection->getProperty('effects');
-    $property->setAccessible(true);
+    $property->setAccessible(TRUE);
     $property->setValue($iiifImageStyle, [
       'test_uuid' => ['id' => 'test_effect'],
     ]);
@@ -121,7 +121,7 @@ class IiifImageStyleTest extends KernelTestBase {
   /**
    * Tests the calculateDependencies() method.
    *
-   * todo: Re-write when dependencies are fixed/updated.
+   * @todo Re-write when dependencies are fixed/updated.
    *
    * @covers ::calculateDependencies
    */
@@ -133,10 +133,8 @@ class IiifImageStyleTest extends KernelTestBase {
   //       'test_uuid' => ['id' => 'iiif_image_resize'], // Use a valid plugin ID.
   //     ],
   //   ]);
-
   //   // Calculate dependencies.
   //   $dependencies = $iiifImageStyle->calculateDependencies();
   //   $this->assertArrayHasKey('module', $dependencies);
   // }
-
 }

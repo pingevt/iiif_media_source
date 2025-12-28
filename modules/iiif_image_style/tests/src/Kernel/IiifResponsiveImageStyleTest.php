@@ -112,11 +112,9 @@ class IiifResponsiveImageStyleTest extends KernelTestBase {
   //     'breakpoint_group' => 'test_breakpoint_group',
   //     'fallback_image_style' => 'fallback_style',
   //   ]);
-
   //   // Calculate dependencies.
   //   $dependencies = $responsiveImageStyle->calculateDependencies();
-
-  //   // Verify that the breakpoint group and fallback image style are included.
+  // // Verify that the breakpoint group and fallback image style are included.
   //   $this->assertArrayHasKey('module', $dependencies);
   // }
 

@@ -145,7 +145,10 @@ class IiifId extends StringItem {
    */
   public function getImg(?array $values = NULL) {
 
+    // phpcs:disable Drupal.Semantics.FunctionTriggerError.TriggerErrorTextLayoutStrict
+    // Trigger deprecation notice.
     @trigger_error('getImg() is deprecated in Drupal 10.4.0 and is removed from Drupal 11.5.0, Use \Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId::getIiifImageObj() instead.', E_USER_DEPRECATED);
+    // phpcs:enable Drupal.Semantics.FunctionTriggerError.TriggerErrorTextLayoutStrict
 
     // If no values are passed, use the current value.
     if ($values === NULL) {

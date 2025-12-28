@@ -91,6 +91,8 @@ class IiifImageUrlParamsTest extends UnitTestCase {
   }
 
   /**
+   * Tests buildUrlString with data provider.
+   *
    * @dataProvider buildUrlStringProvider
    */
   public function testBuildUrlStringDataProvider($version, $expected) {

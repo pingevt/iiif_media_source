@@ -36,7 +36,8 @@ class IiifImageStyleSettingsEventTest extends KernelTestBase {
   public function testConstructorAndGetters(): void {
     // Create a real IiifImageStyle entity with a valid ID.
     $imageStyle = IiifImageStyle::create([
-      'name' => 'test_style', // Ensure the ID is a valid machine name.
+    // Ensure the ID is a valid machine name.
+      'name' => 'test_style',
       'label' => 'Test Style',
     ]);
     $imageStyle->save();

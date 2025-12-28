@@ -384,7 +384,6 @@ class IiifImageMediaSourceKernelTest extends KernelTestBase {
     //   "/^$hash\..*/"
     // );
     // var_dump($files);
-
     // Create an instance of the IiifImageMediaSource plugin.
     $plugin = new IiifImageMediaSource(
       [

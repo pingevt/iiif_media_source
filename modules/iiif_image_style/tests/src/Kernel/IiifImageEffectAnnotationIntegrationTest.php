@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\iiif_image_style\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\iiif_image_style\IiifImageEffectManager;
 
 /**
  * Tests the integration of the IiifImageEffect annotation with the plugin system.
