@@ -149,7 +149,10 @@ phpunit:
         export _PHPUNIT_CONCURRENT=1
       fi
     - echo "End of before_script _PHPUNIT_CONCURRENT=$_PHPUNIT_CONCURRENT _PHPUNIT_EXTRA=$_PHPUNIT_EXTRA"
+
 code_coverage:
+  before_script:
+    - composer install
   script:
     - ./vendor/bin/phpunit --coverage-html build/coverage
   artifacts:

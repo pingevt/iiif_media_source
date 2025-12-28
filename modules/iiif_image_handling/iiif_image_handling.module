@@ -4,9 +4,9 @@
  * @file
  */
 
-use Drupal\media_library_media_modify\Form\FileEditForm;
-
 declare(strict_types=1);
+
+use Drupal\media_library_media_modify\Form\FileEditForm;
 
 /**
  * @file
