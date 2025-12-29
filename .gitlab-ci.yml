@@ -119,7 +119,7 @@ eslint:
 stylelint:
   allow_failure: false
   rules:
-    - if: $SKIP_STYLELINT == 1
+    - if: $SKIP_STYLELINT == "1"
       when: never
     - when: on_success
 
