@@ -156,12 +156,13 @@ phpunit:
       fi
     - echo "End of before_script _PHPUNIT_CONCURRENT=$_PHPUNIT_CONCURRENT _PHPUNIT_EXTRA=$_PHPUNIT_EXTRA"
 
-code_coverage:
-  before_script:
-    - composer install
-  script:
-    - ./vendor/bin/phpunit --coverage-html build/coverage
-  artifacts:
-    paths:
-      - build/coverage
-    expire_in: 1 week
+# TODO: Add in code coverage job.
+# code_coverage:
+#   before_script:
+#     - composer install
+#   script:
+#     - ./vendor/bin/phpunit --coverage-html build/coverage
+#   artifacts:
+#     paths:
+#       - build/coverage
+#     expire_in: 1 week
