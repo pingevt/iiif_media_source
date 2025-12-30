@@ -6,6 +6,7 @@ use Drupal\crop\Entity\Crop;
 use Drupal\iiif_image_handling\Event\IiifEffectFindCropEvent;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectBase;
 use Drupal\iiif_image_style\IiifConfigurableImageEffectInterface;
+use Drupal\iiif_media_source\Iiif\IiifImage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -46,7 +47,7 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
   /**
    * Gets the crop for the image, allowing event subscribers to alter it.
    *
-   * @param \Drupal\iiif_image_style\IiifImage $image
+   * @param \Drupal\iiif_media_source\Iiif\IiifImage $image
    *   The IIIF image object.
    * @param string $crop_type
    *   The crop type.
@@ -56,7 +57,8 @@ abstract class IiifConfigurableImageEffectWithCropBase extends IiifConfigurableI
    * @return \Drupal\crop\Entity\Crop|null
    *   The crop entity, or NULL if none found.
    */
-  protected function getCrop($image, $crop_type, $context): ?Crop {
+  protected function getCrop(IiifImage $image, $crop_type, $context): ?Crop {
+    // Use the static findCrop() method on the Crop entity class.
     $crop = Crop::findCrop($image->getFullUrl(), $crop_type);
 
     // Dispatch Event.

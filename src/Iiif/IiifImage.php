@@ -2,10 +2,12 @@
 
 namespace Drupal\iiif_media_source\Iiif;
 
+use Drupal\iiif_media_source\IiifImageInterface;
+
 /**
  * IIIF Image class.
  */
-class IiifImage extends IiifBase {
+class IiifImage extends IiifBase implements IiifImageInterface {
 
   /**
    * Thumbnail width.
