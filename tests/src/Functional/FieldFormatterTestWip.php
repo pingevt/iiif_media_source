@@ -11,6 +11,8 @@
  * https://media.nga.gov/iiif/fdfa01c4-7334-4a34-a1fa-64429773e96e/full/full/0/default.jpg
  * https://media.nga.gov/iiif/ab18bc0e-2b0e-48db-bf7a-d57f24f9c6a3/full/full/0/default.jpg
  * https://media.nga.gov/iiif/866a1a6c-2e3e-452c-ad91-5b2339e56da2/full/full/0/default.jpg
+ *
+ * @group iiif_media_source
  */
 
 namespace Drupal\Tests\iiif_media_source\Functional;
