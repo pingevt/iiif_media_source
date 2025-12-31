@@ -11,6 +11,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\iiif_media_source\Event\IiifGetImageFromFieldEvent;
 use Drupal\iiif_media_source\Iiif\IiifImage;
+use Drupal\iiif_media_source\IiifImageInterface;
 
 /**
  * Defines the 'string' entity field type.
@@ -172,13 +173,13 @@ class IiifId extends StringItem {
   /**
    * Get an IiifImage object for this field value.
    *
-   * @return \Drupal\iiif_media_source\Iiif\IiifImage
+   * @return \Drupal\iiif_media_source\IiifImageInterface
    *   The IIIF Image object.
    *
    * @since 10.4.0
    * @see getImg()
    */
-  public function getIiifImageObj(): IiifImage {
+  public function getIiifImageObj(): IiifImageInterface {
     $values = $this->getValue();
 
     $info = new \stdClass();

@@ -18,9 +18,11 @@ use Drupal\iiif_media_source\Plugin\Field\FieldType\IiifId;
  */
 function iiif_image_focalpoint_theme($existing, $type, $theme, $path) {
   return [
+    // Define theme hooks for focal point crop summaries.
     'iiif_focal_point_crop_summary' => [
       'variables' => ['data' => NULL, 'effect' => []],
     ],
+    // Define theme hooks for focal point scale crop summaries.
     'iiif_focal_point_scale_crop_summary' => [
       'variables' => ['data' => NULL, 'effect' => []],
     ],
@@ -40,28 +42,26 @@ function iiif_image_focalpoint_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  *
  * Saves the focal point value for the image file entity about to be saved.
+ *
+ * todo: Move into a service class.
  */
 function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
-  // ksm($entity);
-  // ksm("hi");
+
   // Only worry about entities that are fieldable.
   if ($entity instanceof FieldableEntityInterface) {
-    // ksm("checking fields...");
+
     // Loop all the fields and save focal point values for images.
     foreach ($entity->getFieldDefinitions() as $key => $field) {
-      // ksm($key, $field->getType());
+
       if ($field->getType() == 'iiif_id' && $entity->hasField($field->getName())) {
-        // ksm("Correct field, i think");
-        // if ($key == "field_media_iiif_image") {
-        // ksm($entity->{$field->getName()});
         // @todo do i need to create settings for this module for croptype? Probably.
         $crop_type = \Drupal::config('iiif_image_focalpoint.settings')->get('crop_type');
-        // ksm( $crop_type );
+
         // Loop through all values for this field. Its cardinality might be > 1.
         foreach ($entity->{$field->getName()} as $item) {
 
+          // Make sure its an iiif id field.
           if (!$item instanceof IiifId) {
-            // ksm("NOT A IiifId FIELD");.
             continue;
           }
 
@@ -104,34 +104,6 @@ function iiif_image_focalpoint_entity_update(EntityInterface $entity) {
       }
     }
   }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function iiif_image_focalpoint_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // phpcs:disable
-  // ksm(func_get_args());
-  // Add option to Image style.
-  // if ($form_id == "iiif_image_style_add_form" || $form_id == "iiif_image_style_edit_form") {
-  //   $entity = $form_state->getFormObject()->getEntity();
-  //   // ksm($entity);
-  // $settings = $entity->getThirdPartySettings('iiif_image_focalpoint');
-  // // ksm($settings);
-  // $form['crops_and_focal'] = [
-  //     '#type' => 'fieldset',
-  //     '#title' => t('Crops and Focal Points'),
-  //     '#collapsible' => FALSE,
-  //     '#collapsed' => FALSE,
-  //   ];
-  // $form['use_iiif_focalpoint'] = [
-  //     '#type' => 'checkbox',
-  //     '#title' => t('Use IIIF focal point'),
-  //     '#default_value' => $settings['use_iiif_focalpoint'] ?? FALSE,
-  //     '#group' => 'crops_and_focal',
-  //   ];
-  // }
-  // phpcs:enable
 }
 
 /**
@@ -200,4 +172,5 @@ function iiif_image_focalpoint_field_widget_single_element_form_alter(&$element,
       $element = IiifImageHandlingProcessor::buildElementFocalPoint($element, $form_state, $context);
     }
   }
+
 }
