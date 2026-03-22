@@ -7,7 +7,10 @@ use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextfieldWidget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\iiif_image_focalpoint\IiifFocalPointManager;
 use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * IIIF Image Widget. (Focal Point)
@@ -22,7 +25,41 @@ use Drupal\iiif_image_handling\IiifImageHandlingProcessor;
  */
 class IiifImageFocalPointWidget extends StringTextfieldWidget implements ContainerFactoryPluginInterface {
 
+  /**
+   * The preview token name.
+   */
   const PREVIEW_TOKEN_NAME = 'focal_point_preview';
+
+  /**
+   * The focal point manager service.
+   *
+   * @var \Drupal\iiif_image_focalpoint\IiifFocalPointManager
+   */
+  protected IiifFocalPointManager $focalPointManager;
+
+  /**
+   * Constructs the widget.
+   */
+  // public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, IiifFocalPointManager $focal_point_manager) {
+  //   parent::__construct([], $plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+  //   $this->focalPointManager = $focal_point_manager;
+  // }
+
+  /**
+   * {@inheritdoc}
+   */
+  // public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+  //   return new static(
+  //     $plugin_id,
+  //     $plugin_definition,
+  //     $configuration['field_definition'],
+  //     $configuration['settings'],
+  //     $configuration['third_party_settings'],
+  //     $container->get('iiif_image_focalpoint.focal_point_manager')
+  //   );
+
+  // }
 
   /**
    * {@inheritdoc}
